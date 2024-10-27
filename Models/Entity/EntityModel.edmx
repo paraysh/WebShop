@@ -1,0 +1,761 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WebShopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Cost" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="ImageName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblItemTypeMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ItemType" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrderedBy" Type="int" />
+          <Property Name="OrderDate" Type="datetime" />
+          <Property Name="OrderApproved" Type="char" MaxLength="2" />
+          <Property Name="TotalCost" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="TotalItems" Type="int" />
+        </EntityType>
+        <EntityType Name="tblOrderDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="int" />
+          <Property Name="StockDetailsId" Type="int" />
+          <Property Name="LendingPeriod" Type="int" />
+          <Property Name="LendingStartDt" Type="datetime" />
+          <Property Name="LendingEndDt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblStock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblStockDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="StockId" Type="int" />
+          <Property Name="SerialNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrderId" Type="int" />
+        </EntityType>
+        <EntityType Name="tblTeamBudget">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="int" Nullable="false" />
+          <Property Name="TeamBudget" Type="numeric" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="tblTeamEmployee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="int" Nullable="false" />
+          <Property Name="TeamEmployeeId" Type="int" Nullable="false" />
+          <Property Name="TeamEmployeeBudget" Type="numeric" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Password" Type="nvarchar(max)" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Mobile" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="UserRole" Type="int" />
+          <Property Name="IsActive" Type="char" MaxLength="2" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblUserRolesMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserRole" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_tblItem_tblItemTypeMaster">
+          <End Role="tblItemTypeMaster" Type="Self.tblItemTypeMaster" Multiplicity="1" />
+          <End Role="tblItem" Type="Self.tblItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItemTypeMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblItem">
+              <PropertyRef Name="Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrder_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrder">
+              <PropertyRef Name="OrderedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrderDetails_tblOrder">
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="0..1" />
+          <End Role="tblOrderDetails" Type="Self.tblOrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrderDetails_tblStockDetails">
+          <End Role="tblStockDetails" Type="Self.tblStockDetails" Multiplicity="0..1" />
+          <End Role="tblOrderDetails" Type="Self.tblOrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStockDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetails">
+              <PropertyRef Name="StockDetailsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStock_tblItem">
+          <End Role="tblItem" Type="Self.tblItem" Multiplicity="0..1" />
+          <End Role="tblStock" Type="Self.tblStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStock">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStockDetails_tblOrder">
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="0..1" />
+          <End Role="tblStockDetails" Type="Self.tblStockDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStockDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStockDetails_tblStock">
+          <End Role="tblStock" Type="Self.tblStock" Multiplicity="0..1" />
+          <End Role="tblStockDetails" Type="Self.tblStockDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStock">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStockDetails">
+              <PropertyRef Name="StockId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamBudget_tblUsers">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamBudget" Type="Self.tblTeamBudget" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamBudget">
+              <PropertyRef Name="TeamLeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamEmployee_tblUsers">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamEmployee">
+              <PropertyRef Name="TeamLeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamEmployee_tblUsers1">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamEmployee">
+              <PropertyRef Name="TeamEmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUsers_tblUserRolesMaster">
+          <End Role="tblUserRolesMaster" Type="Self.tblUserRolesMaster" Multiplicity="0..1" />
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUserRolesMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblUser">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebShopModelStoreContainer">
+          <EntitySet Name="tblItem" EntityType="Self.tblItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblItemTypeMaster" EntityType="Self.tblItemTypeMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblOrder" EntityType="Self.tblOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblOrderDetails" EntityType="Self.tblOrderDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblStock" EntityType="Self.tblStock" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblStockDetails" EntityType="Self.tblStockDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTeamBudget" EntityType="Self.tblTeamBudget" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTeamEmployee" EntityType="Self.tblTeamEmployee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUserRolesMaster" EntityType="Self.tblUserRolesMaster" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblItem_tblItemTypeMaster" Association="Self.FK_tblItem_tblItemTypeMaster">
+            <End Role="tblItemTypeMaster" EntitySet="tblItemTypeMaster" />
+            <End Role="tblItem" EntitySet="tblItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrder_tblUser" Association="Self.FK_tblOrder_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblOrder" EntitySet="tblOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrderDetails_tblOrder" Association="Self.FK_tblOrderDetails_tblOrder">
+            <End Role="tblOrder" EntitySet="tblOrder" />
+            <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrderDetails_tblStockDetails" Association="Self.FK_tblOrderDetails_tblStockDetails">
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+            <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStock_tblItem" Association="Self.FK_tblStock_tblItem">
+            <End Role="tblItem" EntitySet="tblItem" />
+            <End Role="tblStock" EntitySet="tblStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStockDetails_tblOrder" Association="Self.FK_tblStockDetails_tblOrder">
+            <End Role="tblOrder" EntitySet="tblOrder" />
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStockDetails_tblStock" Association="Self.FK_tblStockDetails_tblStock">
+            <End Role="tblStock" EntitySet="tblStock" />
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="Self.FK_tblTeamBudget_tblUsers">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblTeamBudget" EntitySet="tblTeamBudget" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamEmployee_tblUsers" Association="Self.FK_tblTeamEmployee_tblUsers">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="Self.FK_tblTeamEmployee_tblUsers1">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUsers_tblUserRolesMaster" Association="Self.FK_tblUsers_tblUserRolesMaster">
+            <End Role="tblUserRolesMaster" EntitySet="tblUserRolesMaster" />
+            <End Role="tblUser" EntitySet="tblUser" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WebShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Cost" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ImageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblItemTypeMaster" Relationship="Self.FK_tblItem_tblItemTypeMaster" FromRole="tblItem" ToRole="tblItemTypeMaster" />
+          <NavigationProperty Name="tblStocks" Relationship="Self.FK_tblStock_tblItem" FromRole="tblItem" ToRole="tblStock" />
+        </EntityType>
+        <EntityType Name="tblItemTypeMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ItemType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblItems" Relationship="Self.FK_tblItem_tblItemTypeMaster" FromRole="tblItemTypeMaster" ToRole="tblItem" />
+        </EntityType>
+        <EntityType Name="tblOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderedBy" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="OrderApproved" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="TotalCost" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalItems" Type="Int32" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblOrder" ToRole="tblUser" />
+          <NavigationProperty Name="tblOrderDetails" Relationship="Self.FK_tblOrderDetails_tblOrder" FromRole="tblOrder" ToRole="tblOrderDetails" />
+          <NavigationProperty Name="tblStockDetails" Relationship="Self.FK_tblStockDetails_tblOrder" FromRole="tblOrder" ToRole="tblStockDetails" />
+        </EntityType>
+        <EntityType Name="tblOrderDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="Int32" />
+          <Property Name="StockDetailsId" Type="Int32" />
+          <Property Name="LendingPeriod" Type="Int32" />
+          <Property Name="LendingStartDt" Type="DateTime" Precision="3" />
+          <Property Name="LendingEndDt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblOrder" Relationship="Self.FK_tblOrderDetails_tblOrder" FromRole="tblOrderDetails" ToRole="tblOrder" />
+          <NavigationProperty Name="tblStockDetail" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblOrderDetails" ToRole="tblStockDetails" />
+        </EntityType>
+        <EntityType Name="tblStock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblItem" Relationship="Self.FK_tblStock_tblItem" FromRole="tblStock" ToRole="tblItem" />
+          <NavigationProperty Name="tblStockDetails" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStock" ToRole="tblStockDetails" />
+        </EntityType>
+        <EntityType Name="tblStockDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="StockId" Type="Int32" />
+          <Property Name="SerialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderId" Type="Int32" />
+          <NavigationProperty Name="tblOrder" Relationship="Self.FK_tblStockDetails_tblOrder" FromRole="tblStockDetails" ToRole="tblOrder" />
+          <NavigationProperty Name="tblOrderDetails" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblStockDetails" ToRole="tblOrderDetails" />
+          <NavigationProperty Name="tblStock" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStockDetails" ToRole="tblStock" />
+        </EntityType>
+        <EntityType Name="tblTeamBudget">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
+          <Property Name="TeamBudget" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblTeamBudget" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblTeamEmployee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
+          <Property Name="TeamEmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="TeamEmployeeBudget" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamEmployee_tblUsers" FromRole="tblTeamEmployee" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser1" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Mobile" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="UserRole" Type="Int32" />
+          <Property Name="IsActive" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblOrders" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblUser" ToRole="tblOrder" />
+          <NavigationProperty Name="tblTeamBudgets" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblUser" ToRole="tblTeamBudget" />
+          <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers" FromRole="tblUser" ToRole="tblTeamEmployee" />
+          <NavigationProperty Name="tblTeamEmployees1" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
+          <NavigationProperty Name="tblUserRolesMaster" Relationship="Self.FK_tblUsers_tblUserRolesMaster" FromRole="tblUser" ToRole="tblUserRolesMaster" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblUserRolesMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserRole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUsers" Relationship="Self.FK_tblUsers_tblUserRolesMaster" FromRole="tblUserRolesMaster" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK_tblItem_tblItemTypeMaster">
+          <End Role="tblItemTypeMaster" Type="Self.tblItemTypeMaster" Multiplicity="1" />
+          <End Role="tblItem" Type="Self.tblItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItemTypeMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblItem">
+              <PropertyRef Name="Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStock_tblItem">
+          <End Role="tblItem" Type="Self.tblItem" Multiplicity="0..1" />
+          <End Role="tblStock" Type="Self.tblStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStock">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrder_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrder">
+              <PropertyRef Name="OrderedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrderDetails_tblOrder">
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="0..1" />
+          <End Role="tblOrderDetails" Type="Self.tblOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStockDetails_tblOrder">
+          <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="0..1" />
+          <End Role="tblStockDetails" Type="Self.tblStockDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStockDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrderDetails_tblStockDetails">
+          <End Role="tblStockDetails" Type="Self.tblStockDetail" Multiplicity="0..1" />
+          <End Role="tblOrderDetails" Type="Self.tblOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStockDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetails">
+              <PropertyRef Name="StockDetailsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblStockDetails_tblStock">
+          <End Role="tblStock" Type="Self.tblStock" Multiplicity="0..1" />
+          <End Role="tblStockDetails" Type="Self.tblStockDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStock">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblStockDetails">
+              <PropertyRef Name="StockId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamBudget_tblUsers">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamBudget" Type="Self.tblTeamBudget" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamBudget">
+              <PropertyRef Name="TeamLeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamEmployee_tblUsers">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamEmployee">
+              <PropertyRef Name="TeamLeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamEmployee_tblUsers1">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamEmployee">
+              <PropertyRef Name="TeamEmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUsers_tblUserRolesMaster">
+          <End Role="tblUserRolesMaster" Type="Self.tblUserRolesMaster" Multiplicity="0..1" />
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUserRolesMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblUser">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblItems" EntityType="Self.tblItem" />
+          <EntitySet Name="tblItemTypeMasters" EntityType="Self.tblItemTypeMaster" />
+          <EntitySet Name="tblOrders" EntityType="Self.tblOrder" />
+          <EntitySet Name="tblOrderDetails" EntityType="Self.tblOrderDetail" />
+          <EntitySet Name="tblStocks" EntityType="Self.tblStock" />
+          <EntitySet Name="tblStockDetails" EntityType="Self.tblStockDetail" />
+          <EntitySet Name="tblTeamBudgets" EntityType="Self.tblTeamBudget" />
+          <EntitySet Name="tblTeamEmployees" EntityType="Self.tblTeamEmployee" />
+          <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
+          <EntitySet Name="tblUserRolesMasters" EntityType="Self.tblUserRolesMaster" />
+          <AssociationSet Name="FK_tblItem_tblItemTypeMaster" Association="Self.FK_tblItem_tblItemTypeMaster">
+            <End Role="tblItemTypeMaster" EntitySet="tblItemTypeMasters" />
+            <End Role="tblItem" EntitySet="tblItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStock_tblItem" Association="Self.FK_tblStock_tblItem">
+            <End Role="tblItem" EntitySet="tblItems" />
+            <End Role="tblStock" EntitySet="tblStocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrder_tblUser" Association="Self.FK_tblOrder_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblOrder" EntitySet="tblOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrderDetails_tblOrder" Association="Self.FK_tblOrderDetails_tblOrder">
+            <End Role="tblOrder" EntitySet="tblOrders" />
+            <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStockDetails_tblOrder" Association="Self.FK_tblStockDetails_tblOrder">
+            <End Role="tblOrder" EntitySet="tblOrders" />
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblOrderDetails_tblStockDetails" Association="Self.FK_tblOrderDetails_tblStockDetails">
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+            <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblStockDetails_tblStock" Association="Self.FK_tblStockDetails_tblStock">
+            <End Role="tblStock" EntitySet="tblStocks" />
+            <End Role="tblStockDetails" EntitySet="tblStockDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="Self.FK_tblTeamBudget_tblUsers">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTeamBudget" EntitySet="tblTeamBudgets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamEmployee_tblUsers" Association="Self.FK_tblTeamEmployee_tblUsers">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="Self.FK_tblTeamEmployee_tblUsers1">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUsers_tblUserRolesMaster" Association="Self.FK_tblUsers_tblUserRolesMaster">
+            <End Role="tblUserRolesMaster" EntitySet="tblUserRolesMasters" />
+            <End Role="tblUser" EntitySet="tblUsers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WebShopModelStoreContainer" CdmEntityContainer="WebShopEntities">
+          <EntitySetMapping Name="tblItems">
+            <EntityTypeMapping TypeName="WebShopModel.tblItem">
+              <MappingFragment StoreEntitySet="tblItem">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblItemTypeMasters">
+            <EntityTypeMapping TypeName="WebShopModel.tblItemTypeMaster">
+              <MappingFragment StoreEntitySet="tblItemTypeMaster">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblOrders">
+            <EntityTypeMapping TypeName="WebShopModel.tblOrder">
+              <MappingFragment StoreEntitySet="tblOrder">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="OrderedBy" ColumnName="OrderedBy" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderApproved" ColumnName="OrderApproved" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="TotalItems" ColumnName="TotalItems" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblOrderDetails">
+            <EntityTypeMapping TypeName="WebShopModel.tblOrderDetail">
+              <MappingFragment StoreEntitySet="tblOrderDetails">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="StockDetailsId" ColumnName="StockDetailsId" />
+                <ScalarProperty Name="LendingPeriod" ColumnName="LendingPeriod" />
+                <ScalarProperty Name="LendingStartDt" ColumnName="LendingStartDt" />
+                <ScalarProperty Name="LendingEndDt" ColumnName="LendingEndDt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblStocks">
+            <EntityTypeMapping TypeName="WebShopModel.tblStock">
+              <MappingFragment StoreEntitySet="tblStock">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDt" ColumnName="ModifiedDt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblStockDetails">
+            <EntityTypeMapping TypeName="WebShopModel.tblStockDetail">
+              <MappingFragment StoreEntitySet="tblStockDetails">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTeamBudgets">
+            <EntityTypeMapping TypeName="WebShopModel.tblTeamBudget">
+              <MappingFragment StoreEntitySet="tblTeamBudget">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
+                <ScalarProperty Name="TeamBudget" ColumnName="TeamBudget" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTeamEmployees">
+            <EntityTypeMapping TypeName="WebShopModel.tblTeamEmployee">
+              <MappingFragment StoreEntitySet="tblTeamEmployee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
+                <ScalarProperty Name="TeamEmployeeId" ColumnName="TeamEmployeeId" />
+                <ScalarProperty Name="TeamEmployeeBudget" ColumnName="TeamEmployeeBudget" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUsers">
+            <EntityTypeMapping TypeName="WebShopModel.tblUser">
+              <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDt" ColumnName="ModifiedDt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUserRolesMasters">
+            <EntityTypeMapping TypeName="WebShopModel.tblUserRolesMaster">
+              <MappingFragment StoreEntitySet="tblUserRolesMaster">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

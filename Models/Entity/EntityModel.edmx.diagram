@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="79eb28e41350457ca092d83ea6baac85" Name="Diagram1" ZoomLevel="139">
+        <EntityTypeShape EntityType="WebShopModel.tblItem" Width="1.5" PointX="6" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblItemTypeMaster" Width="1.5" PointX="3.75" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblOrder" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblOrderDetail" Width="1.5" PointX="7.5" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblStock" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblStockDetail" Width="1.5" PointX="10.5" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblTeamBudget" Width="1.5" PointX="5.25" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblTeamEmployee" Width="1.5" PointX="5.25" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblUser" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopModel.tblUserRolesMaster" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
+        <AssociationConnector Association="WebShopModel.FK_tblItem_tblItemTypeMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblStock_tblItem" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblOrder_tblUser" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblOrderDetails_tblOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblStockDetails_tblOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblOrderDetails_tblStockDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblStockDetails_tblStock" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblTeamBudget_tblUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblTeamEmployee_tblUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblTeamEmployee_tblUsers1" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopModel.FK_tblUsers_tblUserRolesMaster" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
