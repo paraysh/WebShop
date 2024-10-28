@@ -16,12 +16,16 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    @*<a>@Html.ActionLink("Log Out", "SignOut", "Account", new { area = "" }, new { @class = "nav-link" })</a>*@
-                </ul>
+                @if (ViewBag.UserRole == 20) //Master Data Manager
+                {
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>@Html.ActionLink("Product", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Orders", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Employee Management", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Stock", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    </ul>
+                }
+
             </div>
             <a class="nav-link" href="/account/signout/" style="color:white">Logout</a>
         </div>

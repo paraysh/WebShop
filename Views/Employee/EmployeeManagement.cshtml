@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WebShop.Models.Entity.tblUser>
+@{
+    ViewBag.Title = "Employee Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Employee Management</h2>
+
+<div class="m-5">
+    @Html.ActionLink("Add", "Add", "Employee", null, new { @class = "btn btn-primary mb-2", @style= "float : right" })
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>User Name</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>User Role</th>
+                <th>Is Active</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Mobile</td>
+                    <td>@user.UserRole</td>
+                    <td>@user.IsActive</td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Employee", new { id = @user.Id }, null) </td>
+                    <td>@Html.ActionLink("Deactivate", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

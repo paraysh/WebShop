@@ -57,7 +57,7 @@ namespace WebShop.Controllers
                        
                         //sign user in
                         SignIn(user);
-
+                        ViewBag.CurrentUser = user;
                         return RedirectToAction("Index", "Home");
                     }
                     else
