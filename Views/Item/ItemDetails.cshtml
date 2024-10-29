@@ -1,0 +1,47 @@
+﻿@model IEnumerable< WebShop.Models.Entity.tblItem>
+
+@{
+    ViewBag.Title = "Item Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .item-img{
+        width: 100px;
+    }
+</style>
+
+<h2>Item Details</h2>
+
+<div class="m-5">
+    @Html.ActionLink("Add", "Add", "Item", null, new { @class = "btn btn-primary mb-2", @style = "float : right" })
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Cost</th>
+                <th>Image</th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.tblItemTypeMaster.ItemType</td>
+                    <td>@item.Cost</td>
+                    <td><img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded"/> </td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Item", new { id = item.Id }, null) </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

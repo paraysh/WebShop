@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WebShop.Models.Entity.tblItem>
+
+@{
+    ViewBag.Title = "Stock Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Stock Details</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th class="col-7">Item</th>
+            <th>Quantity</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td class="col-7">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Name : </b>@item.Name</p>
+                            <p><b>Description : </b>@item.Description</p>
+                            <p><b>Type : </b>@item.tblItemTypeMaster.ItemType</p>
+                            <p><b>Cost : </b>@item.Cost</p>
+
+                        </div>
+                        <div class="col-6">
+                            <p><img src="~/Content/ItemImages/@item.ImageName" class="object-fit-contain border rounded" style="width: 100%; height:150px" /></p>
+                        </div>
+                    </div>
+                </td>
+                <td>@item.tblStocks.Count()</td>
+
+                <td>@Html.ActionLink("Add Item to Stock", "Add", "Stock", new { id = item.Id }, new { @class = "btn btn-primary mb-2" })  </td>
+                <td>@Html.ActionLink("Details", "StockInfo", "Item", new { id = item.Id }, null) </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

@@ -24,7 +24,7 @@ namespace WebShop.Controllers
 
         public ActionResult Add() 
         {
-            User usr = new User();
+            UserModel usr = new UserModel();
             //create available team leaders select list
             var admins = db.tblUsers.Where(x => x.UserRole.Value == (int)UserRoleEnum.TeamLeaders).Select(x => new SelectListItem
             {
@@ -36,7 +36,7 @@ namespace WebShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(User user)
+        public ActionResult Add(UserModel user)
         {
             tblUser newUserObj = new tblUser();
             newUserObj.UserName = user.UserName;
@@ -85,7 +85,7 @@ namespace WebShop.Controllers
         public ActionResult Edit(int id)
         {
             var employee = db.tblUsers.Where(x => x.Id == id).Include(x => x.tblUserRolesMaster).Include(x => x.tblTeamBudgets).Include(x => x.tblTeamEmployees).SingleOrDefault();
-            User usr = new User();
+            UserModel usr = new UserModel();
             usr.Id = employee.Id;
             usr.UserName = employee.UserName;
             usr.IsActive = employee.IsActive;
@@ -111,7 +111,7 @@ namespace WebShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User user)
+        public ActionResult Edit(UserModel user)
         {
             var employee = db.tblUsers.Where(x => x.Id == user.Id).Include(x => x.tblUserRolesMaster).Include(x => x.tblTeamBudgets).Include(x => x.tblTeamEmployees).SingleOrDefault();
             employee.UserName = user.UserName;

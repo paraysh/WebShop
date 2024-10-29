@@ -9,9 +9,9 @@ using WebShop.Models.Entity;
 
 namespace WebShop.Models
 {
-    public class User
+    public class UserModel
     {
-        public User()
+        public UserModel()
         {
             //this.tblOrders = new HashSet<tblOrder>();
             //this.tblTeamBudgets = new HashSet<tblTeamBudget>();

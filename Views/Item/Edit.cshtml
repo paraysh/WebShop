@@ -1,0 +1,55 @@
+﻿@model WebShop.Models.ItemModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<div class="m-1 card p-3 bg-light">
+    @using (Html.BeginForm("Edit", "Item", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Id)
+                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Name)
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Type)
+                @Html.DropDownList("Type",
+                   EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+                   null,
+                   new { @class = "form-control", @id = "ddlItemType" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Cost)
+                @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <label>Added Image:</label>
+            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded"/>
+        </div>
+        <div class="row mt-3">
+            <label>Upload New Image</label>
+            @Html.TextBoxFor(model => model.ImageData, new { Type = "File", @class = "form-control" })
+        </div>
+
+        <hr />
+        <input type="submit" class="btn btn-primary" value="Submit" />
+    }
+</div>
+
