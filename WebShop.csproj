@@ -178,6 +178,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EntityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Entity\sysdiagram.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Entity\tblItem.cs">
       <DependentUpon>EntityModel.tt</DependentUpon>
     </Compile>
@@ -210,6 +213,7 @@
     </Compile>
     <Compile Include="Models\Enum\UserRoleEnum.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

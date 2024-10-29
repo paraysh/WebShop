@@ -1,18 +1,108 @@
-﻿@model WebShop.Models.Entity.tblUser
+﻿@model WebShop.Models.User
 
 @{
     ViewBag.Title = "Add";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .teamBudgetContainer, .employeeContainer {
+        display: none;
+    }
+</style>
+
 <h2>Add</h2>
 
-<div class="m-5">
+<div class="m-1 card p-3 bg-light">
     @using (Html.BeginForm())
-    {
-        @Html.EditorForModel("tblUser")
-        <div class="clearfix"></div>
-        <input type="submit" value="submit" />
+    {<div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.UserName)
+                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.IsActive)
+                @Html.DropDownList("IsActive", new List<SelectListItem>
+
+                {
+                   new SelectListItem{ Text="Active", Value = "Y" },
+                   new SelectListItem{ Text="Not-Active", Value = "N" }
+                }, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.FirstName)
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.LastName)
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.UserRole)
+                @Html.DropDownList("UserRole",
+                       EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.UserRoleEnum)),
+                       null,
+                       new { @class = "form-control", @id = "ddlUserRole" })
+            </div>
+        </div>
+
+        <div class="row mt-3 teamBudgetContainer">
+            <div class="col-md-6">
+                <label>Team Budget</label>
+                @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
+            </div>
+        </div>
+
+        <div class="row mt-3 employeeContainer">
+            <div class="col-md-4">
+                <label>Assign Team Leader</label>
+                @Html.DropDownListFor(model => model.TeamLeader, Model.availableTeamLeaderLst, new { @class = "form-control", @data_placement = "auto" })
+            </div>
+            <div class="col-md-4 mt-3">
+                <label>Employee Budget</label>
+                @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
+            </div>
+            @*<div class="col-md-3 mt-3">
+                    <label>Team Budget</label>
+                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                </div>*@
+        </div>
+
+        <hr />
+        <input type="submit" class="btn btn-primary" value="Submit" />
     }
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function (doc) {
+        if ($("#ddlUserRole").val() == 40) {
+            $(".teamBudgetContainer").show(300);
+        }
+        if ($("#ddlUserRole").val() == 50) {
+            $(".employeeContainer").show(300);
+        }
+    });
+
+    $("#ddlUserRole").change(function (obj) {
+        if (this.value == 40) {
+            $(".teamBudgetContainer").show(300);
+        } else {
+            $(".teamBudgetContainer").hide(300);
+        }
+
+        if (this.value == 50) {
+            $(".employeeContainer").show(300);
+        } else {
+            $(".employeeContainer").hide(300);
+        }
+    });
+</script>
 

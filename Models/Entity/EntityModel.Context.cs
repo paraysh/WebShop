@@ -35,5 +35,6 @@ namespace WebShop.Models.Entity
         public virtual DbSet<tblTeamEmployee> tblTeamEmployees { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblUserRolesMaster> tblUserRolesMasters { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }
