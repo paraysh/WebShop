@@ -20,7 +20,6 @@ namespace WebShop.Models.Entity
             this.tblOrders = new HashSet<tblOrder>();
             this.tblTeamBudgets = new HashSet<tblTeamBudget>();
             this.tblTeamEmployees = new HashSet<tblTeamEmployee>();
-            this.tblTeamEmployees1 = new HashSet<tblTeamEmployee>();
         }
     
         public int Id { get; set; }
@@ -43,8 +42,6 @@ namespace WebShop.Models.Entity
         public virtual ICollection<tblTeamBudget> tblTeamBudgets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblTeamEmployee> tblTeamEmployees { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblTeamEmployee> tblTeamEmployees1 { get; set; }
         public virtual tblUserRolesMaster tblUserRolesMaster { get; set; }
     }
 }

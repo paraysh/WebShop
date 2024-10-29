@@ -215,18 +215,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblTeamEmployee_tblUsers">
-          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
-          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tblTeamEmployee">
-              <PropertyRef Name="TeamLeaderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblTeamEmployee_tblUsers1">
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
           <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
@@ -251,6 +239,37 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="WebShopModelStoreContainer">
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblItem" EntityType="Self.tblItem" Schema="dbo" store:Type="Tables" />
@@ -294,10 +313,6 @@
           <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="Self.FK_tblTeamBudget_tblUsers">
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblTeamBudget" EntitySet="tblTeamBudget" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblTeamEmployee_tblUsers" Association="Self.FK_tblTeamEmployee_tblUsers">
-            <End Role="tblUser" EntitySet="tblUser" />
-            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployee" />
           </AssociationSet>
           <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="Self.FK_tblTeamEmployee_tblUsers1">
             <End Role="tblUser" EntitySet="tblUser" />
@@ -404,8 +419,7 @@
           <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
           <Property Name="TeamEmployeeId" Type="Int32" Nullable="false" />
           <Property Name="TeamEmployeeBudget" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamEmployee_tblUsers" FromRole="tblTeamEmployee" ToRole="tblUser" />
-          <NavigationProperty Name="tblUser1" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
         </EntityType>
         <EntityType Name="tblUser">
           <Key>
@@ -425,8 +439,7 @@
           <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblOrders" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblUser" ToRole="tblOrder" />
           <NavigationProperty Name="tblTeamBudgets" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblUser" ToRole="tblTeamBudget" />
-          <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers" FromRole="tblUser" ToRole="tblTeamEmployee" />
-          <NavigationProperty Name="tblTeamEmployees1" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
+          <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
           <NavigationProperty Name="tblUserRolesMaster" Relationship="Self.FK_tblUsers_tblUserRolesMaster" FromRole="tblUser" ToRole="tblUserRolesMaster" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
@@ -534,18 +547,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblTeamEmployee_tblUsers">
-          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
-          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tblTeamEmployee">
-              <PropertyRef Name="TeamLeaderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblTeamEmployee_tblUsers1">
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
           <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
@@ -612,10 +613,6 @@
           <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="Self.FK_tblTeamBudget_tblUsers">
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblTeamBudget" EntitySet="tblTeamBudgets" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblTeamEmployee_tblUsers" Association="Self.FK_tblTeamEmployee_tblUsers">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployees" />
           </AssociationSet>
           <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="Self.FK_tblTeamEmployee_tblUsers1">
             <End Role="tblUser" EntitySet="tblUsers" />
@@ -782,7 +779,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
