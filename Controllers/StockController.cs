@@ -12,6 +12,7 @@ using WebShop.Models.Enum;
 
 namespace WebShop.Controllers
 {
+    [Authorize]
     public class StockController : Controller
     {
         int _userRole;  
@@ -61,14 +62,14 @@ namespace WebShop.Controllers
         public ActionResult Add(AddStockModel addStockModel)
         {
             tblStock _tblStock = new tblStock();
+            _tblStock.ItemId = addStockModel.Id;
+            _tblStock.Quantity = addStockModel.Quantity;
+
+            db.tblStocks.Add(_tblStock);
+            db.SaveChanges();
+
             if (addStockModel.LstSerialNumbers != null && addStockModel.LstSerialNumbers.Count > 0)
             {
-                _tblStock.ItemId = addStockModel.Id;
-                _tblStock.Quantity = addStockModel.Quantity;
-
-                db.tblStocks.Add(_tblStock);
-                db.SaveChanges();
-
                 int generatedStockId = _tblStock.Id;
 
                 foreach (var item in addStockModel.LstSerialNumbers)

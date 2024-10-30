@@ -67,7 +67,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#btnSave').prop('disabled', true);
+        
         $('#btnSave').click(function () {
 
             var qnt = $('#txtQuantity').val();
@@ -94,7 +94,6 @@
             $('#txtQuantity').prop('disabled', true);
 
             if (val > 0 && val <= 10) {
-                $(this).parents('.temp-div').remove();
                 var template = '';
                 for (var i = 0; i < val; i++) {
                     if ($('#ddlItemType').val() == 10) {
@@ -103,14 +102,21 @@
                         template = '<div class="row mt-3"><label>License number </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
                     }
                     $(template).insertAfter('.temp-div');
-
-                    $('#btnSave').prop('disabled', false);
                 }
+                $('#btnSave').prop('disabled', false);
             } else {
                 alert("Error! Please Enter Valid Quantity. (0-10)")
             }
 
         });
+
+        //hide 'generate serial number' button for Rental Software
+        if ($('#ddlItemType').val() == 10 || $('#ddlItemType').val() == 30) {
+            $('#btnAddSerialNo').show();
+            $('#btnSave').prop('disabled', true);
+        } else {
+            $('#btnAddSerialNo').hide();
+        }
     });
 </script>
 

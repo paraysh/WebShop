@@ -264,6 +264,7 @@
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -321,6 +322,8 @@
     <Compile Include="Models\Enum\UserRoleEnum.cs" />
     <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ShoppingCartModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -403,6 +406,9 @@
     <Content Include="Views\Item\Edit.cshtml" />
     <Content Include="Views\Stock\StockDetails.cshtml" />
     <Content Include="Views\Stock\Add.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCart.cshtml" />
+    <Content Include="Views\Product\ShoppingCart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
