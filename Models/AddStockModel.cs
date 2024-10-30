@@ -11,6 +11,8 @@ namespace WebShop.Models
         [Required]
         [Display(Name = "Quantity")]
         public int Quantity { get; set; }
-        public List<string> lstSerialNumbers { get; set; }
+
+        public string ItemTypeStr { get; set; }
+        public List<string> LstSerialNumbers { get; set; }
     }
 }

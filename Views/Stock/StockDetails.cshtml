@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebShop.Models.Entity.tblItem>
+﻿@model IEnumerable<WebShop.Models.AddStockModel>
 
 @{
     ViewBag.Title = "Stock Details";
@@ -27,7 +27,7 @@
                         <div class="col-6">
                             <p><b>Name : </b>@item.Name</p>
                             <p><b>Description : </b>@item.Description</p>
-                            <p><b>Type : </b>@item.tblItemTypeMaster.ItemType</p>
+                            <p><b>Type : </b>@item.ItemTypeStr</p>
                             <p><b>Cost : </b>@item.Cost</p>
 
                         </div>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </td>
-                <td>@item.tblStocks.Count()</td>
+                <td>@item.Quantity</td>
 
                 <td>@Html.ActionLink("Add Item to Stock", "Add", "Stock", new { id = item.Id }, new { @class = "btn btn-primary mb-2" })  </td>
                 <td>@Html.ActionLink("Details", "StockInfo", "Item", new { id = item.Id }, null) </td>

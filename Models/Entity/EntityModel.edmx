@@ -60,19 +60,20 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ItemId" Type="int" />
           <Property Name="Quantity" Type="int" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDt" Type="datetime" />
+          <Property Name="TestColumnToBeDeleted" Type="int" />
         </EntityType>
         <EntityType Name="tblStockDetails">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StockId" Type="int" />
           <Property Name="SerialNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="OrderId" Type="int" />
@@ -389,6 +390,7 @@
           <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblItem" Relationship="Self.FK_tblStock_tblItem" FromRole="tblStock" ToRole="tblItem" />
           <NavigationProperty Name="tblStockDetails" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStock" ToRole="tblStockDetails" />
+          <Property Name="TestColumnToBeDeleted" Type="Int32" />
         </EntityType>
         <EntityType Name="tblStockDetail">
           <Key>
@@ -688,6 +690,7 @@
           <EntitySetMapping Name="tblStocks">
             <EntityTypeMapping TypeName="WebShopModel.tblStock">
               <MappingFragment StoreEntitySet="tblStock">
+                <ScalarProperty Name="TestColumnToBeDeleted" ColumnName="TestColumnToBeDeleted" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />

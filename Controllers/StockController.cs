@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using WebShop.Models;
 using WebShop.Models.Entity;
 using WebShop.Models.Enum;
@@ -26,8 +27,17 @@ namespace WebShop.Controllers
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
-            var allItems = db.tblItems.Include(x => x.tblStocks).ToList();
-            return View(allItems);
+            var allItems = db.tblItems.Include(x => x.tblStocks).Select(x => new AddStockModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                ItemTypeStr = x.tblItemTypeMaster.ItemType,
+                ImageName = x.ImageName,
+                Cost = x.Cost,
+                Quantity = x.tblStocks.Where(i => i.ItemId == x.Id).Count() == 0 ? 0 : (int)x.tblStocks.Where(i => i.ItemId == x.Id).Sum(s => s.Quantity),
+            });
+            return View(allItems.ToList());
         }
 
         public ActionResult Add(int id)
@@ -42,8 +52,36 @@ namespace WebShop.Controllers
             addStockModel.Cost = itemInfo.Cost;
             addStockModel.ImageName = itemInfo.ImageName;
 
-            addStockModel.Quantity = itemInfo.tblStocks.Count;
+            addStockModel.Quantity = 0;
             return View(addStockModel); 
+        }
+
+        [HttpPost]
+
+        public ActionResult Add(AddStockModel addStockModel)
+        {
+            tblStock _tblStock = new tblStock();
+            if (addStockModel.LstSerialNumbers != null && addStockModel.LstSerialNumbers.Count > 0)
+            {
+                _tblStock.ItemId = addStockModel.Id;
+                _tblStock.Quantity = addStockModel.Quantity;
+
+                db.tblStocks.Add(_tblStock);
+                db.SaveChanges();
+
+                int generatedStockId = _tblStock.Id;
+
+                foreach (var item in addStockModel.LstSerialNumbers)
+                {
+                    tblStockDetail _tblStockDetail = new tblStockDetail();
+                    _tblStockDetail.SerialNumber = item;
+                    _tblStockDetail.StockId = generatedStockId;
+                    db.tblStockDetails.Add(_tblStockDetail);
+                }
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("StockDetails"); 
         }
     }
 }

@@ -7,66 +7,91 @@
 <h2>Add Item To Stock</h2>
 
 <div class="m-1 card p-3 bg-light">
-    @using (Html.BeginForm("Add", "Stock", FormMethod.Post))
-    {
-        <div class="row">
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Id)
-                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
-            </div>
+    @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmAddItemToStock" }))
+        {*@
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Id)
+            @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @id = "txtItemId" })
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Name)
-                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
-            </div>
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Type)
-                @Html.DropDownList("Type",
-                   EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
-                   null,
-                   new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Name)
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
         </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Description)
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
-            </div>
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Cost)
-                @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
-            </div>
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Type)
+            @Html.DropDownList("Type",
+               EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+               null,
+               new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
         </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <label>Added Image:</label>
-                <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
-            </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Description)
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
         </div>
-        <hr />
-        <div class="row mt-3">
-            <div class="col-md-6">
-                @Html.LabelFor(model => model.Quantity)
-                @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", @type = "number", @id = "txtQuantity", @data_placement = "auto" })
-            </div>
-            <div class="col-md-6 mt-4">
-                <button class="btn btn-success" type="button" id="btnAddSerialNo">Add Serial Number</button>
-            </div>
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Cost)
+            @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <label>Added Image:</label>
+            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
+        </div>
+    </div>
+    <hr />
+    <div class="row mt-3">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Quantity)
+            @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", @type = "number", @id = "txtQuantity", @data_placement = "auto" })
+        </div>
+        <div class="col-md-6 mt-4">
+            <button class="btn btn-success" type="button" id="btnAddSerialNo">Add Serial Number</button>
+        </div>
 
-        </div>
-        <div class="temp-div"></div>
+    </div>
+    <div class="temp-div"></div>
 
-        <hr />
-        <input type="submit" class="btn btn-primary" value="Submit" />
-    }
+    <hr />
+    <button class="btn btn-primary" id="btnSave">Submit</button>
+
+    @*<input type="submit" class="btn btn-primary" value="Submit" />*@
+    @*}*@
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
+        $('#btnSave').prop('disabled', true);
+        $('#btnSave').click(function () {
+
+            var qnt = $('#txtQuantity').val();
+            var lstSerialNo = [];
+            for (var i = 0; i < qnt; i++) {
+                var serialNo = $('#txtSerialNo_' + i).val();
+                lstSerialNo.push(serialNo);
+            }
+
+            $.ajax({
+                url: '@Url.Action("Add")',
+                type: 'POST',
+                data: { Id: $("#txtItemId").val(), Quantity: $("#txtQuantity").val(), LstSerialNumbers: lstSerialNo },
+                success: function (result) {
+                    console.log("btnSaveSuccess ", result);
+                    window.location.href = '/Stock/StockDetails';
+                }
+            });
+        });
+
         $('#btnAddSerialNo').on('click', function() {
-            console.log("hello!");
             var val = $('#txtQuantity').val();
+            $('#btnAddSerialNo').prop('disabled', true);
+            $('#txtQuantity').prop('disabled', true);
 
             if (val > 0 && val <= 10) {
                 $(this).parents('.temp-div').remove();
@@ -77,13 +102,14 @@
                     } else if ($('#ddlItemType').val() == 30) {
                         template = '<div class="row mt-3"><label>License number </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
                     }
-                    
                     $(template).insertAfter('.temp-div');
+
+                    $('#btnSave').prop('disabled', false);
                 }
             } else {
                 alert("Error! Please Enter Valid Quantity. (0-10)")
             }
-            
+
         });
     });
 </script>
