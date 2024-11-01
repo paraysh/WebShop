@@ -7,6 +7,6 @@ namespace WebShop.Models
 {
     public class ProductModel : ItemModel
     {
-
+        public string ProductType { get; set; }
     }
 }

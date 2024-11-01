@@ -37,11 +37,11 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderId" Type="nvarchar" MaxLength="50" />
           <Property Name="OrderedBy" Type="int" />
           <Property Name="OrderDate" Type="datetime" />
-          <Property Name="OrderApproved" Type="char" MaxLength="2" />
+          <Property Name="OrderApproved" Type="char" MaxLength="1" />
           <Property Name="TotalCost" Type="numeric" Precision="18" Scale="2" />
           <Property Name="TotalItems" Type="int" />
         </EntityType>
@@ -49,10 +49,10 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderId" Type="int" />
           <Property Name="StockDetailsId" Type="int" />
-          <Property Name="LendingPeriod" Type="int" />
+          <Property Name="LendingPeriodMonths" Type="int" />
           <Property Name="LendingStartDt" Type="datetime" />
           <Property Name="LendingEndDt" Type="datetime" />
         </EntityType>
@@ -357,7 +357,7 @@
           <Property Name="OrderId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="OrderedBy" Type="Int32" />
           <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <Property Name="OrderApproved" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="OrderApproved" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="TotalCost" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="TotalItems" Type="Int32" />
           <NavigationProperty Name="tblUser" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblOrder" ToRole="tblUser" />
@@ -371,11 +371,11 @@
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="OrderId" Type="Int32" />
           <Property Name="StockDetailsId" Type="Int32" />
-          <Property Name="LendingPeriod" Type="Int32" />
           <Property Name="LendingStartDt" Type="DateTime" Precision="3" />
           <Property Name="LendingEndDt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblOrder" Relationship="Self.FK_tblOrderDetails_tblOrder" FromRole="tblOrderDetails" ToRole="tblOrder" />
           <NavigationProperty Name="tblStockDetail" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblOrderDetails" ToRole="tblStockDetails" />
+          <Property Name="LendingPeriodMonths" Type="Int32" />
         </EntityType>
         <EntityType Name="tblStock">
           <Key>
@@ -678,10 +678,10 @@
           <EntitySetMapping Name="tblOrderDetails">
             <EntityTypeMapping TypeName="WebShopModel.tblOrderDetail">
               <MappingFragment StoreEntitySet="tblOrderDetails">
+                <ScalarProperty Name="LendingPeriodMonths" ColumnName="LendingPeriodMonths" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="StockDetailsId" ColumnName="StockDetailsId" />
-                <ScalarProperty Name="LendingPeriod" ColumnName="LendingPeriod" />
                 <ScalarProperty Name="LendingStartDt" ColumnName="LendingStartDt" />
                 <ScalarProperty Name="LendingEndDt" ColumnName="LendingEndDt" />
               </MappingFragment>

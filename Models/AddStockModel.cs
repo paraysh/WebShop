@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace WebShop.Models
 {
@@ -14,5 +15,8 @@ namespace WebShop.Models
 
         public string ItemTypeStr { get; set; }
         public List<string> LstSerialNumbers { get; set; }
+        public List<SelectListItem> SelectLstSerialNumbers { get; set; }
+
+        public string SelectedSerialNo { get; set; }
     }
 }

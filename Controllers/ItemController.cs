@@ -31,6 +31,9 @@ namespace WebShop.Controllers
 
         public ActionResult Add()
         {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
             return View();
         }
 
@@ -58,6 +61,9 @@ namespace WebShop.Controllers
 
         public ActionResult Edit(int id)
         {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
             var selectedItem = db.tblItems.Where(x => x.Id == id).FirstOrDefault();
             ItemModel item = new ItemModel();
             item.Id = id;

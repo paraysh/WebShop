@@ -1,0 +1,136 @@
+﻿@model IEnumerable<WebShop.Models.OrderModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    WebGrid webGrid = new WebGrid(source: Model, canSort: false, canPage: false);
+}
+
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    .Grid {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        .Grid th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .Grid th, .Grid td {
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .Grid img {
+            cursor: pointer;
+        }
+
+    .ChildGrid {
+        width: 100%;
+    }
+
+        .ChildGrid th {
+            background-color: #6C6C6C;
+            color: #fff;
+            font-weight: bold;
+        }
+</style>
+
+<h2>Order Details</h2>
+
+@webGrid.GetHtml(
+        htmlAttributes: new { @id = "WebGrid", @class = "table table-striped-columns" },
+        columns: webGrid.Columns(
+                 webGrid.Column(null, null, format: @<text>
+                    <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
+                webGrid.Column("OrderId", "Order Id"),
+                webGrid.Column("OrderDt", "Order Date"),
+                webGrid.Column("OrderedByName", "Ordered By"),
+                webGrid.Column("OrderApproved", "Order Approved"),
+                webGrid.Column("TotalItems", "Total Items"),
+                webGrid.Column("TotalCost", "Total Cost"),
+                webGrid.Column("Action", format: (item) =>
+                {
+                    if (item.OrderApproved == "N")
+                    {
+                        return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve\">Approve</a></text>", item.Id));
+                    }
+                    else
+                    {
+                        return "-";
+                    }
+
+                }),
+
+webGrid.Column(format: (item) =>
+{
+    WebGrid childGrid = new WebGrid(source: item.lstOrderDetails, canSort: false, canPage: false);
+    return childGrid.GetHtml(
+    htmlAttributes: new { @class = "ChildGrid" },
+    columns: childGrid.Columns(
+    childGrid.Column("ItemName", "Item Name"),
+    childGrid.Column("SerialNo", "Serial No"),
+    childGrid.Column("LendingPeriodMonths", "Lending Period(Months)"),
+    childGrid.Column("LendingStartDt", "Lending Start Dt"),
+    childGrid.Column("LendingEndDt", "Lending End Dt")
+    ));
+})
+))
+
+<script type="text/javascript">
+    $(function () {
+        //Loop through all Child Grids.
+        $("#WebGrid .ChildGrid").each(function () {
+            //Copy the Child Grid to DIV.
+            var childGrid = $(this).clone();
+            $(this).closest("TR").find("TD").eq(0).find("DIV").append(childGrid);
+
+            //Remove the Last Column from the Row.
+            $(this).parent().remove();
+        });
+
+        //Remove Last Column from Header Row.
+        $("#WebGrid TH:last-child").eq(0).remove();
+    });
+    //Assign Click event to Plus Image.
+    $("body").on("click", "img[src*='plus.png']", function () {
+        $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>");
+        $(this).attr("src", "/Content/images/minus.png");
+    });
+    //Assign Click event to Minus Image.
+    $("body").on("click", "img[src*='minus.png']", function () {
+        $(this).attr("src", "/Content/images/plus.png");
+        $(this).closest("tr").next().remove();
+    });
+
+    //Approve Clicked
+    $(".approve").on("click", function () {
+        var orderId = $(this).attr("id").split("_")[1];
+        var formData = new FormData();
+        formData.append("OrderId", orderId);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Order/Approve',
+            success: function (data) {
+                if (data.Success) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    })
+</script>

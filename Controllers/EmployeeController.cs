@@ -24,6 +24,9 @@ namespace WebShop.Controllers
 
         public ActionResult Add() 
         {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
             UserModel usr = new UserModel();
             //create available team leaders select list
             var admins = db.tblUsers.Where(x => x.UserRole.Value == (int)UserRoleEnum.TeamLeaders).Select(x => new SelectListItem
@@ -77,6 +80,7 @@ namespace WebShop.Controllers
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
+
             List<tblUser> lstUsers = new List<tblUser>();
             lstUsers = db.tblUsers.Include(x => x.tblUserRolesMaster).ToList();
             return View(lstUsers);
@@ -84,6 +88,9 @@ namespace WebShop.Controllers
 
         public ActionResult Edit(int id)
         {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
             var employee = db.tblUsers.Where(x => x.Id == id).Include(x => x.tblUserRolesMaster).Include(x => x.tblTeamBudgets).Include(x => x.tblTeamEmployees).SingleOrDefault();
             UserModel usr = new UserModel();
             usr.Id = employee.Id;

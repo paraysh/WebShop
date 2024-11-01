@@ -1,46 +1,153 @@
 ﻿@model IEnumerable<WebShop.Models.ShoppingCartModel>
-@{ 
+@{
     ViewBag.Title = "Shopping Cart";
     decimal TotalAmt = 0;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool showLendinfPrdDDL = false;
 }
 
 <h2>Shopping Cart</h2>
 
-<table class="table table-striped-columns" style="width: 100%">
-    @foreach (var item in Model)
-	{
-        TotalAmt += item.Total;
-        <tr>
-            <td>
-                <img src="~/Content/ItemImages/@item.ImageName" height="60px" width="60px" class="img-rounded" />
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table table-striped-columns" style="width: 100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Unit Price (€ per Month)</th>
+                <th>Lending Period (Months)</th>
+                <th>Lending Start Dt.</th>
+                <th>Lending End Dt.</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            TotalAmt += item.Total;
+            showLendinfPrdDDL = item.Type == (int)WebShop.Models.Enum.ItemTypeEnum.RentalSoftware ? true : false;
+
+            <tr>
+                <td>
+                    <a href="@Url.Action("RemoveItem", "Product", new { ItemId = item.Id })" title="Remove">
+                        <i class="fa fa-lg fa-trash" style="color:orangered"></i>
+                    </a>
+
+                    @*@Html.ActionLink(" ", "RemoveItem", "Product", new { ItemId = item.Id }, new { @class = "btn btn-lg btn-outline-danger" })*@
+                </td>
+                <td>
+                    <img src="~/Content/ItemImages/@item.ImageName" height="60px" width="60px" class="img-rounded" />
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.UnitPrice
+                </td>
+                @if (showLendinfPrdDDL)
+                {
+
+                    var listPeriod = new SelectList(new[]
+                        {
+                            new {ID="1", Name="1 Month"},
+                            new {ID="12", Name="1 Year"},
+                            new {ID="24", Name="2 Year"}
+                        },
+                        "ID", "Name", item.LendingPeriodMonths);
+
+                    <td>
+                        @Html.DropDownList("ddlLendingPeriod", listPeriod, new { @class = "form-control", @itemid = item.Id, @onChange = "EditCart(this)" })
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @item.LendingPeriodMonths
+                    </td>
+                }
+                <td>
+                    @item.LendingStartDt.ToShortDateString()
+                </td>
+                <td>
+                    @item.LendingEndDt.ToShortDateString()
+                </td>
+                <td style="text-align: right">
+                    @item.Total
+                </td>
+            </tr>
+        }
+        <tr style="border-top: 2px solid maroon">
+            <td colspan="7" style="text-align: right">
+                <h3>Total Amount</h3>
             </td>
-            <td>
-                @item.Name
-            </td>
-            <td>
-                @item.CartQuantity
-            </td>
-            <td>
-                @item.UnitPrice
-            </td>
-            <td>
-                @item.Total
+            <td style="text-align: right">
+                <h3>@TotalAmt</h3>
             </td>
         </tr>
-	}
-    <tr style="border-top: 2px solid maroon">
-        <td colspan="4" style="text-align: right">
-            <h3>Total Amount</h3>
-        </td>
-        <td style="text-align: right">
-            <h3>@TotalAmt</h3>
-        </td>
-    </tr>
 
-    <tr style="text-align: right">
-        <td colspan="5">
-            <input type="button" value="Place Order" name="PlaceOrder" class="btn btn-success"  />
-        </td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="6">
+                <a href="index" class="btn btn-primary" >
+                    Go Back To Products
+                </a>
+            </td>
+            <td colspan="6" style="text-align: right">
+                <input type="button" value="Place Order" name="PlaceOrder" id="btnPlaceOrder" onclick="PlaceOrder()" class="btn btn-success"/>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    <h3 style="text-align:center">
+        Cart is empty.
+    </h3>
+}
+
+
+<script type="text/javascript">
+    function EditCart(item) {
+        var itemId = $(item).attr("itemid");
+        var lendingPeriod = $(item).val();
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+        formData.append("LendingPeriod", lendingPeriod);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Product/EditCart',
+            success: function (data) {
+                if (data.Success) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    }
+
+    function PlaceOrder() {
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            //data: formData,
+            url: '/Product/PlaceOrder',
+            success: function (data) {
+                if (data.Success) {
+                    alert("Order Placed Success.");
+                    window.location.href = "/Product/Index";
+                }
+            },
+            error: function (data) {
+                alert("Something went wrong!");
+            }
+        });
+    }
+</script>

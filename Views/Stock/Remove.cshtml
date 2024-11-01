@@ -1,0 +1,59 @@
+﻿@model WebShop.Models.AddStockModel
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Remove Item From Stock</h2>
+<div class="m-1 card p-3 bg-light">
+    @using (Html.BeginForm("Remove", "Stock", FormMethod.Post, new { id = "frmRemoveItemFromStock" }))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Id)
+                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @id = "txtItemId" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Name)
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Type)
+                @Html.DropDownList("Type",
+                    EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+                    null,
+                    new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Cost)
+                @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Added Image:</label>
+                <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
+            </div>
+        </div>
+        <hr />
+
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label>Select Serial Number To Remove</label>
+                @Html.DropDownListFor(model => model.SelectedSerialNo, Model.SelectLstSerialNumbers, new { @class = "form-control", @id = "ddlSerialNo" })
+            </div>
+            <div class="col-md-6" style="text-align: left">
+                <button class="btn btn-danger mt-4" id="btnRemove">Remove</button>
+            </div>
+        </div>
+        @*<input type="submit" class="btn btn-primary" value="Submit" />*@
+    }
+</div>

@@ -4,9 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -21,7 +24,7 @@
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Product", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Orders", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Orders", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Employees", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Items", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Stock", "StockDetails", "Stock", new { area = "" }, new { @class = "nav-link" })</li>

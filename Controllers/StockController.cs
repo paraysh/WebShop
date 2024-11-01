@@ -15,7 +15,7 @@ namespace WebShop.Controllers
     [Authorize]
     public class StockController : Controller
     {
-        int _userRole;  
+        int _userRole;
         private WebShopEntities db = new WebShopEntities();
         // GET: Stock
         public ActionResult Index()
@@ -43,8 +43,11 @@ namespace WebShop.Controllers
 
         public ActionResult Add(int id)
         {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
             AddStockModel addStockModel = new AddStockModel();
-            var itemInfo = db.tblItems.Where(x=> x.Id == id).Include(x => x.tblStocks).FirstOrDefault();
+            var itemInfo = db.tblItems.Where(x => x.Id == id).Include(x => x.tblStocks).FirstOrDefault();
 
             addStockModel.Id = id;
             addStockModel.Name = itemInfo.Name;
@@ -54,11 +57,10 @@ namespace WebShop.Controllers
             addStockModel.ImageName = itemInfo.ImageName;
 
             addStockModel.Quantity = 0;
-            return View(addStockModel); 
+            return View(addStockModel);
         }
 
         [HttpPost]
-
         public ActionResult Add(AddStockModel addStockModel)
         {
             tblStock _tblStock = new tblStock();
@@ -82,7 +84,57 @@ namespace WebShop.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("StockDetails"); 
+            return RedirectToAction("StockDetails");
+        }
+
+        public ActionResult Remove(int id)
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            AddStockModel addStockModel = new AddStockModel();
+            //List<string> stockInfo = new List<string>();
+            var itemInfo = db.tblItems.Where(x => x.Id == id).Single();
+
+            var stockInfo = itemInfo.tblStocks.SelectMany(x => x.tblStockDetails).Where(x => x.OrderId == null).SelectMany(s => new List<SelectListItem> {
+                new SelectListItem
+                {
+                    Text = s.SerialNumber,
+                    Value = s.Id.ToString(),
+                    Selected = false
+                }
+                
+            }).ToList(); // select only those serial number whose OrderId == null
+
+            addStockModel.Id = id;
+            addStockModel.Name = itemInfo.Name;
+            addStockModel.Description = itemInfo.Description;
+            addStockModel.Type = itemInfo.Type;
+            addStockModel.Cost = itemInfo.Cost;
+            addStockModel.ImageName = itemInfo.ImageName;
+            //addStockModel.LstSerialNumbers = stockInfo;
+            addStockModel.SelectLstSerialNumbers = stockInfo;
+
+            addStockModel.Quantity = 0;
+            return View(addStockModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult Remove(AddStockModel stockModel)
+        {
+            int stockDetailsId = Convert.ToInt32(stockModel.SelectedSerialNo);
+            var stockDetailModel = db.tblStockDetails.Where(x => x.Id == stockDetailsId).Single();
+
+            var tblStockModel = db.tblStocks.Where(x => x.Id == stockDetailModel.StockId).Single();
+            tblStockModel.Quantity = tblStockModel.Quantity - 1;
+            tblStockModel.ModifiedBy = User.Identity.GetUserName();
+            tblStockModel.ModifiedDt = DateTime.Now;
+
+            db.Entry(tblStockModel).State = EntityState.Modified;
+            db.tblStockDetails.Remove(stockDetailModel);
+            db.SaveChanges();
+            return RedirectToAction("StockDetails");
         }
     }
 }
