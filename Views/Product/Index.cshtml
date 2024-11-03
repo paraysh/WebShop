@@ -36,7 +36,7 @@
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-1 product-tile mt-3">
-                <div style="border-style: double" class="px-1">
+                <div style="border-style: double; border-radius:7px" class="px-1">
                     <div onclick="location.href='/Product/Details/@item.Id'">
                         <div style="text-align: center; border-bottom: 1px solid maroon">
                             <h3>@item.Name</h3>

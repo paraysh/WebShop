@@ -35,7 +35,7 @@ namespace WebShop.Controllers
             ViewBag.UserRole = _userRole;
 
             _ = new List<ProductModel>();
-            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Select(l => new ProductModel
+            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y").Select(l => new ProductModel
             {
                 Id = l.Id,
                 Name = l.Name,

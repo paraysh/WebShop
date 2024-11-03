@@ -29,7 +29,17 @@
                 {
                    new SelectListItem{ Text="Active", Value = "Y" },
                    new SelectListItem{ Text="Not-Active", Value = "N" }
-                }, new { @class = "form-control"})
+                }, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Password)
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.ConfirmPassword)
+                @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
             </div>
         </div>
         <div class="row mt-3">
@@ -49,17 +59,21 @@
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.UserRole)
-                @Html.DropDownList("UserRole",
-                       EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.UserRoleEnum)),
-                       null,
-                       new { @class = "form-control", @id = "ddlUserRole" })
+                @Html.EnumDropDownListFor(model => model.UserRoleEnum, new { @class = "form-control", @id = "ddlUserRole" })
             </div>
         </div>
 
         <div class="row mt-3 teamBudgetContainer">
             <div class="col-md-6">
                 <label>Team Budget</label>
-                @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
+                @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                {
+                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                }
             </div>
         </div>
 
@@ -68,18 +82,44 @@
                 <label>Assign Team Leader</label>
                 @Html.DropDownListFor(model => model.TeamLeader, Model.availableTeamLeaderLst, new { @class = "form-control", @data_placement = "auto" })
             </div>
-            <div class="col-md-4 mt-3">
+            @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+            {
+                <label class="mt-3">Employee Budget</label>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
+                </div>
+
+                <label class="mt-3">Assigned Team Budget</label>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(model => model.AssignedTeamBudget, new { @class = "form-control", @data_placement = "auto", @readonly = "readonly" })
+                </div>
+
+                <label class="mt-3">Remaining Team Budget</label>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(model => model.RemainingTeamBudget, new { @class = "form-control", @data_placement = "auto", @readonly = "readonly" })
+                </div>
+            }
+            else
+            {
                 <label>Employee Budget</label>
-                @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
-            </div>
-            @*<div class="col-md-3 mt-3">
-                <label>Team Budget</label>
-                @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
-            </div>*@
+                <div class="col-md-4 mt-3">
+                    @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                </div>
+            }
         </div>
 
         <hr />
-        <input type="submit" class="btn btn-primary" value="Submit" />
+        <div>
+            <div>
+                <div class="pull-left">
+                    @Html.ActionLink("Cancel", "EmployeeManagement", "Employee", new { @class = "btn btn-dark" })
+                </div>
+            </div>
+            <div style="text-align:right">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+        </div>
+
     }
 </div>
 

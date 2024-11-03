@@ -77,14 +77,15 @@ namespace WebShop.Controllers
             return View(item);
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Deactivate(int id)
         {
-            var selectedItem = db.tblItems.Where(x => x.Id == id).FirstOrDefault();
+            var selectedItem = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == id).Single();
             var itemsInStock = selectedItem.tblStocks.Sum(x => x.Quantity);
 
             if (itemsInStock == 0)
             {
-                db.tblItems.Remove(selectedItem);
+                selectedItem.IsActive = "N";
+                db.Entry(selectedItem).State = EntityState.Modified;
                 db.SaveChanges();
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} deleted.", selectedItem.Name) };
             }

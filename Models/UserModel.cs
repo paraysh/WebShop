@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 //using System.Web.WebPages.Html;
 using WebShop.Models.Entity;
+using WebShop.Models.Enum;
 
 namespace WebShop.Models
 {
@@ -37,9 +38,11 @@ namespace WebShop.Models
         public string IsActive { get; set; }
 
         [Display(Name = "Team Budget")]
-        public decimal? TeamBudget { get; set; }
+        public decimal? TeamBudget { get; set; } = 0;
         [Display(Name = "Employee Budget")]
-        public decimal? EmployeeBudget { get; set; }
+        public decimal? EmployeeBudget { get; set; } = 0;
+        public decimal? AssignedTeamBudget { get; set; } = 0;
+        public decimal? RemainingTeamBudget { get; set; } = 0;
 
         public List<SelectListItem> availableTeamLeaderLst { get; set; }
         public int TeamLeader { get; set; }
@@ -48,5 +51,9 @@ namespace WebShop.Models
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDt { get; set; }
         public string Password { get; set; }
+        [Display(Name = "Confirm Password")]
+        public string ConfirmPassword { get; set; }
+
+        public UserRoleEnum UserRoleEnum { get; set; }
     }
 }

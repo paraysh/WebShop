@@ -84,7 +84,7 @@ namespace WebShop.Controllers
                 db.SaveChanges();
             }
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} added from stock.", addStockModel.Name) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} added to stock.", addStockModel.Name) };
             return RedirectToAction("StockDetails");
         }
 
@@ -137,6 +137,11 @@ namespace WebShop.Controllers
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from stock.", stockDetailModel.SerialNumber) };
             return RedirectToAction("StockDetails");
+        }
+
+        public ActionResult Details(int id)
+        {
+            return View();
         }
     }
 }

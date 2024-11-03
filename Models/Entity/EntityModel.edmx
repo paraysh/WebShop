@@ -25,6 +25,7 @@
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Cost" Type="numeric" Precision="18" Scale="2" />
           <Property Name="ImageName" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsActive" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="tblItemTypeMaster">
           <Key>
@@ -358,6 +359,7 @@
           <NavigationProperty Name="tblItemTypeMaster" Relationship="Self.FK_tblItem_tblItemTypeMaster" FromRole="tblItem" ToRole="tblItemTypeMaster" />
           <NavigationProperty Name="tblStocks" Relationship="Self.FK_tblStock_tblItem" FromRole="tblItem" ToRole="tblStock" />
           <NavigationProperty Name="tblOrderDetails" Relationship="WebShopModel.FK_tblOrderDetails_tblItem" FromRole="tblItem" ToRole="tblOrderDetail" />
+          <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="tblItemTypeMaster">
           <Key>
@@ -681,6 +683,7 @@
           <EntitySetMapping Name="tblItems">
             <EntityTypeMapping TypeName="WebShopModel.tblItem">
               <MappingFragment StoreEntitySet="tblItem">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

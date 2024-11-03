@@ -127,6 +127,7 @@ webGrid.Column(format: (item) =>
             url: '/Order/Approve',
             success: function (data) {
                 if (data.Success) {
+                    alert(data.Message);
                     location.reload();
                 }
                 if (data.Error) {
@@ -154,6 +155,7 @@ webGrid.Column(format: (item) =>
             url: '/Order/Reject',
             success: function (data) {
                 if (data.Success) {
+                    alert(data.Message);
                     location.reload();
                 }
             },

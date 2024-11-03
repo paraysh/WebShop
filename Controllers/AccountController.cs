@@ -79,9 +79,10 @@ namespace WebShop.Controllers
             var claims = new Claim[] {
                             new Claim(ClaimTypes.NameIdentifier, user.UserRole.ToString()),
                             new Claim(ClaimTypes.Name, user.UserName),
-                            new Claim(ClaimTypes.Role, user.tblUserRolesMaster.UserRole)
-                        };
-
+                            new Claim(ClaimTypes.Role, user.tblUserRolesMaster.UserRole),
+                            new Claim("UserId", user.Id.ToString())
+        };
+             
             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(identity);
         }

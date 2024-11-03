@@ -11,6 +11,9 @@ using WebShop.Models.Entity;
 using WebShop.Models.Enum;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Threading;
+using Microsoft.Ajax.Utilities;
 
 namespace WebShop.Controllers
 {
@@ -19,6 +22,7 @@ namespace WebShop.Controllers
     {
         int _userRole;
         private WebShopEntities db;
+        ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
         public OrderController()
         {
@@ -36,6 +40,7 @@ namespace WebShop.Controllers
                 {
                     Id = x.Id,
                     OrderId = x.OrderId,
+                    OrderedBy = (int)x.OrderedBy,
                     OrderedByName = x.tblUser.UserName,
                     OrderDt = x.OrderDate.Value,
                     OrderApproved = x.OrderApproved,
@@ -51,26 +56,39 @@ namespace WebShop.Controllers
                         LendingEndDt = s.LendingEndDt.Value
                     } }).ToList()
                 }
-            }).ToList();
+            });
 
+            if (_userRole == (int)UserRoleEnum.TeamLeaders)
+            {
+                int currUserID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
+                List<int> employeeList = new List<int>() { currUserID };
+                var teamEmployees = db.tblTeamEmployees.Where(x => x.TeamLeaderId == currUserID).Select(x => x.tblUser.Id).ToList();
+                employeeList.AddRange(teamEmployees);
+                var filteredList = lstOrders.Where(x => employeeList.Contains(x.OrderedBy)).ToList();
+                return View(filteredList);
+            }
+            else
+            {
+                int currUserID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
+                var filteredList = lstOrders.Where(x => x.OrderedBy == currUserID).ToList();
+                return View(filteredList);
+            }
             //var lstStockDetails = lstOrders.SelectMany(x => x.tblStockDetails).ToList();
-
-            return View(lstOrders);
+            //return View(lstOrders.ToList());
         }
 
         public ActionResult Approve(int OrderId)
         {
             var OrderTblRow = db.tblOrders.Where(x => x.Id == OrderId).Single();
 
-            var currUserName = "Employee"; //User.Identity.GetUserName();
-            var currUserObj = db.tblUsers.Where(x => x.UserName == currUserName).Single();
-            var employeeBudget = currUserObj.tblTeamEmployees.Where(x => x.TeamEmployeeId == currUserObj.Id).Single().TeamEmployeeBudget;
-            var utilisedBudget = db.tblOrders.Where(x => x.OrderedBy == currUserObj.Id).Sum(x => x.TotalCost);
+            var currUserName = User.Identity.GetUserName();
+            var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy).Single().TeamEmployeeBudget;
+            var utilisedBudget = db.tblOrders.Where(x => x.OrderedBy == OrderTblRow.OrderedBy && x.OrderApproved != "R").Sum(x => x.TotalCost);
 
-            if (utilisedBudget > employeeBudget)
+            if (utilisedBudget > empBudget)
             {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, employeeBudget) };
-                return Json(data: new { Success = false, Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, employeeBudget) }, JsonRequestBehavior.AllowGet);
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) };
+                return Json(data: new { Success = false, Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }
             
             OrderTblRow.OrderApproved = "Y";
@@ -84,12 +102,17 @@ namespace WebShop.Controllers
 
         public ActionResult Reject(int OrderId)
         {
-            var OrderTblRow = db.tblOrders.Where(x => x.Id == OrderId).Single();
-
+            var OrderTblRow = db.tblOrders.Include(x => x.tblStockDetails).Where(x => x.Id == OrderId).Single();
             OrderTblRow.OrderApproved = "R";
+
+            OrderTblRow.tblStockDetails.ForEach(x => x.OrderId = null);
+            OrderTblRow.tblStockDetails.ForEach(x => x.tblStock.Quantity = x.tblStock.Quantity + 1);
 
             db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
+
+            // Free up stock
+
 
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Order {0} rejected.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = "Order Rejected" }, JsonRequestBehavior.AllowGet);
