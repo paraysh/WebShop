@@ -53,14 +53,16 @@
                 webGrid.Column("OrderId", "Order Id"),
                 webGrid.Column("OrderDt", "Order Date"),
                 webGrid.Column("OrderedByName", "Ordered By"),
-                webGrid.Column("OrderApproved", "Order Approved"),
+                webGrid.Column("OrderStatus", "Order Status"),
                 webGrid.Column("TotalItems", "Total Items"),
                 webGrid.Column("TotalCost", "Total Cost"),
                 webGrid.Column("Action", format: (item) =>
                 {
                     if (item.OrderApproved == "N")
                     {
-                        return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve\">Approve</a></text>", item.Id));
+                        
+                        return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Approve</a></text>", item.Id) 
+                            + "  " + string.Format("<text><a href=\"#\" id=\"Reject_{0}\" class=\"reject btn btn-danger\">Reject</a></text>", item.Id));
                     }
                     else
                     {
@@ -123,6 +125,33 @@ webGrid.Column(format: (item) =>
             processData: false,
             data: formData,
             url: '/Order/Approve',
+            success: function (data) {
+                if (data.Success) {
+                    location.reload();
+                }
+                if (data.Error) {
+                    alert(data.Message);
+                }
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    });
+
+    //Reject Clicked
+    $(".reject").on("click", function () {
+        var orderId = $(this).attr("id").split("_")[1];
+        var formData = new FormData();
+        formData.append("OrderId", orderId);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Order/Reject',
             success: function (data) {
                 if (data.Success) {
                     location.reload();

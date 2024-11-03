@@ -35,14 +35,16 @@ namespace WebShop.Controllers
             ViewBag.UserRole = _userRole;
 
             _ = new List<ProductModel>();
-            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(s => s.tblStocks.Sum(q => q.Quantity) > 0).Select(l => new ProductModel
+            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Select(l => new ProductModel
             {
                 Id = l.Id,
                 Name = l.Name,
                 Description = l.Description,
                 ProductType = l.tblItemTypeMaster.ItemType,
                 Cost = l.Cost,
-                ImageName = l.ImageName
+                ImageName = l.ImageName,
+                ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+
             }).ToList();
 
             return View(lstProducts);
@@ -81,7 +83,6 @@ namespace WebShop.Controllers
 
             Session["CartCounter"] = lstShoppingCartModel.Count;
             Session["CartItem"] = lstShoppingCartModel;
-
             return Json(data: new { Success = true, Counter = lstShoppingCartModel.Count }, JsonRequestBehavior.AllowGet);
         }
 
@@ -128,7 +129,18 @@ namespace WebShop.Controllers
             Session["CartCounter"] = lstShoppingCartModel.Count;
             Session["CartItem"] = lstShoppingCartModel;
 
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from cart.", selectedItem.Name) };
+
             return RedirectToAction("ShoppingCart");
+        }
+
+        public ActionResult Details(int id)
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            var selectedItem = db.tblItems.Where(x => x.Id == id).Single();
+            return View(selectedItem);
         }
 
 
@@ -166,16 +178,23 @@ namespace WebShop.Controllers
 
                     var itemInfo = db.tblItems.Where(x => x.Id == item.Id).Single();
                     var availableStock = itemInfo.tblStocks.Where(x => x.Quantity > 0).First();
-                    var availableStockDetail = availableStock.tblStockDetails.Where(x => x.StockId == availableStock.Id).FirstOrDefault();
+                    var availableStockDetail = availableStock.tblStockDetails.Where(x => x.StockId == availableStock.Id && x.OrderId == null).FirstOrDefault();
 
                     availableStock.Quantity = availableStock.Quantity - 1;
                     db.Entry(availableStock).State = EntityState.Modified;
 
-                    if (availableStockDetail != null) // When item is Rental Software
+                    if (item.Type == (int)ItemTypeEnum.RentalSoftware) // When item is Rental Software
                     {
+                        _tblOrderDetail.StockDetailsId = null;
+                        _tblOrderDetail.ItemId = item.Id;
+                    }
+                    else
                         _tblOrderDetail.StockDetailsId = availableStockDetail.Id;
-                        db.tblOrderDetails.Add(_tblOrderDetail);
-
+                   
+                    
+                    db.tblOrderDetails.Add(_tblOrderDetail);
+                    if (availableStockDetail != null) 
+                    {
                         availableStockDetail.OrderId = generatedOrderId;
                         db.Entry(availableStockDetail).State = EntityState.Modified;
                     }
@@ -186,14 +205,16 @@ namespace WebShop.Controllers
                 transaction.Commit();
 
                 //refresh cart
-                Session["CartCounter"] = 0;
+                Session["CartCounter"] = null;
                 Session["CartItem"] = null;
 
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Order Successful") };
                 return Json(data: new { Success = true, Message = "Order Successful" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
                 transaction.Rollback();
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = "Order Failed!" };
                 return Json(data: new { Success = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
             }
         }

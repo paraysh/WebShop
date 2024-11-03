@@ -26,6 +26,7 @@
         <AssociationConnector Association="WebShopModel.FK_tblTeamEmployee_tblUsers1" ManuallyRouted="false" />
         <AssociationConnector Association="WebShopModel.FK_tblUsers_tblUserRolesMaster" ManuallyRouted="false" />
         <EntityTypeShape EntityType="WebShopModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
+        <AssociationConnector Association="WebShopModel.FK_tblOrderDetails_tblItem" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

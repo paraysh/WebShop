@@ -52,6 +52,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderId" Type="int" />
           <Property Name="StockDetailsId" Type="int" />
+          <Property Name="ItemId" Type="int" />
           <Property Name="LendingPeriodMonths" Type="int" />
           <Property Name="LendingStartDt" Type="datetime" />
           <Property Name="LendingEndDt" Type="datetime" />
@@ -141,6 +142,18 @@
             </Principal>
             <Dependent Role="tblOrder">
               <PropertyRef Name="OrderedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblOrderDetails_tblItem">
+          <End Role="tblItem" Type="Self.tblItem" Multiplicity="0..1" />
+          <End Role="tblOrderDetails" Type="Self.tblOrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetails">
+              <PropertyRef Name="ItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -291,6 +304,10 @@
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblOrder" EntitySet="tblOrder" />
           </AssociationSet>
+          <AssociationSet Name="FK_tblOrderDetails_tblItem" Association="Self.FK_tblOrderDetails_tblItem">
+            <End Role="tblItem" EntitySet="tblItem" />
+            <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
+          </AssociationSet>
           <AssociationSet Name="FK_tblOrderDetails_tblOrder" Association="Self.FK_tblOrderDetails_tblOrder">
             <End Role="tblOrder" EntitySet="tblOrder" />
             <End Role="tblOrderDetails" EntitySet="tblOrderDetails" />
@@ -340,6 +357,7 @@
           <Property Name="ImageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblItemTypeMaster" Relationship="Self.FK_tblItem_tblItemTypeMaster" FromRole="tblItem" ToRole="tblItemTypeMaster" />
           <NavigationProperty Name="tblStocks" Relationship="Self.FK_tblStock_tblItem" FromRole="tblItem" ToRole="tblStock" />
+          <NavigationProperty Name="tblOrderDetails" Relationship="WebShopModel.FK_tblOrderDetails_tblItem" FromRole="tblItem" ToRole="tblOrderDetail" />
         </EntityType>
         <EntityType Name="tblItemTypeMaster">
           <Key>
@@ -376,6 +394,8 @@
           <NavigationProperty Name="tblOrder" Relationship="Self.FK_tblOrderDetails_tblOrder" FromRole="tblOrderDetails" ToRole="tblOrder" />
           <NavigationProperty Name="tblStockDetail" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblOrderDetails" ToRole="tblStockDetails" />
           <Property Name="LendingPeriodMonths" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <NavigationProperty Name="tblItem" Relationship="WebShopModel.FK_tblOrderDetails_tblItem" FromRole="tblOrderDetail" ToRole="tblItem" />
         </EntityType>
         <EntityType Name="tblStock">
           <Key>
@@ -625,6 +645,10 @@
             <End Role="tblUser" EntitySet="tblUsers" />
           </AssociationSet>
           <EntitySet Name="sysdiagrams" EntityType="WebShopModel.sysdiagram" />
+          <AssociationSet Name="FK_tblOrderDetails_tblItem" Association="WebShopModel.FK_tblOrderDetails_tblItem">
+            <End Role="tblItem" EntitySet="tblItems" />
+            <End Role="tblOrderDetail" EntitySet="tblOrderDetails" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="sysdiagram">
           <Key>
@@ -636,6 +660,18 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
+        <Association Name="FK_tblOrderDetails_tblItem">
+          <End Type="WebShopModel.tblItem" Role="tblItem" Multiplicity="0..1" />
+          <End Type="WebShopModel.tblOrderDetail" Role="tblOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblOrderDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -678,6 +714,7 @@
           <EntitySetMapping Name="tblOrderDetails">
             <EntityTypeMapping TypeName="WebShopModel.tblOrderDetail">
               <MappingFragment StoreEntitySet="tblOrderDetails">
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="LendingPeriodMonths" ColumnName="LendingPeriodMonths" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />

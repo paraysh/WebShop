@@ -11,6 +11,7 @@ using WebShop.Models.Entity;
 using WebShop.Models.Enum;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Web.Services.Description;
 
 namespace WebShop.Controllers
 {
@@ -74,6 +75,25 @@ namespace WebShop.Controllers
             item.ImageName = selectedItem.ImageName;
 
             return View(item);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var selectedItem = db.tblItems.Where(x => x.Id == id).FirstOrDefault();
+            var itemsInStock = selectedItem.tblStocks.Sum(x => x.Quantity);
+
+            if (itemsInStock == 0)
+            {
+                db.tblItems.Remove(selectedItem);
+                db.SaveChanges();
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} deleted.", selectedItem.Name) };
+            }
+            else
+            {
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = itemsInStock + " Items availabe in stock. Item cannot be deleted." };
+            } 
+
+            return RedirectToAction("ItemDetails");
         }
 
         [HttpPost]

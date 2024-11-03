@@ -8,5 +8,6 @@ namespace WebShop.Models
     public class ProductModel : ItemModel
     {
         public string ProductType { get; set; }
+        public int? ItemsInStock { get; set; }
     }
 }

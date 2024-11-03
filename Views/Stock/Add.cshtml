@@ -82,7 +82,6 @@
                 type: 'POST',
                 data: { Id: $("#txtItemId").val(), Quantity: $("#txtQuantity").val(), LstSerialNumbers: lstSerialNo },
                 success: function (result) {
-                    console.log("btnSaveSuccess ", result);
                     window.location.href = '/Stock/StockDetails';
                 }
             });

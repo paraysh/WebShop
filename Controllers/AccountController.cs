@@ -89,6 +89,10 @@ namespace WebShop.Controllers
         public ActionResult SignOut() 
         {
             AuthenticationManager.SignOut();
+
+            //refresh cart
+            Session["CartCounter"] = null;
+            Session["CartItem"] = null;
             return RedirectToAction("Login");
         }    
     }

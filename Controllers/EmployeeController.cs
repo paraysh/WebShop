@@ -72,6 +72,7 @@ namespace WebShop.Controllers
 
             db.tblUsers.Add(newUserObj);
             db.SaveChanges();
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Added.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
@@ -167,6 +168,7 @@ namespace WebShop.Controllers
 
             db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Updated.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
@@ -184,6 +186,8 @@ namespace WebShop.Controllers
             user.IsActive = "N";
             db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
+
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Deactivate.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
     }

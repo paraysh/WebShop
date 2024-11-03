@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using WebShop.Models;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -20,22 +22,52 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                @if (ViewBag.UserRole == 20) //Master Data Manager
+                @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee) //Employee
+                {
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>@Html.ActionLink("Product", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Orders", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                    </ul>
+                }
+                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins) //Team Leader //Admins
+                {
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>@Html.ActionLink("Product", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Orders", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Employees", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
+                    </ul>
+                }
+                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.MasterDataManager) //Master Data Manager
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Product", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Orders", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Employees", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Items", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
+                    </ul>
+                }
+                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.MasterDataManager) // warehouse worker
+                {
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>@Html.ActionLink("Product", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Orders", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Stock", "StockDetails", "Stock", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }
                 @Html.Partial("_ShoppingCart")
             </div>
-            <a class="nav-link"  href="/account/signout/" style="color:white; margin-left:30px">Logout</a>
+            <a class="nav-link" href="/account/signout/" style="color:white; margin-left:30px">Logout</a>
         </div>
     </nav>
     <div class="container body-content">
+        @if (TempData["UserMessage"] != null)
+        {
+            var message = (MessageVM)TempData["UserMessage"];
+            <div class="alert @message.CssClassName">
+                <strong>@message.Title</strong>
+                @message.Message
+            </div>
+        }
         @RenderBody()
         <hr />
         <footer>

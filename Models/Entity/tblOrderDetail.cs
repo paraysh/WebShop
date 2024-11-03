@@ -20,8 +20,10 @@ namespace WebShop.Models.Entity
         public Nullable<System.DateTime> LendingStartDt { get; set; }
         public Nullable<System.DateTime> LendingEndDt { get; set; }
         public Nullable<int> LendingPeriodMonths { get; set; }
+        public Nullable<int> ItemId { get; set; }
     
         public virtual tblOrder tblOrder { get; set; }
         public virtual tblStockDetail tblStockDetail { get; set; }
+        public virtual tblItem tblItem { get; set; }
     }
 }

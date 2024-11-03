@@ -38,7 +38,8 @@
                     <td>@item.tblItemTypeMaster.ItemType</td>
                     <td>@item.Cost</td>
                     <td><img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded"/> </td>
-                    <td>@Html.ActionLink("Edit", "Edit", "Item", new { id = item.Id }, null) </td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Item", new { id = item.Id }, new { @class = "btn btn-primary" }) @Html.ActionLink("Delete", "Delete", "Item", new { id = item.Id }, new { @class = "btn btn-danger", @id="btnDelete1" }) 
+                        
                 </tr>
             }
 

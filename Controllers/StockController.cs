@@ -84,6 +84,7 @@ namespace WebShop.Controllers
                 db.SaveChanges();
             }
 
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} added from stock.", addStockModel.Name) };
             return RedirectToAction("StockDetails");
         }
 
@@ -134,6 +135,7 @@ namespace WebShop.Controllers
             db.Entry(tblStockModel).State = EntityState.Modified;
             db.tblStockDetails.Remove(stockDetailModel);
             db.SaveChanges();
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from stock.", stockDetailModel.SerialNumber) };
             return RedirectToAction("StockDetails");
         }
     }

@@ -323,6 +323,7 @@
     <Compile Include="Models\Enum\UserRoleEnum.cs" />
     <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\MessageVM.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ShoppingCartModel.cs" />
@@ -415,6 +416,7 @@
     <Content Include="Views\Product\ShoppingCart.cshtml" />
     <Content Include="Views\Stock\Remove.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

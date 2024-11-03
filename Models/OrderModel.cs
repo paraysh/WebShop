@@ -16,6 +16,7 @@ namespace WebShop.Models
         public int OrderedBy { get; set; }
         public DateTime OrderDt { get; set; }
         public string OrderApproved { get; set; }
+        public string OrderStatus { get; set; }
         public decimal TotalCost { get; set; }
         public int TotalItems { get; set; }
 
@@ -32,7 +33,7 @@ namespace WebShop.Models
 
     public class OrderDetail
     {
-        public int StockDetailsId { get; set; }
+        public int? StockDetailsId { get; set; }
         public string SerialNo { get; set; }
         public int ItemId { get; set; }
         public string ItemName { get; set; }

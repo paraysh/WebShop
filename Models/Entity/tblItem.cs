@@ -18,6 +18,7 @@ namespace WebShop.Models.Entity
         public tblItem()
         {
             this.tblStocks = new HashSet<tblStock>();
+            this.tblOrderDetails = new HashSet<tblOrderDetail>();
         }
     
         public int Id { get; set; }
@@ -30,5 +31,7 @@ namespace WebShop.Models.Entity
         public virtual tblItemTypeMaster tblItemTypeMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblStock> tblStocks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblOrderDetail> tblOrderDetails { get; set; }
     }
 }
