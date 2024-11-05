@@ -33,6 +33,7 @@ namespace WebShop.Models
         public string ImageName { get; set; }
 
         public HttpPostedFileBase ImageData { get; set; }
+        public string IsActive { get; set; } = "Y";
 
         //public virtual tblItemTypeMaster tblItemTypeMaster { get; set; }
         //public virtual ICollection<tblStock> tblStocks { get; set; }

@@ -69,7 +69,7 @@
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDt" Type="datetime" />
-          <Property Name="TestColumnToBeDeleted" Type="int" />
+          <Property Name="InitialQuantity" Type="int" />
         </EntityType>
         <EntityType Name="tblStockDetails">
           <Key>
@@ -79,6 +79,7 @@
           <Property Name="StockId" Type="int" />
           <Property Name="SerialNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="OrderId" Type="int" />
+          <Property Name="IsDeleted" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="tblTeamBudget">
           <Key>
@@ -412,7 +413,7 @@
           <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblItem" Relationship="Self.FK_tblStock_tblItem" FromRole="tblStock" ToRole="tblItem" />
           <NavigationProperty Name="tblStockDetails" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStock" ToRole="tblStockDetails" />
-          <Property Name="TestColumnToBeDeleted" Type="Int32" />
+          <Property Name="InitialQuantity" Type="Int32" />
         </EntityType>
         <EntityType Name="tblStockDetail">
           <Key>
@@ -425,6 +426,7 @@
           <NavigationProperty Name="tblOrder" Relationship="Self.FK_tblStockDetails_tblOrder" FromRole="tblStockDetails" ToRole="tblOrder" />
           <NavigationProperty Name="tblOrderDetails" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblStockDetails" ToRole="tblOrderDetails" />
           <NavigationProperty Name="tblStock" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStockDetails" ToRole="tblStock" />
+          <Property Name="IsDeleted" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="tblTeamBudget">
           <Key>
@@ -730,7 +732,7 @@
           <EntitySetMapping Name="tblStocks">
             <EntityTypeMapping TypeName="WebShopModel.tblStock">
               <MappingFragment StoreEntitySet="tblStock">
-                <ScalarProperty Name="TestColumnToBeDeleted" ColumnName="TestColumnToBeDeleted" />
+                <ScalarProperty Name="InitialQuantity" ColumnName="InitialQuantity" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
@@ -744,6 +746,7 @@
           <EntitySetMapping Name="tblStockDetails">
             <EntityTypeMapping TypeName="WebShopModel.tblStockDetail">
               <MappingFragment StoreEntitySet="tblStockDetails">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StockId" ColumnName="StockId" />
                 <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />

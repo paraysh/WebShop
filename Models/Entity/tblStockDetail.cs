@@ -24,6 +24,7 @@ namespace WebShop.Models.Entity
         public Nullable<int> StockId { get; set; }
         public string SerialNumber { get; set; }
         public Nullable<int> OrderId { get; set; }
+        public string IsDeleted { get; set; }
     
         public virtual tblOrder tblOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

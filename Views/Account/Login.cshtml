@@ -15,6 +15,7 @@
     .main-head {
         height: 150px;
         background: #FFF;
+        
     }
 
     .sidenav {
@@ -44,7 +45,7 @@
     }
 
     .login-form {
-        margin-top: 80%;
+        margin-top: 30%;
     }
 
     .register-form {
@@ -69,12 +70,14 @@
 </style>
 
 <div class="sidenav">
-    <div class="login-main-text">
-        <h2>Fiktiv GmbH<br> Login Page</h2>
-        <p>Login from here to access.</p>
-    </div>
+    
 </div>
-<div class="main">
+<div class="main" style="margin-top: 10%;">
+    <div class="">
+        <h2 style="font-weight: 300; text-decoration: unset; text-align: start;">Fiktiv GmbH</h2>
+        <p>Melden Sie sich an, um die Seite zu betreten.</p>
+    </div>
+    <hr />
     <div class="col-md-6 col-sm-12">
         <div class="login-form">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "frmLoginForm" }))
@@ -99,7 +102,7 @@
                 </div>
 
                 <div class="action">
-                    <input type="submit" class="btn btn-primary" value="Login" data-loading-text="logging..." id="btnSubmit" />
+                    <input type="submit" class="btn btn-primary" value="Anmelden" data-loading-text="logging..." id="btnSubmit" />
                 </div>
             }
         </div>

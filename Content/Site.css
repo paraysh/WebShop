@@ -4,6 +4,14 @@
     padding-left: 15px;
     padding-right: 15px;
     background: #d3d3d32b;
+    flex: 1;
+}
+
+h2 {
+    text-decoration: underline;
+    text-align: center;
+    background: #a9a9a973;
+    padding-bottom: 7px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -155,4 +163,18 @@ textarea {
     100% {
         opacity: 1;
     }
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
 }

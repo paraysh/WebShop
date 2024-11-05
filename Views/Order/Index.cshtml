@@ -58,7 +58,7 @@
                 webGrid.Column("TotalCost", "Total Cost"),
                 webGrid.Column("Action", format: (item) =>
                 {
-                    if (item.OrderApproved == "N")
+                    if (item.OrderApproved == "N" && ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
                         
                         return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Approve</a></text>", item.Id) 
@@ -129,7 +129,7 @@ webGrid.Column(format: (item) =>
                 if (data.Success) {
                     alert(data.Message);
                     location.reload();
-                }
+                } 
                 if (data.Error) {
                     alert(data.Message);
                 }

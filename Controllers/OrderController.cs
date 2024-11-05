@@ -88,7 +88,7 @@ namespace WebShop.Controllers
             if (utilisedBudget > empBudget)
             {
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) };
-                return Json(data: new { Success = false, Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
+                return Json(data: new { Error = true, Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }
             
             OrderTblRow.OrderApproved = "Y";

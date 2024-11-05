@@ -38,7 +38,18 @@
                     <td>@item.tblItemTypeMaster.ItemType</td>
                     <td>@item.Cost</td>
                     <td><img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded"/> </td>
-                    <td>@Html.ActionLink("Edit", "Edit", "Item", new { id = item.Id }, new { @class = "btn btn-primary" }) @Html.ActionLink("Deactivate", "Deactivate", "Item", new { id = item.Id }, new { @class = "btn btn-danger", @id="btnDeactivate" }) 
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Item", new { id = item.Id }, new { @class = "btn btn-primary" })
+                        @if (item.IsActive == "Y")
+                        {
+                            @Html.ActionLink("Deactivate", "Deactivate", "Item", new { id = item.Id }, new { @class = "btn btn-danger", @id = "btnDeactivate" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Activate", "Activate", "Item", new { id = item.Id }, new { @class = "btn btn-success", @id = "btnActivate" })
+                        }
+
+                    </td>
                         
                 </tr>
             }

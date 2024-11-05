@@ -47,6 +47,7 @@ namespace WebShop.Controllers
             newItemObj.Description = item.Description;
             newItemObj.Type = item.Type;
             newItemObj.Cost = item.Cost;
+            newItemObj.IsActive = item.IsActive;
 
             if (item.ImageData != null)
             {
@@ -77,26 +78,6 @@ namespace WebShop.Controllers
             return View(item);
         }
 
-        public ActionResult Deactivate(int id)
-        {
-            var selectedItem = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == id).Single();
-            var itemsInStock = selectedItem.tblStocks.Sum(x => x.Quantity);
-
-            if (itemsInStock == 0)
-            {
-                selectedItem.IsActive = "N";
-                db.Entry(selectedItem).State = EntityState.Modified;
-                db.SaveChanges();
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} deleted.", selectedItem.Name) };
-            }
-            else
-            {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = itemsInStock + " Items availabe in stock. Item cannot be deleted." };
-            } 
-
-            return RedirectToAction("ItemDetails");
-        }
-
         [HttpPost]
         public ActionResult Edit(ItemModel item)
         {
@@ -116,6 +97,37 @@ namespace WebShop.Controllers
 
             db.Entry(selectedItem).State = EntityState.Modified;
             db.SaveChanges();
+            return RedirectToAction("ItemDetails");
+        }
+
+        public ActionResult Deactivate(int id)
+        {
+            var selectedItem = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == id).Single();
+            var itemsInStock = selectedItem.tblStocks.Sum(x => x.Quantity);
+
+            if (itemsInStock == 0)
+            {
+                selectedItem.IsActive = "N";
+                db.Entry(selectedItem).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} deactivated.", selectedItem.Name) };
+            }
+            else
+            {
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = itemsInStock + " Items availabe in stock. Item cannot be deactivated." };
+            } 
+
+            return RedirectToAction("ItemDetails");
+        }
+
+        public ActionResult Activate(int id)
+        {
+            var selectedItem = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == id).Single();
+            selectedItem.IsActive = "Y";
+            db.Entry(selectedItem).State = EntityState.Modified;
+            db.SaveChanges();
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} activated.", selectedItem.Name) };
+           
             return RedirectToAction("ItemDetails");
         }
     }

@@ -27,7 +27,7 @@ namespace WebShop.Models.Entity
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDt { get; set; }
-        public Nullable<int> TestColumnToBeDeleted { get; set; }
+        public Nullable<int> InitialQuantity { get; set; }
     
         public virtual tblItem tblItem { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

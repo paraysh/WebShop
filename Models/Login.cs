@@ -9,16 +9,16 @@ namespace WebShop.Models
     public class LoginModel
     {
         [Required]
-        [Display(Name = "User Name")]
+        [Display(Name = "Benutzername")]
         [DataType(DataType.Text)]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Passwort")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Angemeldet bleiben?")]
         public bool RememberMe { get; set; }
     }
 }

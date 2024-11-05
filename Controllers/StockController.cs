@@ -66,6 +66,9 @@ namespace WebShop.Controllers
             tblStock _tblStock = new tblStock();
             _tblStock.ItemId = addStockModel.Id;
             _tblStock.Quantity = addStockModel.Quantity;
+            _tblStock.CreatedBy = User.Identity.GetUserName();
+            _tblStock.CreatedDate = DateTime.Now;
+            _tblStock.InitialQuantity = addStockModel.Quantity;
 
             db.tblStocks.Add(_tblStock);
             db.SaveChanges();
@@ -79,6 +82,7 @@ namespace WebShop.Controllers
                     tblStockDetail _tblStockDetail = new tblStockDetail();
                     _tblStockDetail.SerialNumber = item;
                     _tblStockDetail.StockId = generatedStockId;
+                    _tblStockDetail.IsDeleted = "N";
                     db.tblStockDetails.Add(_tblStockDetail);
                 }
                 db.SaveChanges();
@@ -97,7 +101,7 @@ namespace WebShop.Controllers
             //List<string> stockInfo = new List<string>();
             var itemInfo = db.tblItems.Where(x => x.Id == id).Single();
 
-            var stockInfo = itemInfo.tblStocks.SelectMany(x => x.tblStockDetails).Where(x => x.OrderId == null).SelectMany(s => new List<SelectListItem> {
+            var stockInfo = itemInfo.tblStocks.SelectMany(x => x.tblStockDetails).Where(x => x.OrderId == null && x.IsDeleted == "N").SelectMany(s => new List<SelectListItem> {
                 new SelectListItem
                 {
                     Text = s.SerialNumber,
@@ -133,7 +137,10 @@ namespace WebShop.Controllers
             tblStockModel.ModifiedDt = DateTime.Now;
 
             db.Entry(tblStockModel).State = EntityState.Modified;
-            db.tblStockDetails.Remove(stockDetailModel);
+
+            stockDetailModel.IsDeleted = "Y";
+            db.Entry(stockDetailModel).State = EntityState.Modified;
+            //db.tblStockDetails.Remove(stockDetailModel);
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from stock.", stockDetailModel.SerialNumber) };
             return RedirectToAction("StockDetails");
@@ -141,7 +148,53 @@ namespace WebShop.Controllers
 
         public ActionResult Details(int id)
         {
-            return View();
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            var tblItem = db.tblItems
+                .Include(x => x.tblStocks)
+                .Include(x => x.tblOrderDetails)
+                .Where(x => x.Id == id)
+                .Select(item => new StockHistoryModel
+                {
+                    ItemId = item.Id,
+                    ItemName = item.Name,
+                    ItemCost = (decimal)item.Cost,
+                    ItemImageName = item.ImageName,
+                    ItemType = item.tblItemTypeMaster.ItemType,
+                    lstStocks = item.tblStocks.SelectMany(stock => new List<Stock> { new Stock {
+                                        InitialQuantity = (int)stock.InitialQuantity,
+                                        StockCurrentQuantity = (int)stock.Quantity,
+                                        StockAddDate = (DateTime)stock.CreatedDate,
+                                        StockAddedBy = stock.CreatedBy,
+                                        StockDeletedBy = stock.ModifiedBy == null ? "NA" : stock.ModifiedBy,
+                                        StockDeleteDate = stock.ModifiedDt,
+                                                    lstStockDetails = stock.tblStockDetails.SelectMany(stockDtl => new List<StockDetail> { new StockDetail {
+                                                    SerialNo = stockDtl.SerialNumber,
+                                                    OrderId = stockDtl.OrderId,
+                                                    IsDeleted = stockDtl.IsDeleted,
+                                                    OrderID = stockDtl.tblOrder.OrderId,
+                                                    OrderedBy = stockDtl.tblOrder.tblUser.UserName,
+                                                    OrderDate = (DateTime)stockDtl.tblOrder.OrderDate,
+                                                    OrderApproved = stockDtl.tblOrder.OrderApproved,
+                                                    LendingPeriodMonths = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? 0 : (int)stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingPeriodMonths,
+                                                    LendingStartDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingStartDt,
+                                                    LendingEndDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingEndDt
+                                                                //lstOrderDetails = stockDtl.tblOrderDetails.SelectMany(orderDtl => new List<OrderDetails> { new OrderDetails {
+                                                                //        OrderID = orderDtl.tblOrder.OrderId,
+                                                                //        OrderedBy = orderDtl.tblOrder.tblUser.UserName,
+                                                                //        OrderDate = (DateTime)orderDtl.tblOrder.OrderDate,
+                                                                //        OrderApproved = orderDtl.tblOrder.OrderApproved,
+                                                                //        LendingPeriodMonths = (int)orderDtl.LendingPeriodMonths,
+                                                                //        LendingStartDt = (DateTime)orderDtl.LendingStartDt,
+                                                                //        LendingEndDt = (DateTime)orderDtl.LendingEndDt
+                                                                //} }).ToList()
+                                                    } }).ToList()
+                    } }).ToList()
+                }).Single();
+
+
+            return View(tblItem);
         }
     }
 }

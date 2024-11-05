@@ -62,7 +62,7 @@ namespace WebShop.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Invalid username or password.");
+                        ModelState.AddModelError("", "Benutzername oder Passwort ungültig.");
                     }
                 }
                 catch (Exception ex)

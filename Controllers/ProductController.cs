@@ -178,7 +178,7 @@ namespace WebShop.Controllers
 
                     var itemInfo = db.tblItems.Where(x => x.Id == item.Id).Single();
                     var availableStock = itemInfo.tblStocks.Where(x => x.Quantity > 0).First();
-                    var availableStockDetail = availableStock.tblStockDetails.Where(x => x.StockId == availableStock.Id && x.OrderId == null).FirstOrDefault();
+                    var availableStockDetail = availableStock.tblStockDetails.Where(x => x.StockId == availableStock.Id && x.OrderId == null && x.IsDeleted == "N").FirstOrDefault();
 
                     availableStock.Quantity = availableStock.Quantity - 1;
                     db.Entry(availableStock).State = EntityState.Modified;
