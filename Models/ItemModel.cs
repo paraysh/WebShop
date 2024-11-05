@@ -22,7 +22,7 @@ namespace WebShop.Models
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }
         [Required]
-        [Display(Name = "Artikeltyp")]
+        [Display(Name = "Artikelart")]
         public int Type { get; set; }
 
         [Required]

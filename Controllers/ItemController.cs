@@ -126,7 +126,7 @@ namespace WebShop.Controllers
             selectedItem.IsActive = "Y";
             db.Entry(selectedItem).State = EntityState.Modified;
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Item {0} activated.", selectedItem.Name) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} activated.", selectedItem.Name) };
            
             return RedirectToAction("ItemDetails");
         }

@@ -56,7 +56,7 @@
                 webGrid.Column("OrderStatus", "Bestellstatus"),
                 webGrid.Column("TotalItems", "Artikelanzahl"),
                 webGrid.Column("TotalCost", "Gesamtbetrag"),
-                webGrid.Column("Action", format: (item) =>
+                webGrid.Column("Prüfen", format: (item) =>
                 {
                     if (item.OrderApproved == "N" && ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
@@ -100,6 +100,8 @@ webGrid.Column(format: (item) =>
 
         //Remove Last Column from Header Row.
         $("#WebGrid TH:last-child").eq(0).remove();
+
+        
     });
     //Assign Click event to Plus Image.
     $("body").on("click", "img[src*='plus.png']", function () {
@@ -127,11 +129,12 @@ webGrid.Column(format: (item) =>
             url: '/Order/Approve',
             success: function (data) {
                 if (data.Success) {
-                    alert(data.Message);
+                    ShowAlert('Success', data.Message, 'success');
                     location.reload();
                 } 
                 if (data.Error) {
-                    alert(data.Message);
+                    //alert(data.Message);
+                    ShowAlert('Error', data.Message, 'danger');
                 }
             },
             error: function () {
@@ -155,7 +158,8 @@ webGrid.Column(format: (item) =>
             url: '/Order/Reject',
             success: function (data) {
                 if (data.Success) {
-                    alert(data.Message);
+                    ShowAlert('Success', data.Message, 'success');
+                    //alert(data.Message);
                     location.reload();
                 }
             },
@@ -164,4 +168,15 @@ webGrid.Column(format: (item) =>
             }
         });
     })
+
+
+    // setting up alert div
+    function ShowAlert(msg_title, msg_body, msg_type) {
+        var AlertMsg = $('#msgDiv');
+        $(AlertMsg).find('strong').html(msg_title);
+        $(AlertMsg).find('span').html(msg_body);
+        $(AlertMsg).removeAttr('class');
+        $(AlertMsg).addClass('alert alert-' + msg_type);
+        $(AlertMsg).show();
+    };
 </script>

@@ -142,7 +142,7 @@ namespace WebShop.Controllers
             db.Entry(stockDetailModel).State = EntityState.Modified;
             //db.tblStockDetails.Remove(stockDetailModel);
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from stock.", stockDetailModel.SerialNumber) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} entfernt.", stockDetailModel.SerialNumber) };
             return RedirectToAction("StockDetails");
         }
 

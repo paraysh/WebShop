@@ -63,6 +63,13 @@
         </div>
     </nav>
     <div class="container body-content">
+        <div>
+            <div class="alert alert-danger" id="msgDiv" style="display: none">
+                <strong>Warning!</strong>
+                <span>Better check yourself, you're not looking too good.</span>
+            </div>
+        </div>
+
         @if (TempData["UserMessage"] != null)
         {
             var message = (MessageVM)TempData["UserMessage"];

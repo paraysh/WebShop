@@ -87,8 +87,8 @@ namespace WebShop.Controllers
 
             if (utilisedBudget > empBudget)
             {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) };
-                return Json(data: new { Error = true, Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
+                //TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) };
+                return Json(data: new { Error = true, Message = string.Format("Verwendetes Budget {0} überschreitet das Mitarbeiterbudget von {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }
             
             OrderTblRow.OrderApproved = "Y";
@@ -97,7 +97,7 @@ namespace WebShop.Controllers
             db.SaveChanges();
 
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) };
-            return Json(data: new { Success = true, Message = "Order Approved" }, JsonRequestBehavior.AllowGet);
+            return Json(data: new { Success = true, Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Reject(int OrderId)

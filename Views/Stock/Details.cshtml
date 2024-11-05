@@ -57,12 +57,12 @@
     <li>
         
         <div class="div-tile">
-            <h3>Item Details</h3>
-            <span style="margin-left: 15px">Item Name : <b> @Model.ItemName</b></span>
+            <h3>Artikeldetails</h3>
+            <span style="margin-left: 15px">Artikelname : <b> @Model.ItemName</b></span>
             <br />
-            <span style="margin-left: 15px">Item Type : <b> @Model.ItemType</b></span>
+            <span style="margin-left: 15px">Artikelart : <b> @Model.ItemType</b></span>
             <br />
-            <span style="margin-left: 15px">Item Cost : <b> @Model.ItemCost</b></span>
+            <span style="margin-left: 15px">Kosten pro Monat : <b> @Model.ItemCost</b></span>
         </div>
         <ul>
             @foreach (var stock in Model.lstStocks)
@@ -70,45 +70,45 @@
                 <li>
                     @{ 
                         var text = "";
-                        text = stock.StockDeleteDate == null ? "Added" : "Deleted";
+                        text = stock.StockDeleteDate == null ? "hinzugefügt " : "Entfernt";
 
                     }
 
                     <div class="div-tile">
-                        <h3>Stock @text</h3>
-                        <span style="margin-left: 15px">Stock Added By : <b> @stock.StockAddedBy</b></span>
+                        <h3>Bestand @text</h3>
+                        <span style="margin-left: 15px">Bestand hinzugefügt von : <b> @stock.StockAddedBy</b></span>
                         <br />
-                        <span style="margin-left: 15px">Stock Add Date : <b> @stock.StockAddDate</b></span>
+                        <span style="margin-left: 15px">Datum : <b> @stock.StockAddDate</b></span>
                         <br />
-                        <span style="margin-left: 15px">Stock Current Quantity : <b> @stock.StockCurrentQuantity</b></span>
+                        <span style="margin-left: 15px">Lagerbestand : <b> @stock.StockCurrentQuantity</b></span>
                         <br />
-                        <span style="margin-left: 15px">Initial Quantity : <b> @stock.InitialQuantity</b></span>
+                        <span style="margin-left: 15px">Warenbestand : <b> @stock.InitialQuantity</b></span>
                         <br />
-                        <span style="margin-left: 15px">Stock Deleted By : <b> @stock.StockDeletedBy</b></span>
+                        <span style="margin-left: 15px">Bestand entfernt von : <b> @stock.StockDeletedBy</b></span>
                         <br />
-                        <span style="margin-left: 15px">Stock Delete Date : <b> @stock.StockDeleteDate</b></span>
+                        <span style="margin-left: 15px">Entfernt am : <b> @stock.StockDeleteDate</b></span>
                     </div>
                     <ul>
                         @foreach (var stockDtls in stock.lstStockDetails)
                         {
                             <li>
                                 <div class="div-tile">
-                                    <h3>Stock Details</h3>
-                                    <span style="margin-left: 15px">SerialNo : <b> @stockDtls.SerialNo</b></span>
+                                    <h3>Details</h3>
+                                    <span style="margin-left: 15px">Seriennummer : <b> @stockDtls.SerialNo</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">OrderID : <b> @stockDtls.OrderID</b></span>
+                                    <span style="margin-left: 15px">Bestell-ID : <b> @stockDtls.OrderID</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">OrderedBy : <b> @stockDtls.OrderedBy</b></span>
+                                    <span style="margin-left: 15px">Bestellt von : <b> @stockDtls.OrderedBy</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">OrderDate : <b> @stockDtls.OrderDate</b></span>
+                                    <span style="margin-left: 15px">Bestelldatum : <b> @stockDtls.OrderDate</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">OrderApproved : <b> @stockDtls.OrderApproved</b></span>
+                                    <span style="margin-left: 15px">Genehmigt : <b> @stockDtls.OrderApproved</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">LendingPeriodMonths : <b> @stockDtls.LendingPeriodMonths</b></span>
+                                    <span style="margin-left: 15px">Leihdauer in Monaten : <b> @stockDtls.LendingPeriodMonths</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">LendingStartDt : <b> @stockDtls.LendingStartDt</b></span>
+                                    <span style="margin-left: 15px">Leihdatum : <b> @stockDtls.LendingStartDt</b></span>
                                     <br />
-                                    <span style="margin-left: 15px">LendingEndDt : <b> @stockDtls.LendingEndDt</b></span>
+                                    <span style="margin-left: 15px">Rückgabedatum : <b> @stockDtls.LendingEndDt</b></span>
                                 </div>
                             </li>
                         }

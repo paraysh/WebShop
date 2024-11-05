@@ -20,7 +20,7 @@
             url: '/Product/AddToCart',
             success: function (data) {
                 if (data.Success) {
-                    $("#cartItem").text("Cart(" + data.Counter + ")");
+                    $("#cartItem").text("Warenkorb(" + data.Counter + ")");
                     window.location.href = '/Product/Index';
                 }
             },
@@ -47,7 +47,7 @@
             @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
         </div>
         <div class="col-md-6">
-            <label>Artikeltyp</label>
+            <label>Artikelart</label>
             @Html.DropDownList("Type",
                EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
                null,

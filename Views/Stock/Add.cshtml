@@ -1,6 +1,6 @@
 ﻿@model WebShop.Models.AddStockModel
 @{
-    ViewBag.Title = "Add";
+    ViewBag.Title = "Erstellen";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -106,9 +106,9 @@
                 var template = '';
                 for (var i = 0; i < val; i++) {
                     if ($('#ddlItemType').val() == 10) {
-                         template = '<div class="row mt-3"><label>Device ID </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
+                        template = '<div class="row mt-3"><label>Seriennummer </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
                     } else if ($('#ddlItemType').val() == 30) {
-                        template = '<div class="row mt-3"><label>License number </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
+                        template = '<div class="row mt-3"><label>Seriennummer </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
                     }
                     $(template).insertAfter('.temp-div');
                 }

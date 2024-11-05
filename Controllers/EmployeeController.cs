@@ -201,7 +201,7 @@ namespace WebShop.Controllers
             }
             db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("User {0} aktualisiert.", user.UserName) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Benutzer {0} aktualisiert.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
