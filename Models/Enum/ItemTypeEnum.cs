@@ -10,9 +10,9 @@ namespace WebShop.Models.Enum
     {
         [Display(Name = "Hardware")]
         Hardware = 10,
-        [Display(Name = "Rental Software")]
+        [Display(Name = "Mietsoftware")]
         RentalSoftware = 20,
-        [Display(Name = "Licensed Software")]
+        [Display(Name = "Lizenzsoftware")]
         LicensedSoftware = 30
     }
 }

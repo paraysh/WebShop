@@ -44,7 +44,7 @@ namespace WebShop.Controllers
                     OrderedByName = x.tblUser.UserName,
                     OrderDt = x.OrderDate.Value,
                     OrderApproved = x.OrderApproved,
-                    OrderStatus = x.OrderApproved == "R" ? "Rejected" : (x.OrderApproved == "Y" ? "Approved" : "Pending Approval"),
+                    OrderStatus = x.OrderApproved == "R" ? "Abgelehnt" : (x.OrderApproved == "Y" ? "Genehmigt" : "Ausstehend"),
                     TotalItems = x.TotalItems.Value,
                     TotalCost = x.TotalCost.Value,
                     lstOrderDetails = x.tblOrderDetails.SelectMany(s => new List<OrderDetail> { new OrderDetail {
@@ -96,7 +96,7 @@ namespace WebShop.Controllers
             db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Order {0} approved.", OrderTblRow.OrderId) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = "Order Approved" }, JsonRequestBehavior.AllowGet);
         }
 
@@ -114,7 +114,7 @@ namespace WebShop.Controllers
             // Free up stock
 
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Order {0} rejected.", OrderTblRow.OrderId) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} abgelehnt.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = "Order Rejected" }, JsonRequestBehavior.AllowGet);
         }
     }

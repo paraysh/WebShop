@@ -110,11 +110,11 @@ namespace WebShop.Controllers
                 selectedItem.IsActive = "N";
                 db.Entry(selectedItem).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} deactivated.", selectedItem.Name) };
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} deaktiviert.", selectedItem.Name) };
             }
             else
             {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = itemsInStock + " Items availabe in stock. Item cannot be deactivated." };
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format(" Es sind {0}  Artikel auf Lager. Der Artikel kann nicht gelöscht werden.", itemsInStock) };
             } 
 
             return RedirectToAction("ItemDetails");
@@ -126,7 +126,7 @@ namespace WebShop.Controllers
             selectedItem.IsActive = "Y";
             db.Entry(selectedItem).State = EntityState.Modified;
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Item {0} activated.", selectedItem.Name) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Item {0} activated.", selectedItem.Name) };
            
             return RedirectToAction("ItemDetails");
         }

@@ -129,7 +129,7 @@ namespace WebShop.Controllers
             Session["CartCounter"] = lstShoppingCartModel.Count;
             Session["CartItem"] = lstShoppingCartModel;
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} removed from cart.", selectedItem.Name) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} wurde aus dem Warenkorb entfernt.", selectedItem.Name) };
 
             return RedirectToAction("ShoppingCart");
         }
@@ -208,8 +208,8 @@ namespace WebShop.Controllers
                 Session["CartCounter"] = null;
                 Session["CartItem"] = null;
 
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("Order Successful") };
-                return Json(data: new { Success = true, Message = "Order Successful" }, JsonRequestBehavior.AllowGet);
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung erfolgreich") };
+                return Json(data: new { Success = true, Message = "Bestellung erfolgreich" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {

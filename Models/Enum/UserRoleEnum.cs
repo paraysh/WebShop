@@ -8,15 +8,15 @@ namespace WebShop.Models.Enum
 {
     public enum UserRoleEnum
     {
-        [Display(Name = "Warehouse Workers")]
+        [Display(Name = "Lagermitarbeiter")]
         WarehouseWorkers = 10,
-        [Display(Name = "Master Data Manager")]
+        [Display(Name = "Stammdatenverwalter")]
         MasterDataManager = 20,
-        [Display(Name = "Admins")]
+        [Display(Name = "Administrator")]
         Admins = 30,
-        [Display(Name = "Team Leaders")]
+        [Display(Name = "Teamleiter")]
         TeamLeaders = 40,
-        [Display(Name = "Employee")]
+        [Display(Name = "Mitarbeiter")]
         Employee = 50
     }
 }

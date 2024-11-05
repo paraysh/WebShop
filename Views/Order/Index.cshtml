@@ -43,26 +43,26 @@
         }
 </style>
 
-<h2>Order Details</h2>
+<h2>Bestellverlauf</h2>
 
 @webGrid.GetHtml(
         htmlAttributes: new { @id = "WebGrid", @class = "table table-striped-columns" },
         columns: webGrid.Columns(
                  webGrid.Column(null, null, format: @<text>
                     <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
-                webGrid.Column("OrderId", "Order Id"),
-                webGrid.Column("OrderDt", "Order Date"),
-                webGrid.Column("OrderedByName", "Ordered By"),
-                webGrid.Column("OrderStatus", "Order Status"),
-                webGrid.Column("TotalItems", "Total Items"),
-                webGrid.Column("TotalCost", "Total Cost"),
+                webGrid.Column("OrderId", "Bestell-ID"),
+                webGrid.Column("OrderDt", "Bestelldatum"),
+                webGrid.Column("OrderedByName", "Bestellt von"),
+                webGrid.Column("OrderStatus", "Bestellstatus"),
+                webGrid.Column("TotalItems", "Artikelanzahl"),
+                webGrid.Column("TotalCost", "Gesamtbetrag"),
                 webGrid.Column("Action", format: (item) =>
                 {
                     if (item.OrderApproved == "N" && ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
                         
-                        return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Approve</a></text>", item.Id) 
-                            + "  " + string.Format("<text><a href=\"#\" id=\"Reject_{0}\" class=\"reject btn btn-danger\">Reject</a></text>", item.Id));
+                        return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Genehmigen</a></text>", item.Id) 
+                            + "  " + string.Format("<text><a href=\"#\" id=\"Reject_{0}\" class=\"reject btn btn-danger\">Ablehnen</a></text>", item.Id));
                     }
                     else
                     {
@@ -77,11 +77,11 @@ webGrid.Column(format: (item) =>
     return childGrid.GetHtml(
     htmlAttributes: new { @class = "ChildGrid" },
     columns: childGrid.Columns(
-    childGrid.Column("ItemName", "Item Name"),
-    childGrid.Column("SerialNo", "Serial No"),
-    childGrid.Column("LendingPeriodMonths", "Lending Period(Months)"),
-    childGrid.Column("LendingStartDt", "Lending Start Dt"),
-    childGrid.Column("LendingEndDt", "Lending End Dt")
+    childGrid.Column("ItemName", "Artikelname"),
+    childGrid.Column("SerialNo", "Seriennummer"),
+    childGrid.Column("LendingPeriodMonths", "Leihdauer (Monate)"),
+    childGrid.Column("LendingStartDt", "Leihbeginn"),
+    childGrid.Column("LendingEndDt", "Leihrückgabe")
     ));
 })
 ))

@@ -19,17 +19,17 @@ namespace WebShop.Models
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
-        [Display(Name = "Description")]
+        [Display(Name = "Beschreibung")]
         public string Description { get; set; }
         [Required]
-        [Display(Name = "Item Type")]
+        [Display(Name = "Artikeltyp")]
         public int Type { get; set; }
 
         [Required]
-        [Display(Name = "Cost")]
+        [Display(Name = "Kosten (€ pro Monat)")]
         public Nullable<decimal> Cost { get; set; }
 
-        [Display(Name = "Image")]
+        [Display(Name = "Bild")]
         public string ImageName { get; set; }
 
         public HttpPostedFileBase ImageData { get; set; }

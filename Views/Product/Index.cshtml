@@ -31,7 +31,7 @@
 </script>
 
 <div class="container">
-    <h2>Product List</h2>
+    <h2>Alle Artikel</h2>
     <div class="row">
         @foreach (var item in Model)
         {
@@ -56,16 +56,16 @@
                     @*<hr />*@
                     <div class="row p-1 mx-1" style="border-top: 1px solid maroon">
                         <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/Details/@item.Id'">
-                            <b>@item.Cost</b> (€ per Month)
+                            <b>@item.Cost</b> (€ pro Monat)
                         </div>
 
                         <div class="col-md-7" style="text-align: right;">
                             @if (item.ItemsInStock > 0)
                             {
                                 @*<input type="button" name="AddToCart" value="Add To Cart" class="btn btn-primary" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)" />*@
-                                <button class="cart-button" name="AddToCart" value="Add To Cart" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
-                                    <span class="add-to-cart">Add to cart</span>
-                                    <span class="added">Added</span>
+                                <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
+                                    <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
+                                    <span class="added">Hinzugefügt</span>
                                     <i class="fa fa-shopping-cart"></i>
                                     <i class="fa fa-box"></i>
                                 </button>

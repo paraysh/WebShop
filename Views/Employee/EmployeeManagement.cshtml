@@ -15,24 +15,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Employee Management</h2>
+<h2>Mitarbeiterverwaltung</h2>
 
 <div class="m-5">
     @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.MasterDataManager)
     {
-        @Html.ActionLink("Add", "Add", "Employee", null, new { @class = "btn btn-primary mb-2", @style = "float : right" })
+        @Html.ActionLink("Hinzufügen", "Add", "Employee", null, new { @class = "btn btn-primary mb-2", @style = "float : right" })
     }
 
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>User Name</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>Benutzername</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
                 <th>Email</th>
-                <th>User Role</th>
-                <th>Is Active</th>
+                <th>Rolle</th>
+                <th>Ist aktiv?</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -50,14 +50,14 @@
                     <td>@user.IsActive</td>
                     @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.MasterDataManager)
                     {
-                        <td>@Html.ActionLink("Edit", "Edit", "Employee", new { id = @user.Id }, null) </td>
-                        <td>@Html.ActionLink("Deactivate", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
+                        <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
+                        <td>@Html.ActionLink("Deaktivieren", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
                     }
                     else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
                         if (user.tblTeamEmployees.Where(x => x.TeamLeaderId == ViewBag.UserId).Count() > 0 || user.Id == ViewBag.UserId)
                         {
-                            <td>@Html.ActionLink("Edit", "Edit", "Employee", new { id = @user.Id }, null) </td>
+                            <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
                             <td> </td>
                         }
                         else

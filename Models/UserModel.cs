@@ -22,19 +22,19 @@ namespace WebShop.Models
 
         public int Id { get; set; }
         [Required]
-        [Display(Name = "User Name")]
+        [Display(Name = "Benutzername")]
         public string UserName { get; set; }
         [Required]
-        [Display(Name = "First Name")]
+        [Display(Name = "Vorname")]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name")]
+        [Display(Name = "Nachname")]
         public string LastName { get; set; }
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Display(Name = "User Role")]
+        [Display(Name = "Rolle")]
         public Nullable<int> UserRole { get; set; }
-        [Display(Name = "Is Active?")]
+        [Display(Name = "Ist aktiv?")]
         public string IsActive { get; set; }
 
         [Display(Name = "Team Budget")]
@@ -50,8 +50,9 @@ namespace WebShop.Models
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDt { get; set; }
+        [Display(Name = "Passwort")]
         public string Password { get; set; }
-        [Display(Name = "Confirm Password")]
+        [Display(Name = "Passwort wiederholen")]
         public string ConfirmPassword { get; set; }
 
         public UserRoleEnum UserRoleEnum { get; set; }

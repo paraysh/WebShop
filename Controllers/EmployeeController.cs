@@ -48,7 +48,7 @@ namespace WebShop.Controllers
         {
             if (user.Password != user.ConfirmPassword)
             {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Unable to Add. Password mismatched.") };
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Aktualisierung nicht möglich. Das Passwort stimmt nicht überein.") };
                 return RedirectToAction("EmployeeManagement");
             }
             tblUser newUserObj = new tblUser();
@@ -82,7 +82,7 @@ namespace WebShop.Controllers
 
             db.tblUsers.Add(newUserObj);
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Added.", user.UserName) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} hinzugefügt.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
@@ -174,7 +174,7 @@ namespace WebShop.Controllers
             {
                 if (user.EmployeeBudget > user.RemainingTeamBudget)
                 {
-                    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Unable to Update. Remaining Team budget is less than Employee Budget.") };
+                    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Update nicht möglich. Das übrige Teambudget ist geringer als das Mitarbeiterbudget.") };
                     return RedirectToAction("EmployeeManagement");
                 }
 
@@ -196,12 +196,12 @@ namespace WebShop.Controllers
 
             if (user.Password != user.ConfirmPassword)
             {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Unable to Update. Password mismatched.") };
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Aktualisierung nicht möglich. Das Passwort stimmt nicht überein.") };
                 return RedirectToAction("EmployeeManagement");
             }
             db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Updated.", user.UserName) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("User {0} aktualisiert.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
@@ -220,7 +220,7 @@ namespace WebShop.Controllers
             db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("User {0} Deactivate.", user.UserName) };
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} deaktiviert.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
     }

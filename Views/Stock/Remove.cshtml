@@ -47,11 +47,23 @@
 
         <div class="row mt-3">
             <div class="col-md-3">
-                <label>Select Serial Number To Remove</label>
+                <label>Seriennummer zum Entfernen auswählen</label>
                 @Html.DropDownListFor(model => model.SelectedSerialNo, Model.SelectLstSerialNumbers, new { @class = "form-control", @id = "ddlSerialNo" })
             </div>
-            <div class="col-md-6" style="text-align: left">
-                <button class="btn btn-danger mt-4" id="btnRemove">Remove</button>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
+
+        <hr />
+        <div>
+            <div>
+                <div class="pull-left">
+                    @Html.ActionLink("Abbrechen", "StockDetails", "Stock", new { @class = "btn btn-dark" })
+                </div>
+            </div>
+            <div style="text-align:right">
+                <button class="btn btn-danger mt-4" id="btnRemove">Entfernen</button>
             </div>
         </div>
         @*<input type="submit" class="btn btn-primary" value="Submit" />*@

@@ -10,7 +10,7 @@ namespace WebShop.Models
     public class AddStockModel : ItemModel
     {
         [Required]
-        [Display(Name = "Quantity")]
+        [Display(Name = "Menge")]
         public int Quantity { get; set; }
 
         public string ItemTypeStr { get; set; }

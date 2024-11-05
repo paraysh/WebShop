@@ -34,12 +34,21 @@
             </div>
         </div>
         <div class="row mt-3">
-            <label>Upload Image</label>
+            <label>Bild hinzufügen</label>
             @*<input type="file" name="file" asp-for="FileUpload.ImageData" class="form-control" />*@
             @Html.TextBoxFor(model => model.ImageData, new { Type = "File", @class = "form-control" })
         </div>
 
         <hr />
-        <input type="submit" class="btn btn-primary" value="Submit" />
+        <div>
+            <div>
+                <div class="pull-left">
+                    @Html.ActionLink("Abbrechen", "ItemDetails", "Item", new { @class = "btn btn-dark" })
+                </div>
+            </div>
+            <div style="text-align:right">
+                <input type="submit" class="btn btn-primary" value="Bestätigen" />
+            </div>
+        </div>
     }
 </div>

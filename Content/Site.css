@@ -53,6 +53,7 @@ textarea {
     color: #fff;
     transition: .3s ease-in-out;
     overflow: hidden;
+    font-size: x-small;
 }
 
     .cart-button:hover {

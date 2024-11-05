@@ -40,16 +40,25 @@
             </div>
         </div>
         <div class="row mt-3">
-            <label>Added Image:</label>
-            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded"/>
+            <label>Bild:</label>
+            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded" />
         </div>
         <div class="row mt-3">
-            <label>Upload New Image</label>
+            <label>Neues Bild hochladen</label>
             @Html.TextBoxFor(model => model.ImageData, new { Type = "File", @class = "form-control" })
         </div>
 
         <hr />
-        <input type="submit" class="btn btn-primary" value="Submit" />
+        <div>
+            <div>
+                <div class="pull-left">
+                    @Html.ActionLink("Abbrechen", "ItemDetails", "Item", new { @class = "btn btn-dark" })
+                </div>
+            </div>
+            <div style="text-align:right">
+                <input type="submit" class="btn btn-primary" value="Bestätigen" />
+            </div>
+        </div>
     }
 </div>
 
