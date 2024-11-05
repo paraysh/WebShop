@@ -20,7 +20,7 @@
             url: '/Product/AddToCart',
             success: function (data) {
                 if (data.Success) {
-                    $("#cartItem").text("Cart(" + data.Counter + ")");
+                    $("#cartItem").text("Warenkorb(" + data.Counter + ")");
                 }
             },
             error: function () {
@@ -72,7 +72,7 @@
                             }
                             else
                             {
-                                <input type="button" name="OutOfStock" value="Out Of Stock" class="btn btn-warning mt-2" id="btnOutOfStock" />
+                                <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning mt-2" id="btnOutOfStock" />
                             }
 
                         </div>

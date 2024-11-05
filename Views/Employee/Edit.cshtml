@@ -21,6 +21,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.UserName)
                 @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.UserName)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.IsActive)
@@ -36,6 +37,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.Password)
                 @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.Password)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.ConfirmPassword)
@@ -46,6 +48,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.FirstName)
                 @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.FirstName)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.LastName)
@@ -65,7 +68,7 @@
 
         <div class="row mt-3 teamBudgetContainer">
             <div class="col-md-6">
-                <label>Team Budget</label>
+                <label>Teambudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
@@ -101,7 +104,7 @@
             }
             else
             {
-                <label>Employee Budget</label>
+                <label>Mitarbeiterbudget</label>
                 <div class="col-md-4 mt-3">
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
                 </div>

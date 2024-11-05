@@ -21,16 +21,21 @@ namespace WebShop.Models
         }
 
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Benutzername ist erforderlich")]
         [Display(Name = "Benutzername")]
         public string UserName { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage = "Der Vorname ist erforderlich")]
         [Display(Name = "Vorname")]
         public string FirstName { get; set; }
+
         [Display(Name = "Nachname")]
         public string LastName { get; set; }
+
         [Display(Name = "Email")]
         public string Email { get; set; }
+
 
         [Display(Name = "Rolle")]
         public Nullable<int> UserRole { get; set; }
@@ -50,8 +55,11 @@ namespace WebShop.Models
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDt { get; set; }
+
         [Display(Name = "Passwort")]
+        [Required(ErrorMessage = "Passwort ist erforderlich")]
         public string Password { get; set; }
+
         [Display(Name = "Passwort wiederholen")]
         public string ConfirmPassword { get; set; }
 

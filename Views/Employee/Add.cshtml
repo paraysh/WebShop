@@ -11,7 +11,7 @@
     }
 </style>
 
-<h2>Add</h2>
+<h2>Erstellen</h2>
 
 <div class="m-1 card p-3 bg-light">
     @using (Html.BeginForm())
@@ -19,6 +19,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.UserName)
                 @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.UserName)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.IsActive)
@@ -34,6 +35,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.Password)
                 @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.Password)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.ConfirmPassword)
@@ -44,6 +46,7 @@
             <div class="col-md-6">
                 @Html.LabelFor(model => model.FirstName)
                 @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                @Html.ValidationMessageFor(m => m.FirstName)
             </div>
             <div class="col-md-6">
                 @Html.LabelFor(model => model.LastName)
@@ -63,7 +66,7 @@
 
         <div class="row mt-3 teamBudgetContainer">
             <div class="col-md-6">
-                <label>Team Budget</label>
+                <label>Teambudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
@@ -77,11 +80,11 @@
 
         <div class="row mt-3 employeeContainer">
             <div class="col-md-4">
-                <label>Assign Team Leader</label>
+                <label>Teamleiter zuweisen</label>
                 @Html.DropDownListFor(model => model.TeamLeader, Model.availableTeamLeaderLst, new { @class = "form-control", @data_placement = "auto" })
             </div>
             <div class="col-md-4 mt-3">
-                <label>Employee Budget</label>
+                <label>Mitarbeiterbudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
@@ -101,11 +104,11 @@
         <div>
             <div>
                 <div class="pull-left">
-                    @Html.ActionLink("Cancel", "EmployeeManagement", "Employee", new { @class = "btn btn-dark" })
+                    @Html.ActionLink("Abbrechen", "EmployeeManagement", "Employee", new { @class = "btn btn-dark" })
                 </div>
             </div>
             <div style="text-align:right">
-                <input type="submit" class="btn btn-primary" value="Submit" />
+                <input type="submit" class="btn btn-primary" value="Erstellen" />
             </div>
         </div>
     }

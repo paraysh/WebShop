@@ -16,7 +16,7 @@ namespace WebShop.Models
         }
 
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Name ist erforderlich")]
         [Display(Name = "Name")]
         public string Name { get; set; }
         [Display(Name = "Beschreibung")]
@@ -25,7 +25,7 @@ namespace WebShop.Models
         [Display(Name = "Artikelart")]
         public int Type { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Kosten sind erforderlich")]
         [Display(Name = "Kosten (€ pro Monat)")]
         public Nullable<decimal> Cost { get; set; }
 

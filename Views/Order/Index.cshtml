@@ -168,15 +168,5 @@ webGrid.Column(format: (item) =>
             }
         });
     })
-
-
-    // setting up alert div
-    function ShowAlert(msg_title, msg_body, msg_type) {
-        var AlertMsg = $('#msgDiv');
-        $(AlertMsg).find('strong').html(msg_title);
-        $(AlertMsg).find('span').html(msg_body);
-        $(AlertMsg).removeAttr('class');
-        $(AlertMsg).addClass('alert alert-' + msg_type);
-        $(AlertMsg).show();
-    };
+    
 </script>

@@ -13,6 +13,8 @@
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/WebShopIcon.png">
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -88,5 +90,17 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        // setting up alert div
+        function ShowAlert(msg_title, msg_body, msg_type) {
+            var AlertMsg = $('#msgDiv');
+            $(AlertMsg).find('strong').html(msg_title);
+            $(AlertMsg).find('span').html(msg_body);
+            $(AlertMsg).removeAttr('class');
+            $(AlertMsg).addClass('alert alert-' + msg_type);
+            $(AlertMsg).show();
+        };
+    </script>
 </body>
 </html>

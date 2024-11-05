@@ -63,6 +63,19 @@ namespace WebShop.Controllers
         [HttpPost]
         public ActionResult Add(AddStockModel addStockModel)
         {
+            //check for duplicate serial Numbers
+            if (addStockModel.LstSerialNumbers != null && addStockModel.LstSerialNumbers.Count > 0)
+            {
+                var anyDuplicateInNewSerialNum = addStockModel.LstSerialNumbers.GroupBy(x => x).Any(g => g.Count() > 1);
+                var anyDuplicateInDB = db.tblStockDetails.Where(x => addStockModel.LstSerialNumbers.Contains(x.SerialNumber)).Count() > 0;
+
+                if (anyDuplicateInNewSerialNum || anyDuplicateInDB)
+                {
+                    return Json(data: new { Error = true, Message = "Doppelte Seriennummer erkannt." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+                
+
             tblStock _tblStock = new tblStock();
             _tblStock.ItemId = addStockModel.Id;
             _tblStock.Quantity = addStockModel.Quantity;
@@ -88,8 +101,7 @@ namespace WebShop.Controllers
                 db.SaveChanges();
             }
 
-            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Success!", Message = string.Format("{0} added to stock.", addStockModel.Name) };
-            return RedirectToAction("StockDetails");
+            return Json(data: new { Success = true, Message = "{0} zum Bestand hinzugefügt." }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Remove(int id)

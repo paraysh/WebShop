@@ -202,6 +202,8 @@ namespace WebShop.Controllers
                     db.SaveChanges();
                 }
 
+                //Check if sofware is added for added hardware article
+
                 transaction.Commit();
 
                 //refresh cart
