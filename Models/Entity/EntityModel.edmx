@@ -80,6 +80,7 @@
           <Property Name="SerialNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="OrderId" Type="int" />
           <Property Name="IsDeleted" Type="char" MaxLength="1" />
+          <Property Name="DeleteReason" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="tblTeamBudget">
           <Key>
@@ -427,6 +428,7 @@
           <NavigationProperty Name="tblOrderDetails" Relationship="Self.FK_tblOrderDetails_tblStockDetails" FromRole="tblStockDetails" ToRole="tblOrderDetails" />
           <NavigationProperty Name="tblStock" Relationship="Self.FK_tblStockDetails_tblStock" FromRole="tblStockDetails" ToRole="tblStock" />
           <Property Name="IsDeleted" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DeleteReason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblTeamBudget">
           <Key>
@@ -746,6 +748,7 @@
           <EntitySetMapping Name="tblStockDetails">
             <EntityTypeMapping TypeName="WebShopModel.tblStockDetail">
               <MappingFragment StoreEntitySet="tblStockDetails">
+                <ScalarProperty Name="DeleteReason" ColumnName="DeleteReason" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StockId" ColumnName="StockId" />

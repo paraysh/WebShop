@@ -62,13 +62,16 @@
                         <div class="col-md-7" style="text-align: right;">
                             @if (item.ItemsInStock > 0)
                             {
-                                @*<input type="button" name="AddToCart" value="Add To Cart" class="btn btn-primary" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)" />*@
-                                <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
-                                    <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
-                                    <span class="added">Hinzugefügt</span>
-                                    <i class="fa fa-shopping-cart"></i>
-                                    <i class="fa fa-box"></i>
-                                </button>
+                                if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                                {
+                                    @*<input type="button" name="AddToCart" value="Add To Cart" class="btn btn-primary" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)" />*@
+                                    <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
+                                        <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
+                                        <span class="added">Hinzugefügt</span>
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <i class="fa fa-box"></i>
+                                    </button>
+                                }
                             }
                             else
                             {

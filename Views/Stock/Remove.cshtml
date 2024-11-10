@@ -51,7 +51,8 @@
                 @Html.DropDownListFor(model => model.SelectedSerialNo, Model.SelectLstSerialNumbers, new { @class = "form-control", @id = "ddlSerialNo" })
             </div>
             <div class="col-md-6">
-                
+                <label>Grund</label>
+                @Html.TextAreaFor(model => model.DeleteReason, new { @class = "form-control", @required= "required" })
             </div>
         </div>
 

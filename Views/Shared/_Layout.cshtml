@@ -11,6 +11,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/WebShopIcon.png">
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -34,7 +36,15 @@
                         <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }
-                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins) //Team Leader //Admins
+                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders) //Team Leader 
+                {
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
+                    </ul>
+                }
+                else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins) //Admins
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
@@ -47,7 +57,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
+                        @*<li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>*@
                         <li>@Html.ActionLink("Warenbestand", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }

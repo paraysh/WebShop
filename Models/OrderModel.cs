@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -42,4 +43,11 @@ namespace WebShop.Models
         public DateTime LendingEndDt { get; set; }
     }
 
+
+    public class WebGridFilterModel
+    {
+        public IEnumerable<OrderModel> OrderBy { get; set; }
+        public string HeadingText { get; set; }
+        public Func<OrderModel, string> Property { get; set; }
+    }
 }

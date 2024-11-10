@@ -270,6 +270,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\WebGridHelpers.cs" />
     <Compile Include="Models\AddStockModel.cs" />
     <Compile Include="Models\Entity\EntityModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -388,6 +389,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\WebGridFilter.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -419,6 +421,7 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Stock\Details.cshtml" />
+    <Content Include="Views\Shared\_webGridFilter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

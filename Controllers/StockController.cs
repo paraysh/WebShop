@@ -151,6 +151,7 @@ namespace WebShop.Controllers
             db.Entry(tblStockModel).State = EntityState.Modified;
 
             stockDetailModel.IsDeleted = "Y";
+            stockDetailModel.DeleteReason = stockModel.DeleteReason;
             db.Entry(stockDetailModel).State = EntityState.Modified;
             //db.tblStockDetails.Remove(stockDetailModel);
             db.SaveChanges();

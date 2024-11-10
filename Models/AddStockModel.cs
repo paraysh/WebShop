@@ -18,5 +18,7 @@ namespace WebShop.Models
         public List<SelectListItem> SelectLstSerialNumbers { get; set; }
 
         public string SelectedSerialNo { get; set; }
+
+        public string DeleteReason { get; set; }
     }
 }

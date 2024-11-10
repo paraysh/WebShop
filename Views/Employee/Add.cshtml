@@ -66,15 +66,15 @@
 
         <div class="row mt-3 teamBudgetContainer">
             <div class="col-md-6">
-                <label>Teambudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
+                    <label>Teambudget</label>
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
                 }
-                else
+                @*else
                 {
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @value = "0" })
-                }
+                }*@
             </div>
         </div>
 
@@ -84,15 +84,15 @@
                 @Html.DropDownListFor(model => model.TeamLeader, Model.availableTeamLeaderLst, new { @class = "form-control", @data_placement = "auto" })
             </div>
             <div class="col-md-4 mt-3">
-                <label>Mitarbeiterbudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
+                    <label>Mitarbeiterbudget</label>
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
                 }
-                else
+                @*else
                 {
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @value = "0" })
-                }
+                }*@
             </div>
             @*<div class="col-md-3 mt-3">
                     <label>Team Budget</label>

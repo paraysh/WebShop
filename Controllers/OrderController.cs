@@ -32,6 +32,8 @@ namespace WebShop.Controllers
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
+            int userID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
+            ViewBag.UserId = userID;
 
             List<OrderModel> model = new List<OrderModel>();
 

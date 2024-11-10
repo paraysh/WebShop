@@ -3,7 +3,6 @@
     ViewBag.Title = "Shopping Cart";
     decimal TotalAmt = 0;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    bool showLendinfPrdDDL = false;
 }
 
 <h2>Warenkorb</h2>
@@ -25,7 +24,6 @@
         @foreach (var item in Model)
         {
             TotalAmt += item.Total;
-            showLendinfPrdDDL = item.Type == (int)WebShop.Models.Enum.ItemTypeEnum.RentalSoftware ? true : false;
 
             <tr>
                 <td>
@@ -44,9 +42,7 @@
                 <td>
                     @item.UnitPrice
                 </td>
-                @if (showLendinfPrdDDL)
-                {
-
+                @{
                     var listPeriod = new SelectList(new[]
                         {
                             new {ID="1", Name="1 Monate"},
@@ -63,17 +59,10 @@
                             new {ID="12", Name="12 Monate"}
                         },
                         "ID", "Name", item.LendingPeriodMonths);
-
-                    <td>
-                        @Html.DropDownList("ddlLendingPeriod", listPeriod, new { @class = "form-control", @itemid = item.Id, @onChange = "EditCart(this)" })
-                    </td>
                 }
-                else
-                {
-                    <td>
-                        @item.LendingPeriodMonths
-                    </td>
-                }
+                <td>
+                    @Html.DropDownList("ddlLendingPeriod", listPeriod, new { @class = "form-control", @itemid = item.Id, @onChange = "EditCart(this)" })
+                </td>
                 <td>
                     @item.LendingStartDt.ToShortDateString()
                 </td>
@@ -101,16 +90,16 @@
                 </a>
             </td>
             <td colspan="6" style="text-align: right">
-                <input type="button" value="Bestellung aufgeben" name="PlaceOrder" id="btnPlaceOrder" onclick="PlaceOrder()" class="btn btn-success"/>
+                <input type="button" value="Bestellung aufgeben" name="PlaceOrder" id="btnPlaceOrder" onclick="PlaceOrder()" class="btn btn-success" />
             </td>
         </tr>
     </table>
 }
 else
 {
-<h3 style="text-align:center">
-    Warenkorb ist leer.
-</h3>
+    <h3 style="text-align:center">
+        Warenkorb ist leer.
+    </h3>
 }
 
 

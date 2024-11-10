@@ -71,9 +71,9 @@ namespace WebShop.Controllers
                 objShoppingCart.ImageName = addedItem.ImageName;
                 objShoppingCart.Name = addedItem.Name;
                 objShoppingCart.Type = addedItem.Type;
-                objShoppingCart.LendingPeriodMonths = addedItem.Type == (int)ItemTypeEnum.RentalSoftware ? 1 : 24;
+                objShoppingCart.LendingPeriodMonths = 1;
                 objShoppingCart.LendingStartDt = DateTime.Now;
-                objShoppingCart.LendingEndDt = addedItem.Type == (int)ItemTypeEnum.RentalSoftware ? DateTime.Now.AddMonths(1) : DateTime.Now.AddMonths(24);
+                objShoppingCart.LendingEndDt = DateTime.Now.AddMonths(1);
                 objShoppingCart.CartQuantity = 1;
                 objShoppingCart.UnitPrice = addedItem.Cost.Value;
                 objShoppingCart.Total = objShoppingCart.UnitPrice * objShoppingCart.LendingPeriodMonths;

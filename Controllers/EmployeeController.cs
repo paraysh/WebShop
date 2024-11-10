@@ -86,7 +86,6 @@ namespace WebShop.Controllers
             return RedirectToAction("EmployeeManagement");
         }
 
-        //[Authorize(Roles = "20")]  //Master Data Manager
         public ActionResult EmployeeManagement()
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -95,7 +94,17 @@ namespace WebShop.Controllers
             ViewBag.UserId = userID;
 
             List<tblUser> lstUsers = new List<tblUser>();
-            lstUsers = db.tblUsers.Include(x => x.tblUserRolesMaster).ToList();
+
+            if (_userRole == (int)UserRoleEnum.TeamLeaders)
+            {
+                var selfRow  = db.tblUsers.Include(x => x.tblUserRolesMaster).Where(x => x.Id == userID).First();
+                lstUsers = db.tblTeamEmployees.Where(x => x.TeamLeaderId == userID).Select(s => s.tblUser).ToList();
+                lstUsers.Add(selfRow);
+            }
+            else
+            {
+                lstUsers = db.tblUsers.Include(x => x.tblUserRolesMaster).ToList();
+            }
             return View(lstUsers);
         }
 
