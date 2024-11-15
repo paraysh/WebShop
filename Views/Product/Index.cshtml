@@ -4,34 +4,55 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script type="text/javascript">
-    function AddToCart(item) {
-        $(item).addClass("clicked");
-        var itemId = $(item).attr("itemid");
-        var formData = new FormData();
-        formData.append("ItemId", itemId);
-
-        $.ajax({
-            async: true,
-            type: 'POST',
-            contentType: false,
-            processData: false,
-            data: formData,
-            url: '/Product/AddToCart',
-            success: function (data) {
-                if (data.Success) {
-                    $("#cartItem").text("Warenkorb(" + data.Counter + ")");
-                }
-            },
-            error: function () {
-                alert("Something went wrong!");
-            }
-        });
+<style>
+    .container {
+        width: 100%;
     }
-</script>
+</style>
 
 <div class="container">
     <h2>Alle Artikel</h2>
+
+    <div class="row input-group pe-3 ps-5">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        @*<input class="input-lg form-control autocomplete" placeholder="Enter Item Name" />*@
+        <input class="tag_input input-lg form-control" id="txtSearch" list="json-datalist" placeholder="Enter Item Name">
+        <datalist id="json-datalist"></datalist>
+    </div>
+
+    @{
+        string both = "";
+        string Hardware = "";
+        string Software = "";
+        var selectedFilter = ViewBag.SelectedFilter;
+        if (selectedFilter == null)
+        {
+            both = "checked";
+        }
+        else if (selectedFilter == "Hardware")
+        {
+            Hardware = "checked";
+        }
+        else
+        {
+            Software = "checked";
+        }
+
+    }
+
+    <div class="mt-2" style="text-align:center">
+        <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
+        <label class="btn btn-secondary" for="rdBoth">All</label>
+
+        <input type="radio" class="btn-check" name="filterOptions" id="rdHardware" autocomplete="off" @Hardware>
+        <label class="btn btn-secondary" for="rdHardware">Hardware</label>
+
+        <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
+        <label class="btn btn-secondary" for="rdSoftware">Software</label>
+    </div>
+
+
+
     <div class="row">
         @foreach (var item in Model)
         {
@@ -86,3 +107,77 @@
         }
     </div>
 </div>
+
+<script type="text/javascript">
+    function AddToCart(item) {
+        $(item).addClass("clicked");
+        var itemId = $(item).attr("itemid");
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Product/AddToCart',
+            success: function (data) {
+                if (data.Success) {
+                    $("#cartItem").text("Warenkorb(" + data.Counter + ")");
+                }
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    };
+
+    $(".tag_input").keyup(function (e) {
+        console.log("aala re aala");
+        var sString = $("#txtSearch").val();
+        $.ajax({
+            url: "@Url.Action("Search","Product")",
+            type: "POST",
+            data: { 'SearchedString': sString },
+            dataType: "json",
+            success: function (data) {
+                if (data == null || data == "") {
+                    //alert("no skills found");
+                }
+                else {
+                    var dataList = document.getElementById('json-datalist');
+                    $(dataList).empty();
+                    $.each(data, function (key, value) {
+                        console.log(value);
+                        $(dataList).append($('<option>').text(value.Name.trim()).attr("value", value.Id));
+                    });
+                }
+            },
+            error: function () {
+                alert("failure");
+            }
+        });
+    });
+
+    $(".tag_input").change(function (e) {
+        var $this = this;
+        var id = $this.value;
+        window.location.href = '/Product/Details/' + id;
+    });
+
+    $('input[type=radio][name=filterOptions]').change(function () {
+        var $this = this;
+        console.log("here we go ", $this.getAttribute("Id"));
+        var id = $this.getAttribute("Id");
+        if (id == 'rdHardware') {
+            window.location.href = '/Product/IndexFilter?filter=Hardware';
+        }
+        else if (id == 'rdSoftware') {
+            window.location.href = '/Product/IndexFilter?filter=Software';
+        } else {  // all
+            window.location.href = '/Product/Index';
+        }
+    });
+
+</script>

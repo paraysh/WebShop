@@ -50,6 +50,54 @@ namespace WebShop.Controllers
             return View(lstProducts);
         }
 
+        public ActionResult IndexFilter(string filter)
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            _ = new List<ProductModel>();
+            List<ProductModel> lstProducts = new List<ProductModel>();
+
+            if (filter == "Hardware")
+            {
+                ViewBag.SelectedFilter = "Hardware";
+                lstProducts = db.tblItems.Include(x => x.tblStocks)
+                    .Where(x => x.IsActive == "Y")
+                    .Where(x => x.tblItemTypeMaster.Id == (int)ItemTypeEnum.Hardware)
+                    .Select(l => new ProductModel
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    Description = l.Description,
+                    ProductType = l.tblItemTypeMaster.ItemType,
+                    Cost = l.Cost,
+                    ImageName = l.ImageName,
+                    ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+
+                }).ToList();
+            }
+            else
+            {
+                ViewBag.SelectedFilter = "Software";
+                lstProducts = db.tblItems.Include(x => x.tblStocks)
+                    .Where(x => x.IsActive == "Y")
+                    .Where(x => x.tblItemTypeMaster.Id == (int)ItemTypeEnum.LicensedSoftware || x.tblItemTypeMaster.Id == (int)ItemTypeEnum.RentalSoftware)
+                    .Select(l => new ProductModel
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        Description = l.Description,
+                        ProductType = l.tblItemTypeMaster.ItemType,
+                        Cost = l.Cost,
+                        ImageName = l.ImageName,
+                        ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+
+                    }).ToList();
+            }
+
+            return View("Index", lstProducts);
+        }
+
         [HttpPost]
         public JsonResult AddToCart(int ItemId) 
         {
@@ -219,6 +267,25 @@ namespace WebShop.Controllers
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = "Order Failed!" };
                 return Json(data: new { Success = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public JsonResult Search(string SearchedString)
+        {
+            _ = new List<ProductModel>();
+            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y")
+                .Where(i => i.Name.Contains(SearchedString)).Select(l => new ProductModel
+            {
+                Id = l.Id,
+                Name = l.Name,
+                Description = l.Description,
+                ProductType = l.tblItemTypeMaster.ItemType,
+                Cost = l.Cost,
+                ImageName = l.ImageName,
+                ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+
+            }).ToList();
+
+            return Json(lstProducts, JsonRequestBehavior.AllowGet);
         }
     }
 }
