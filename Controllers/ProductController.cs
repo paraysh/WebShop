@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace WebShop.Controllers
 {
+    /// <summary>
+    /// Der ProductController verwaltet die Produkte im WebShop.
+    /// Er bietet Funktionen zum Anzeigen, Filtern, Hinzufügen zum Warenkorb, Bearbeiten des Warenkorbs, Entfernen von Artikeln, Anzeigen von Details, Bestellen und Suchen von Produkten.
+    /// </summary>
     [Authorize]
     public class ProductController : Controller
     {
@@ -21,20 +25,24 @@ namespace WebShop.Controllers
         private WebShopEntities db;
         List<ShoppingCartModel> lstShoppingCartModel;
 
+        /// <summary>
+        /// Konstruktor, der die Datenbankverbindung initialisiert und den Warenkorb initialisiert.
+        /// </summary>
         public ProductController()
         {
             db = new WebShopEntities();
             lstShoppingCartModel = new List<ShoppingCartModel>();
-            
         }
 
-        // GET: Product
+        /// <summary>
+        /// Zeigt die Hauptseite der Produktverwaltung an.
+        /// </summary>
+        /// <returns>Die Index-Ansicht mit einer Liste von Produkten.</returns>
         public ActionResult Index()
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
-            _ = new List<ProductModel>();
             List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y").Select(l => new ProductModel
             {
                 Id = l.Id,
@@ -44,18 +52,21 @@ namespace WebShop.Controllers
                 Cost = l.Cost,
                 ImageName = l.ImageName,
                 ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-
             }).ToList();
 
             return View(lstProducts);
         }
 
+        /// <summary>
+        /// Filtert die Produkte nach dem angegebenen Filter (Hardware oder Software).
+        /// </summary>
+        /// <param name="filter">Der Filter, nach dem die Produkte gefiltert werden sollen.</param>
+        /// <returns>Die gefilterte Liste von Produkten.</returns>
         public ActionResult IndexFilter(string filter)
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
-            _ = new List<ProductModel>();
             List<ProductModel> lstProducts = new List<ProductModel>();
 
             if (filter == "Hardware")
@@ -65,16 +76,15 @@ namespace WebShop.Controllers
                     .Where(x => x.IsActive == "Y")
                     .Where(x => x.tblItemTypeMaster.Id == (int)ItemTypeEnum.Hardware)
                     .Select(l => new ProductModel
-                {
-                    Id = l.Id,
-                    Name = l.Name,
-                    Description = l.Description,
-                    ProductType = l.tblItemTypeMaster.ItemType,
-                    Cost = l.Cost,
-                    ImageName = l.ImageName,
-                    ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-
-                }).ToList();
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        Description = l.Description,
+                        ProductType = l.tblItemTypeMaster.ItemType,
+                        Cost = l.Cost,
+                        ImageName = l.ImageName,
+                        ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+                    }).ToList();
             }
             else
             {
@@ -91,27 +101,32 @@ namespace WebShop.Controllers
                         Cost = l.Cost,
                         ImageName = l.ImageName,
                         ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-
                     }).ToList();
             }
 
             return View("Index", lstProducts);
         }
 
+        /// <summary>
+        /// Fügt ein Produkt zum Warenkorb hinzu.
+        /// </summary>
+        /// <param name="ItemId">Die ID des hinzuzufügenden Produkts.</param>
+        /// <returns>Eine JSON-Antwort, die den Erfolg des Hinzufügens anzeigt.</returns>
         [HttpPost]
-        public JsonResult AddToCart(int ItemId) 
+        public JsonResult AddToCart(int ItemId)
         {
             ShoppingCartModel objShoppingCart = new ShoppingCartModel();
             var addedItem = db.tblItems.Single(x => x.Id == ItemId);
 
-            if (Session["CartItem"] != null) {
+            if (Session["CartItem"] != null)
+            {
                 lstShoppingCartModel = Session["CartItem"] as List<ShoppingCartModel>;
             }
 
             if (lstShoppingCartModel.Any(x => x.Id == ItemId))
             {
-                //If item already added to cart, do nothing
-                //Quantity increase discarded
+                // Wenn der Artikel bereits im Warenkorb ist, nichts tun
+                // Mengenänderung verworfen
             }
             else
             {
@@ -125,7 +140,7 @@ namespace WebShop.Controllers
                 objShoppingCart.CartQuantity = 1;
                 objShoppingCart.UnitPrice = addedItem.Cost.Value;
                 objShoppingCart.Total = objShoppingCart.UnitPrice * objShoppingCart.LendingPeriodMonths;
-                
+
                 lstShoppingCartModel.Add(objShoppingCart);
             }
 
@@ -134,6 +149,12 @@ namespace WebShop.Controllers
             return Json(data: new { Success = true, Counter = lstShoppingCartModel.Count }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Bearbeitet den Warenkorb, indem die Leihdauer eines Artikels geändert wird.
+        /// </summary>
+        /// <param name="ItemId">Die ID des zu bearbeitenden Artikels.</param>
+        /// <param name="LendingPeriod">Die neue Leihdauer in Monaten.</param>
+        /// <returns>Eine JSON-Antwort, die den Erfolg der Bearbeitung anzeigt.</returns>
         [HttpPost]
         public JsonResult EditCart(int ItemId, int LendingPeriod)
         {
@@ -156,6 +177,10 @@ namespace WebShop.Controllers
             return Json(data: new { Success = true, Counter = lstShoppingCartModel.Count }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Zeigt den Warenkorb an.
+        /// </summary>
+        /// <returns>Die Ansicht des Warenkorbs.</returns>
         public ActionResult ShoppingCart()
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -165,6 +190,11 @@ namespace WebShop.Controllers
             return View(lstShoppingCartModel);
         }
 
+        /// <summary>
+        /// Entfernt einen Artikel aus dem Warenkorb.
+        /// </summary>
+        /// <param name="ItemId">Die ID des zu entfernenden Artikels.</param>
+        /// <returns>Leitet zur Warenkorbansicht weiter.</returns>
         public ActionResult RemoveItem(int ItemId)
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -182,6 +212,11 @@ namespace WebShop.Controllers
             return RedirectToAction("ShoppingCart");
         }
 
+        /// <summary>
+        /// Zeigt die Details eines Produkts an.
+        /// </summary>
+        /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
+        /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult Details(int id)
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -191,7 +226,10 @@ namespace WebShop.Controllers
             return View(selectedItem);
         }
 
-
+        /// <summary>
+        /// Platziert eine Bestellung mit den Artikeln im Warenkorb.
+        /// </summary>
+        /// <returns>Eine JSON-Antwort, die den Erfolg oder Fehler der Bestellung anzeigt.</returns>
         [HttpPost]
         public ActionResult PlaceOrder()
         {
@@ -213,7 +251,6 @@ namespace WebShop.Controllers
                 db.tblOrders.Add(_tblOrder);
                 db.SaveChanges();
 
-
                 int generatedOrderId = _tblOrder.Id;
 
                 foreach (var item in lstShoppingCartModel)
@@ -231,30 +268,27 @@ namespace WebShop.Controllers
                     availableStock.Quantity = availableStock.Quantity - 1;
                     db.Entry(availableStock).State = EntityState.Modified;
 
-                    if (item.Type == (int)ItemTypeEnum.RentalSoftware) // When item is Rental Software
+                    if (item.Type == (int)ItemTypeEnum.RentalSoftware) // Wenn der Artikel Mietsoftware ist
                     {
                         _tblOrderDetail.StockDetailsId = null;
                         _tblOrderDetail.ItemId = item.Id;
                     }
                     else
                         _tblOrderDetail.StockDetailsId = availableStockDetail.Id;
-                   
-                    
+
                     db.tblOrderDetails.Add(_tblOrderDetail);
-                    if (availableStockDetail != null) 
+                    if (availableStockDetail != null)
                     {
                         availableStockDetail.OrderId = generatedOrderId;
                         db.Entry(availableStockDetail).State = EntityState.Modified;
                     }
-                   
+
                     db.SaveChanges();
                 }
 
-                //Check if sofware is added for added hardware article
-
                 transaction.Commit();
 
-                //refresh cart
+                // Warenkorb aktualisieren
                 Session["CartCounter"] = null;
                 Session["CartItem"] = null;
 
@@ -269,21 +303,24 @@ namespace WebShop.Controllers
             }
         }
 
+        /// <summary>
+        /// Sucht nach Produkten anhand eines Suchbegriffs.
+        /// </summary>
+        /// <param name="SearchedString">Der Suchbegriff, nach dem gesucht werden soll.</param>
+        /// <returns>Eine JSON-Antwort mit der Liste der gefundenen Produkte.</returns>
         public JsonResult Search(string SearchedString)
         {
-            _ = new List<ProductModel>();
             List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y")
                 .Where(i => i.Name.Contains(SearchedString)).Select(l => new ProductModel
-            {
-                Id = l.Id,
-                Name = l.Name,
-                Description = l.Description,
-                ProductType = l.tblItemTypeMaster.ItemType,
-                Cost = l.Cost,
-                ImageName = l.ImageName,
-                ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-
-            }).ToList();
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    Description = l.Description,
+                    ProductType = l.tblItemTypeMaster.ItemType,
+                    Cost = l.Cost,
+                    ImageName = l.ImageName,
+                    ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+                }).ToList();
 
             return Json(lstProducts, JsonRequestBehavior.AllowGet);
         }

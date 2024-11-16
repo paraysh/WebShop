@@ -17,6 +17,10 @@ using Microsoft.Ajax.Utilities;
 
 namespace WebShop.Controllers
 {
+    /// <summary>
+    /// Der OrderController verwaltet Bestellungen im WebShop.
+    /// Er bietet Funktionen zum Anzeigen, Genehmigen und Ablehnen von Bestellungen.
+    /// </summary>
     [Authorize]
     public class OrderController : Controller
     {
@@ -24,10 +28,18 @@ namespace WebShop.Controllers
         private WebShopEntities db;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+        /// <summary>
+        /// Konstruktor, der die Datenbankverbindung initialisiert.
+        /// </summary>
         public OrderController()
         {
             db = new WebShopEntities();
         }
+
+        /// <summary>
+        /// Zeigt die Hauptseite der Bestellverwaltung an.
+        /// </summary>
+        /// <returns>Die Index-Ansicht mit einer Liste von Bestellungen.</returns>
         public ActionResult Index()
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -75,10 +87,13 @@ namespace WebShop.Controllers
                 var filteredList = lstOrders.Where(x => x.OrderedBy == currUserID).ToList();
                 return View(filteredList);
             }
-            //var lstStockDetails = lstOrders.SelectMany(x => x.tblStockDetails).ToList();
-            //return View(lstOrders.ToList());
         }
 
+        /// <summary>
+        /// Genehmigt eine Bestellung.
+        /// </summary>
+        /// <param name="OrderId">Die ID der zu genehmigenden Bestellung.</param>
+        /// <returns>Eine JSON-Antwort, die den Erfolg oder Fehler der Genehmigung anzeigt.</returns>
         public ActionResult Approve(int OrderId)
         {
             var OrderTblRow = db.tblOrders.Where(x => x.Id == OrderId).Single();
@@ -89,10 +104,9 @@ namespace WebShop.Controllers
 
             if (utilisedBudget > empBudget)
             {
-                //TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Utilised Budget {0} is exceeding Employee Budget {1}.", utilisedBudget, empBudget) };
                 return Json(data: new { Error = true, Message = string.Format("Verwendetes Budget {0} überschreitet das Mitarbeiterbudget von {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }
-            
+
             OrderTblRow.OrderApproved = "Y";
 
             db.Entry(OrderTblRow).State = EntityState.Modified;
@@ -102,6 +116,11 @@ namespace WebShop.Controllers
             return Json(data: new { Success = true, Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Lehnt eine Bestellung ab.
+        /// </summary>
+        /// <param name="OrderId">Die ID der zu ablehnenden Bestellung.</param>
+        /// <returns>Eine JSON-Antwort, die den Erfolg der Ablehnung anzeigt.</returns>
         public ActionResult Reject(int OrderId)
         {
             var OrderTblRow = db.tblOrders.Include(x => x.tblStockDetails).Where(x => x.Id == OrderId).Single();
@@ -112,9 +131,6 @@ namespace WebShop.Controllers
 
             db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
-
-            // Free up stock
-
 
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} abgelehnt.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = "Order Rejected" }, JsonRequestBehavior.AllowGet);

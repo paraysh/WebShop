@@ -13,26 +13,38 @@ using WebShop.Models.Enum;
 
 namespace WebShop.Controllers
 {
+    /// <summary>
+    /// Der EmployeeController verwaltet die Mitarbeiter im WebShop.
+    /// Er bietet Funktionen zum Hinzufügen, Bearbeiten, Löschen und Deaktivieren von Mitarbeitern sowie zur Verwaltung der Mitarbeiterübersicht.
+    /// </summary>
     [Authorize]
     public class EmployeeController : Controller
     {
         int _userRole;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
         private WebShopEntities db = new WebShopEntities();
-        // GET: Employee
+
+        /// <summary>
+        /// Zeigt die Startseite für Mitarbeiter an.
+        /// </summary>
+        /// <returns>Die Index-Ansicht.</returns>
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Add() 
+        /// <summary>
+        /// Zeigt die Seite zum Hinzufügen eines neuen Mitarbeiters an.
+        /// </summary>
+        /// <returns>Die Add-Ansicht mit einem neuen UserModel.</returns>
+        public ActionResult Add()
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
             UserModel usr = new UserModel();
-            //create available team leaders select list
-            usr.UserRoleEnum = UserRoleEnum.MasterDataManager; // default value for dropdown
+            // Erstellen der verfügbaren Teamleiter-Auswahlliste
+            usr.UserRoleEnum = UserRoleEnum.MasterDataManager; // Standardwert für Dropdown
 
             var admins = db.tblUsers.Where(x => x.UserRole.Value == (int)UserRoleEnum.TeamLeaders).Select(x => new SelectListItem
             {
@@ -43,6 +55,11 @@ namespace WebShop.Controllers
             return View(usr);
         }
 
+        /// <summary>
+        /// Fügt einen neuen Mitarbeiter hinzu.
+        /// </summary>
+        /// <param name="user">Das UserModel des hinzuzufügenden Mitarbeiters.</param>
+        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
         [HttpPost]
         public ActionResult Add(UserModel user)
         {
@@ -57,20 +74,19 @@ namespace WebShop.Controllers
             newUserObj.LastName = user.LastName;
             newUserObj.Email = user.Email;
             newUserObj.UserRole = (int)user.UserRoleEnum;
-            newUserObj.Password = user.Password; // setting password same as userName
+            newUserObj.Password = user.Password; // Passwort wird auf den gleichen Wert wie der Benutzername gesetzt
             newUserObj.IsActive = user.IsActive;
 
-            // check if userrole is "team leader"
+            // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
             if (user.UserRoleEnum == UserRoleEnum.TeamLeaders)
             {
                 tblTeamBudget _tblbudgetObj = new tblTeamBudget();
                 _tblbudgetObj.TeamLeaderId = user.Id;
                 _tblbudgetObj.TeamBudget = user.TeamBudget;
                 newUserObj.tblTeamBudgets.Add(_tblbudgetObj);
-
             }
 
-            // check if userrole is "Employee"
+            // Überprüfen, ob die Benutzerrolle "Mitarbeiter" ist
             if (user.UserRoleEnum == UserRoleEnum.Employee)
             {
                 tblTeamEmployee _tblTeamObj = new tblTeamEmployee();
@@ -86,6 +102,10 @@ namespace WebShop.Controllers
             return RedirectToAction("EmployeeManagement");
         }
 
+        /// <summary>
+        /// Zeigt die Mitarbeiterverwaltungsseite an.
+        /// </summary>
+        /// <returns>Die EmployeeManagement-Ansicht mit einer Liste von Mitarbeitern.</returns>
         public ActionResult EmployeeManagement()
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -97,7 +117,7 @@ namespace WebShop.Controllers
 
             if (_userRole == (int)UserRoleEnum.TeamLeaders)
             {
-                var selfRow  = db.tblUsers.Include(x => x.tblUserRolesMaster).Where(x => x.Id == userID).First();
+                var selfRow = db.tblUsers.Include(x => x.tblUserRolesMaster).Where(x => x.Id == userID).First();
                 lstUsers = db.tblTeamEmployees.Where(x => x.TeamLeaderId == userID).Select(s => s.tblUser).ToList();
                 lstUsers.Add(selfRow);
             }
@@ -108,6 +128,11 @@ namespace WebShop.Controllers
             return View(lstUsers);
         }
 
+        /// <summary>
+        /// Zeigt die Seite zum Bearbeiten eines Mitarbeiters an.
+        /// </summary>
+        /// <param name="id">Die ID des zu bearbeitenden Mitarbeiters.</param>
+        /// <returns>Die Edit-Ansicht mit dem UserModel des Mitarbeiters.</returns>
         public ActionResult Edit(int id)
         {
             _userRole = User.Identity.GetUserId<int>();
@@ -135,8 +160,8 @@ namespace WebShop.Controllers
                 var teamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Sum(x => x.TeamEmployeeBudget);
                 usr.RemainingTeamBudget = usr.AssignedTeamBudget - (teamEmployeesTotalBudget == null ? 0 : teamEmployeesTotalBudget);
             }
-            
-            //create available team leaders select list
+
+            // Erstellen der verfügbaren Teamleiter-Auswahlliste
             var admins = db.tblUsers.Where(x => x.UserRole.Value == (int)UserRoleEnum.TeamLeaders).Select(x => new SelectListItem
             {
                 Text = x.UserName,
@@ -148,20 +173,24 @@ namespace WebShop.Controllers
             return View(usr);
         }
 
+        /// <summary>
+        /// Aktualisiert die Informationen eines Mitarbeiters.
+        /// </summary>
+        /// <param name="user">Das aktualisierte UserModel des Mitarbeiters.</param>
+        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
         [HttpPost]
         public ActionResult Edit(UserModel user)
         {
-            
             var employee = db.tblUsers.Where(x => x.Id == user.Id).Include(x => x.tblUserRolesMaster).Include(x => x.tblTeamBudgets).Include(x => x.tblTeamEmployees).SingleOrDefault();
             employee.UserName = user.UserName;
             employee.FirstName = user.FirstName;
             employee.LastName = user.LastName;
             employee.Email = user.Email;
             employee.UserRole = (int)user.UserRoleEnum;
-            employee.Password = user.Password; 
+            employee.Password = user.Password;
             employee.IsActive = user.IsActive;
 
-            // check if userrole is "team leader"
+            // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
             if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && user.TeamBudget.HasValue)
             {
                 if (employee.tblTeamBudgets.Count > 0)
@@ -178,7 +207,7 @@ namespace WebShop.Controllers
                 }
             }
 
-            // check if userrole is "Employee"
+            // Überprüfen, ob die Benutzerrolle "Mitarbeiter" ist
             if (user.UserRoleEnum == UserRoleEnum.Employee && user.EmployeeBudget.HasValue)
             {
                 if (user.EmployeeBudget > user.RemainingTeamBudget)
@@ -214,6 +243,11 @@ namespace WebShop.Controllers
             return RedirectToAction("EmployeeManagement");
         }
 
+        /// <summary>
+        /// Löscht einen Mitarbeiter.
+        /// </summary>
+        /// <param name="id">Die ID des zu löschenden Mitarbeiters.</param>
+        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
         public ActionResult Delete(int id)
         {
             var user = db.tblUsers.Where(x => x.Id == id).SingleOrDefault();
@@ -222,6 +256,11 @@ namespace WebShop.Controllers
             return RedirectToAction("EmployeeManagement");
         }
 
+        /// <summary>
+        /// Deaktiviert einen Mitarbeiter.
+        /// </summary>
+        /// <param name="id">Die ID des zu deaktivierenden Mitarbeiters.</param>
+        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
         public ActionResult Deactivate(int id)
         {
             var user = db.tblUsers.Where(x => x.Id == id).SingleOrDefault();

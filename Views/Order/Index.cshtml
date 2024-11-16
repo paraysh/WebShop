@@ -59,13 +59,13 @@
 <h2>Bestellverlauf</h2>
 
 <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#own">Own Orders</a></li>
+    <li class="active"><a data-toggle="tab" href="#own">Eigene Bestellungen</a></li>
     <li><a data-toggle="tab" href="#employee">Mitarbeiterbestellungen</a></li>
 </ul>
 
 <div class="tab-content">
     <div id="own" class="tab-pane fade in active">
-        <h3>Own Orders</h3>
+        <h3>Eigene Bestellungen</h3>
         @webGridOwn.GetHtml(
         htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
         headerStyle: "grid-header",
@@ -110,7 +110,7 @@
     </div>
     <div id="employee" class="tab-pane fade">
         <h3>Mitarbeiterbestellungen</h3>
-        <p>Filter by clicking on Bestellt von.</p>
+        <p>Filtern durch klicken auf "Bestellt von"</p>
         @*@webGridEmp.GetHtml(
             htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
             headerStyle: "grid-header",

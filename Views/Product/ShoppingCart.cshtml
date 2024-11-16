@@ -27,7 +27,7 @@
 
             <tr>
                 <td>
-                    <a href="@Url.Action("RemoveItem", "Product", new { ItemId = item.Id })" title="Remove">
+                    <a href="@Url.Action("RemoveItem", "Product", new { ItemId = item.Id })" title="Entfernen">
                         <i class="fa fa-lg fa-trash" style="color:orangered"></i>
                     </a>
 
@@ -45,7 +45,7 @@
                 @{
                     var listPeriod = new SelectList(new[]
                         {
-                            new {ID="1", Name="1 Monate"},
+                            new {ID="1", Name="1 Monat"},
                             new {ID="2", Name="2 Monate"},
                             new {ID="3", Name="3 Monate"},
                             new {ID="4", Name="4 Monate"},
@@ -56,7 +56,19 @@
                             new {ID="9", Name="9 Monate"},
                             new {ID="10", Name="10 Monate"},
                             new {ID="11", Name="11 Monate"},
-                            new {ID="12", Name="12 Monate"}
+                            new {ID="12", Name="12 Monate"},
+                            new {ID="13", Name="13 Monate"},
+                            new {ID="14", Name="14 Monate"},
+                            new {ID="15", Name="15 Monate"},
+                            new {ID="16", Name="16 Monate"},
+                            new {ID="17", Name="17 Monate"},
+                            new {ID="18", Name="18 Monate"},
+                            new {ID="19", Name="19 Monate"},
+                            new {ID="20", Name="20 Monate"},
+                            new {ID="21", Name="21 Monate"},
+                            new {ID="22", Name="22 Monate"},
+                            new {ID="23", Name="23 Monate"},
+                            new {ID="24", Name="24 Monate"},
                         },
                         "ID", "Name", item.LendingPeriodMonths);
                 }

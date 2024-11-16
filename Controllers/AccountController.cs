@@ -13,11 +13,16 @@ using WebShop.Models.Entity;
 
 namespace WebShop.Controllers
 {
+    /// <summary>
+    /// Diese Klasse verwaltet die Benutzerkonten im WebShop. Sie bietet Funktionen zum Anmelden, Abmelden und zur Authentifizierung von Benutzern.
+    /// </summary>
     public class AccountController : Controller
     {
         public WebShopEntities db = new WebShopEntities();
-      
 
+        /// <summary>
+        /// Holt den Authentifizierungsmanager für die aktuelle HTTP-Anfrage.
+        /// </summary>
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -26,16 +31,22 @@ namespace WebShop.Controllers
             }
         }
 
-        //
-        // GET: /Account/Login
+        /// <summary>
+        /// Zeigt die Anmeldeseite an.
+        /// </summary>
+        /// <param name="returnUrl">Die URL, zu der nach erfolgreicher Anmeldung weitergeleitet werden soll.</param>
+        /// <returns>Die Ansicht der Anmeldeseite.</returns>
         [AllowAnonymous]
         public async Task<ActionResult> Login(string returnUrl)
         {
             return View();
         }
 
-        //
-        // POST: /Account/Login
+        /// <summary>
+        /// Verarbeitet die Anmeldeinformationen des Benutzers.
+        /// </summary>
+        /// <param name="model">Das Anmeldemodell mit Benutzername und Passwort.</param>
+        /// <returns>Leitet zur Produktseite weiter, wenn die Anmeldung erfolgreich ist, andernfalls wird die Anmeldeseite erneut angezeigt.</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -45,7 +56,7 @@ namespace WebShop.Controllers
             {
                 try
                 {
-                    var user =  db.tblUsers.Where(x => x.UserName == model.UserName && x.Password == model.Password).FirstOrDefault();
+                    var user = db.tblUsers.Where(x => x.UserName == model.UserName && x.Password == model.Password).FirstOrDefault();
 
                     if (user != null)
                     {
@@ -54,8 +65,8 @@ namespace WebShop.Controllers
                             TempData["ErrorMessage"] = "<h3>Account Suspended</h3>Your account is suspended. Please contact your company administrator.";
                             return View(model);
                         }
-                       
-                        //sign user in
+
+                        // Benutzer anmelden
                         SignIn(user);
                         ViewBag.CurrentUser = user;
                         return RedirectToAction("Index", "Product");
@@ -67,13 +78,17 @@ namespace WebShop.Controllers
                 }
                 catch (Exception ex)
                 {
-                    //Log exception
+                    // Ausnahme protokollieren
                 }
             }
-            // If we got this far, something failed, redisplay form
+            // Wenn wir hierher gelangen, ist etwas fehlgeschlagen, das Formular erneut anzeigen
             return View(model);
         }
 
+        /// <summary>
+        /// Meldet den Benutzer an und erstellt die entsprechenden Ansprüche.
+        /// </summary>
+        /// <param name="user">Das Benutzerobjekt, das angemeldet werden soll.</param>
         private void SignIn(tblUser user)
         {
             var claims = new Claim[] {
@@ -82,19 +97,23 @@ namespace WebShop.Controllers
                             new Claim(ClaimTypes.Role, user.tblUserRolesMaster.UserRole),
                             new Claim("UserId", user.Id.ToString())
         };
-             
+
             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(identity);
         }
 
-        public ActionResult SignOut() 
+        /// <summary>
+        /// Meldet den Benutzer ab und löscht die Sitzung.
+        /// </summary>
+        /// <returns>Leitet zur Anmeldeseite weiter.</returns>
+        public ActionResult SignOut()
         {
             AuthenticationManager.SignOut();
 
-            //refresh cart
+            // Warenkorb aktualisieren
             Session["CartCounter"] = null;
             Session["CartItem"] = null;
             return RedirectToAction("Login");
-        }    
+        }
     }
 }
