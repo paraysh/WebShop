@@ -23,26 +23,30 @@
         </thead>
         @foreach (var item in Model)
         {
+            // Addiert die Gesamtkosten jedes Artikels zum Gesamtbetrag
             TotalAmt += item.Total;
 
             <tr>
                 <td>
+                    @* Link zum Entfernen eines Artikels aus dem Warenkorb *@
                     <a href="@Url.Action("RemoveItem", "Product", new { ItemId = item.Id })" title="Entfernen">
                         <i class="fa fa-lg fa-trash" style="color:orangered"></i>
                     </a>
-
-                    @*@Html.ActionLink(" ", "RemoveItem", "Product", new { ItemId = item.Id }, new { @class = "btn btn-lg btn-outline-danger" })*@
                 </td>
                 <td>
+                    @* Bild des Artikels *@
                     <img src="~/Content/ItemImages/@item.ImageName" height="60px" width="60px" class="img-rounded" />
                 </td>
                 <td>
+                    @* Name des Artikels *@
                     @item.Name
                 </td>
                 <td>
+                    @* Preis des Artikels pro Monat *@
                     @item.UnitPrice
                 </td>
                 @{
+                    // Dropdown-Liste für die Auswahl der Leihdauer
                     var listPeriod = new SelectList(new[]
                         {
                             new {ID="1", Name="1 Monat"},
@@ -73,15 +77,19 @@
                         "ID", "Name", item.LendingPeriodMonths);
                 }
                 <td>
+                    @* Dropdown-Liste zur Auswahl der Leihdauer *@
                     @Html.DropDownList("ddlLendingPeriod", listPeriod, new { @class = "form-control", @itemid = item.Id, @onChange = "EditCart(this)" })
                 </td>
                 <td>
+                    @* Startdatum der Leihdauer *@
                     @item.LendingStartDt.ToShortDateString()
                 </td>
                 <td>
+                    @* Enddatum der Leihdauer *@
                     @item.LendingEndDt.ToShortDateString()
                 </td>
                 <td style="text-align: right">
+                    @* Gesamtkosten für den Artikel *@
                     @item.Total
                 </td>
             </tr>
@@ -97,11 +105,13 @@
 
         <tr>
             <td colspan="6">
+                @* Link zurück zur Artikelliste *@
                 <a href="index" class="btn btn-primary">
                     Zurück zu Artikeln
                 </a>
             </td>
             <td colspan="6" style="text-align: right">
+                @* Button zum Aufgeben der Bestellung *@
                 <input type="button" value="Bestellung aufgeben" name="PlaceOrder" id="btnPlaceOrder" onclick="PlaceOrder()" class="btn btn-success" />
             </td>
         </tr>
@@ -113,7 +123,6 @@ else
         Warenkorb ist leer.
     </h3>
 }
-
 
 <script type="text/javascript">
     function EditCart(item) {
@@ -147,7 +156,6 @@ else
             type: 'POST',
             contentType: false,
             processData: false,
-            //data: formData,
             url: '/Product/PlaceOrder',
             success: function (data) {
                 if (data.Success) {

@@ -41,13 +41,14 @@ namespace WebShop.Models
         /// <summary>
         /// Der Vorname des Benutzers.
         /// </summary>
-        [Required(ErrorMessage = "Der Vorname ist erforderlich")]
+        [Required(ErrorMessage = "Vorname ist erforderlich")]
         [Display(Name = "Vorname")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Der Nachname des Benutzers.
         /// </summary>
+        [Required(ErrorMessage = "Nachname ist erforderlich")]
         [Display(Name = "Nachname")]
         public string LastName { get; set; }
 
@@ -132,6 +133,7 @@ namespace WebShop.Models
         /// Das Bestätigungspasswort des Benutzers.
         /// </summary>
         [Display(Name = "Passwort wiederholen")]
+        [Required(ErrorMessage = "Passwort ist erforderlich")]
         public string ConfirmPassword { get; set; }
 
         /// <summary>

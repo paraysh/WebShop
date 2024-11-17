@@ -1,25 +1,36 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    @* Zeichensatz der Webseite auf UTF-8 setzen *@
     <meta charset="utf-8" />
+    @* Meta-Tag zur Anpassung der Ansicht auf verschiedenen Geräten *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Titel der Seite, der aus dem ViewBag entnommen wird *@
     <title>@ViewBag.Title</title>
+    @* Einbinden der CSS-Dateien *@
     @Styles.Render("~/Content/css")
+    @* Einbinden von Modernizr, um HTML5- und CSS3-Funktionen in älteren Browsern zu unterstützen *@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    @* Navigationselement, das als Platzhalter dient *@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
     </nav>
     <div class="container body-content">
+        @* Hier wird der Hauptinhalt der Seite gerendert *@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Web Shop Application</p>
+            @* Fußzeile mit dem aktuellen Jahr und dem Namen der Anwendung *@
+            <p>&copy; @DateTime.Now.Year - Fiktiv GmbH Application</p>
         </footer>
     </div>
 
+    @* Einbinden der jQuery-Bibliothek *@
     @Scripts.Render("~/bundles/jquery")
+    @* Einbinden der Bootstrap-Bibliothek *@
     @Scripts.Render("~/bundles/bootstrap")
+    @* Ermöglicht das Einfügen zusätzlicher Skripte in spezifischen Ansichten *@
     @RenderSection("scripts", required: false)
 </body>
 </html>

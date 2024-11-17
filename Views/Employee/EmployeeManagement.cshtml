@@ -20,6 +20,7 @@
 <div class="m-5">
     @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins)
     {
+        <!-- Zeigt einen "Hinzufügen"-Button nur für Admins an. -->
         @Html.ActionLink("Hinzufügen", "Add", "Employee", null, new { @class = "btn btn-primary mb-2", @style = "float : right" })
     }
 
@@ -42,19 +43,28 @@
             {
                 <tr>
                     <td>@user.Id</td>
+                    <!-- Zeigt die ID des Benutzers an. -->
                     <td>@user.UserName</td>
+                    <!-- Zeigt den Benutzernamen an. -->
                     <td>@user.FirstName</td>
+                    <!-- Zeigt den Vornamen an. -->
                     <td>@user.LastName</td>
+                    <!-- Zeigt den Nachnamen an. -->
                     <td>@user.Email</td>
+                    <!-- Zeigt die E-Mail-Adresse an. -->
                     <td>@user.tblUserRolesMaster.UserRole</td>
+                    <!-- Zeigt die Rolle des Benutzers an. -->
                     <td>@user.IsActive</td>
+                    <!-- Zeigt an, ob der Benutzer aktiv ist. -->
                     @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins)
                     {
+                        <!-- Zeigt "Bearbeiten" und "Deaktivieren" Links nur für Admins an. -->
                         <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
                         <td>@Html.ActionLink("Deaktivieren", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
                     }
                     else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
+                        <!-- Zeigt "Bearbeiten" Link für Teamleiter an, wenn der Benutzer zu ihrem Team gehört oder sie selbst sind. -->
                         if (user.tblTeamEmployees.Where(x => x.TeamLeaderId == ViewBag.UserId).Count() > 0 || user.Id == ViewBag.UserId)
                         {
                             <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
@@ -68,12 +78,12 @@
                     }
                     else
                     {
+                        <!-- Keine Aktionen für andere Benutzerrollen. -->
                         <td> </td>
                         <td> </td>
                     }
                 </tr>
             }
-
         </tbody>
     </table>
 </div>

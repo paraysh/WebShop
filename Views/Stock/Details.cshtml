@@ -6,7 +6,7 @@
 
 <style>
     .div-tile {
-        width : 500px;
+        width: 500px;
         box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
         border-radius: 10px;
         padding: 10px;
@@ -14,50 +14,48 @@
 
     ul.tree, ul.tree ul {
         list-style: none;
-        /*margin: 0;
-        padding: 0;*/
     }
 
-    ul.tree ul {
-        margin-left: 30px;
-    }
+        ul.tree ul {
+            margin-left: 30px;
+        }
 
-    ul.tree li {
-        margin: 0;
-        padding: 0px 35px;
-        line-height: 20px;
-        color: black;
-        border-left: 3px solid rgb(100,100,100);
-    }
+        ul.tree li {
+            margin: 0;
+            padding: 0px 35px;
+            line-height: 20px;
+            color: black;
+            border-left: 3px solid rgb(100,100,100);
+        }
 
-    ul.tree li:last-child {
-        border-left: none;
-    }
+            ul.tree li:last-child {
+                border-left: none;
+            }
 
-    ul.tree li:before {
-        position: relative;
-        top: 3px;
-        height: 1em;
-        width: 200px;
-        color: white;
-        border-bottom: 3px solid rgb(100,100,100);
-        content: "";
-        display: inline-block;
-        left: -35px;
-    }
+            ul.tree li:before {
+                position: relative;
+                top: 3px;
+                height: 1em;
+                width: 200px;
+                color: white;
+                border-bottom: 3px solid rgb(100,100,100);
+                content: "";
+                display: inline-block;
+                left: -35px;
+            }
 
-    ul.tree li:last-child:before {
-        border-left: 3px solid rgb(100,100,100);
-    }
+            ul.tree li:last-child:before {
+                border-left: 3px solid rgb(100,100,100);
+            }
 </style>
 
 <h2>Details</h2>
 
 <ul class="tree">
     <li>
-        
         <div class="div-tile">
             <h3>Artikeldetails</h3>
+            @* Anzeige der Artikeldetails *@
             <span style="margin-left: 15px">Artikelname : <b> @Model.ItemName</b></span>
             <br />
             <span style="margin-left: 15px">Artikelart : <b> @Model.ItemType</b></span>
@@ -68,14 +66,14 @@
             @foreach (var stock in Model.lstStocks)
             {
                 <li>
-                    @{ 
+                    @{
                         var text = "";
                         text = stock.StockDeleteDate == null ? "hinzugefügt " : "Entfernt";
-
                     }
 
                     <div class="div-tile">
                         <h3>Bestand @text</h3>
+                        @* Anzeige der Bestandsinformationen *@
                         <span style="margin-left: 15px">Bestand hinzugefügt von : <b> @stock.StockAddedBy</b></span>
                         <br />
                         <span style="margin-left: 15px">Datum : <b> @stock.StockAddDate</b></span>
@@ -94,6 +92,7 @@
                             <li>
                                 <div class="div-tile">
                                     <h3>Details</h3>
+                                    @* Anzeige der Details zu jedem Bestandseintrag *@
                                     <span style="margin-left: 15px">Seriennummer : <b> @stockDtls.SerialNo</b></span>
                                     <br />
                                     <span style="margin-left: 15px">Bestell-ID : <b> @stockDtls.OrderID</b></span>

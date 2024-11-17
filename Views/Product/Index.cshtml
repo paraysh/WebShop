@@ -15,12 +15,13 @@
 
     <div class="row input-group pe-3 ps-5">
         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-        @*<input class="input-lg form-control autocomplete" placeholder="Enter Item Name" />*@
+        @* Suchfeld für die Artikelsuche *@
         <input class="tag_input input-lg form-control" id="txtSearch" list="json-datalist" placeholder="Artikel suchen">
         <datalist id="json-datalist"></datalist>
     </div>
 
     @{
+        // Initialisierung der Filteroptionen
         string both = "";
         string Hardware = "";
         string Software = "";
@@ -37,10 +38,10 @@
         {
             Software = "checked";
         }
-
     }
 
     <div class="mt-2" style="text-align:center">
+        @* Filteroptionen für die Artikel *@
         <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
         <label class="btn btn-secondary" for="rdBoth">Alle Artikel</label>
 
@@ -50,8 +51,6 @@
         <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
         <label class="btn btn-secondary" for="rdSoftware">Software</label>
     </div>
-
-
 
     <div class="row">
         @foreach (var item in Model)
@@ -65,16 +64,11 @@
 
                         <div class="row">
                             <div class="col-md-12">
+                                @* Bild des Artikels *@
                                 <img src="~/Content/ItemImages/@item.ImageName" width="100%" height="150px" />
                             </div>
-                            @*<div class="col-md-6" style="text-align:left">
-                                    - <b>@item.ProductType</b>
-                                    <br />
-                                    - <b>@item.Description</b>
-                                </div>*@
                         </div>
                     </div>
-                    @*<hr />*@
                     <div class="row p-1 mx-1" style="border-top: 1px solid maroon">
                         <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/Details/@item.Id'">
                             <b>@item.Cost</b> (€ pro Monat)
@@ -85,7 +79,7 @@
                             {
                                 if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                                 {
-                                    @*<input type="button" name="AddToCart" value="Add To Cart" class="btn btn-primary" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)" />*@
+                                    @* Button zum Hinzufügen des Artikels zum Warenkorb *@
                                     <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
                                         <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
                                         <span class="added">Hinzugefügt</span>
@@ -96,20 +90,20 @@
                             }
                             else
                             {
+                                @* Button, der anzeigt, dass der Artikel nicht verfügbar ist *@
                                 <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning mt-2" id="btnOutOfStock" />
                             }
-
                         </div>
                     </div>
                 </div>
             </div>
-
         }
     </div>
 </div>
 
 <script type="text/javascript">
     function AddToCart(item) {
+        // Fügt eine CSS-Klasse hinzu, um den Button als geklickt zu markieren.
         $(item).addClass("clicked");
         var itemId = $(item).attr("itemid");
         var formData = new FormData();
@@ -124,6 +118,7 @@
             url: '/Product/AddToCart',
             success: function (data) {
                 if (data.Success) {
+                    // Aktualisiert die Warenkorb-Anzeige.
                     $("#cartItem").text("Warenkorb(" + data.Counter + ")");
                 }
             },
@@ -133,8 +128,8 @@
         });
     };
 
+    // Event-Handler für die Eingabe im Suchfeld.
     $(".tag_input").keyup(function (e) {
-        console.log("aala re aala");
         var sString = $("#txtSearch").val();
         $.ajax({
             url: "@Url.Action("Search","Product")",
@@ -142,14 +137,10 @@
             data: { 'SearchedString': sString },
             dataType: "json",
             success: function (data) {
-                if (data == null || data == "") {
-                    //alert("no skills found");
-                }
-                else {
+                if (data != null && data != "") {
                     var dataList = document.getElementById('json-datalist');
                     $(dataList).empty();
                     $.each(data, function (key, value) {
-                        console.log(value);
                         $(dataList).append($('<option>').text(value.Name.trim()).attr("value", value.Id));
                     });
                 }
@@ -160,24 +151,24 @@
         });
     });
 
+    // Event-Handler für die Auswahl eines Artikels aus der Liste.
     $(".tag_input").change(function (e) {
         var $this = this;
         var id = $this.value;
         window.location.href = '/Product/Details/' + id;
     });
 
+    // Event-Handler für die Filteroptionen.
     $('input[type=radio][name=filterOptions]').change(function () {
         var $this = this;
-        console.log("here we go ", $this.getAttribute("Id"));
         var id = $this.getAttribute("Id");
         if (id == 'rdHardware') {
             window.location.href = '/Product/IndexFilter?filter=Hardware';
         }
         else if (id == 'rdSoftware') {
             window.location.href = '/Product/IndexFilter?filter=Software';
-        } else {  // all
+        } else {  // alle Artikel
             window.location.href = '/Product/Index';
         }
     });
-
 </script>

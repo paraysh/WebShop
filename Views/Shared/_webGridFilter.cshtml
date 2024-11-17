@@ -1,19 +1,25 @@
 ﻿@model WebShop.Models.WebGridFilterModel
+
 <div class="dropdown">
     <span class="button-group">
+        @* Anzeige der Überschrift des Filters und des Dropdown-Symbols *@
         @Model.HeadingText <span class="dropdown-toggle glyphicon glyphicon-filter" data-toggle="dropdown"></span>
         <ul class="dropdown-menu">
             <li>
+                @* Option zum Auswählen oder Abwählen aller Filter *@
                 <a href="#" class="small" data-value="all" tabIndex="-1">
                     <input type="checkbox" checked />&nbsp;Alle auswählen
                 </a>
             </li>
             <li class="divider"></li>
+            @* Iteration über die Benutzerliste und Anzeige der Filteroptionen *@
             @foreach (var user in Model.OrderBy.OrderBy(Model.Property))
             {
+                @* Überprüfen, ob der aktuelle Benutzer nicht der im ViewBag gespeicherte Benutzer ist *@
                 if (ViewBag.UserId != user.OrderedBy)
                 {
                     <li>
+                        @* Anzeige einer Filteroption für jeden Benutzer *@
                         <a href="#" class="small" data-value="@user.OrderedBy" tabIndex="-1">
                             <input type="checkbox" class="filterbox" checked />&nbsp;@Model.Property(user)
                         </a>

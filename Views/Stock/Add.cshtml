@@ -7,39 +7,44 @@
 <h2>Artikel zum Warenbestand hinzufügen</h2>
 
 <div class="m-1 card p-3 bg-light">
-    @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmAddItemToStock" }))
-        {*@
+    @* Formular zum Hinzufügen eines Artikels zum Warenbestand *@
     <div class="row">
         <div class="col-md-6">
+            @* ID des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Id)
             @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @id = "txtItemId" })
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
+            @* Name des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Name)
             @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
         </div>
         <div class="col-md-6">
+            @* Typ des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Type)
             @Html.DropDownList("Type",
-               EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
-               null,
-               new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
+                    EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+                    null,
+                    new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-md-6">
+            @* Beschreibung des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Description)
             @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
         </div>
         <div class="col-md-6">
+            @* Kosten des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Cost)
             @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-md-6">
+            @* Bild des Artikels *@
             <label>Bild:</label>
             <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
         </div>
@@ -47,39 +52,36 @@
     <hr />
     <div class="row mt-3">
         <div class="col-md-6">
+            @* Eingabefeld für die Menge des Artikels *@
             @Html.LabelFor(model => model.Quantity)
-            @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", @type = "number", @min="0", @id = "txtQuantity", @data_placement = "auto" })
+            @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", @type = "number", @min = "0", @id = "txtQuantity", @data_placement = "auto" })
         </div>
         <div class="col-md-6 mt-4">
+            @* Button zum Hinzufügen von Seriennummern *@
             <button class="btn btn-success" type="button" id="btnAddSerialNo">Seriennummer hinzufügen</button>
         </div>
-
     </div>
     <div class="temp-div"></div>
 
-    
     <hr />
     <div>
         <div>
             <div class="pull-left">
+                @* Link zum Abbrechen und Zurückkehren zur Bestandsübersicht *@
                 @Html.ActionLink("Abbrechen", "StockDetails", "Stock", new { @class = "btn btn-dark" })
             </div>
         </div>
         <div style="text-align:right">
+            @* Button zum Speichern der Änderungen *@
             <button class="btn btn-primary" id="btnSave">Bestätigen</button>
         </div>
     </div>
-
-    @*<input type="submit" class="btn btn-primary" value="Submit" />*@
-    @*}*@
 </div>
 
 <script type="text/javascript">
-
     $(document).ready(function () {
-        
+        // Event-Handler für den Speichern-Button
         $('#btnSave').click(function () {
-
             var qnt = $('#txtQuantity').val();
             var lstSerialNo = [];
             for (var i = 0; i < qnt; i++) {
@@ -87,6 +89,7 @@
                 lstSerialNo.push(serialNo);
             }
 
+            // AJAX-Aufruf zum Speichern der Artikelinformationen
             $.ajax({
                 url: '@Url.Action("Add")',
                 type: 'POST',
@@ -97,13 +100,13 @@
                         window.location.href = '/Stock/StockDetails';
                     }
                     if (data.Error) {
-                        //alert(data.Message);
                         ShowAlert('Error', data.Message, 'danger');
                     }
                 }
             });
         });
 
+        // Event-Handler für den Button zum Hinzufügen von Seriennummern
         $('#btnAddSerialNo').on('click', function() {
             var val = $('#txtQuantity').val();
             $('#btnAddSerialNo').prop('disabled', true);
@@ -123,10 +126,9 @@
             } else {
                 alert("Error! Please Enter Valid Quantity. (0-10)")
             }
-
         });
 
-        //hide 'generate serial number' button for Rental Software
+        // Versteckt den Button zum Generieren von Seriennummern für Mietsoftware
         if ($('#ddlItemType').val() == 10 || $('#ddlItemType').val() == 30) {
             $('#btnAddSerialNo').show();
             $('#btnSave').prop('disabled', true);
@@ -135,4 +137,3 @@
         }
     });
 </script>
-

@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    // Bestimmt, ob die Admin-spezifischen Felder angezeigt werden sollen.
     var adminDisplay = ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins ? "display: block;" : "display: none;";
 }
 
@@ -17,79 +18,101 @@
 <div class="m-1 card p-3 bg-light">
     @using (Html.BeginForm())
     {
-            <div style="@adminDisplay">
-                <div class="row">
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.UserName)
-                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                        @Html.ValidationMessageFor(m => m.UserName)
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.IsActive)
-                        @Html.DropDownList("IsActive", new List<SelectListItem>
-
+        <!-- Beginnt ein Formular, das eine POST-Anfrage an die aktuelle Aktion sendet. -->
+        <div style="@adminDisplay">
+            <!-- Container für Admin-spezifische Felder, die nur angezeigt werden, wenn der Benutzer ein Admin ist. -->
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.UserName)
+                    <!-- Ein Label für das Benutzername-Feld. -->
+                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für den Benutzernamen mit der CSS-Klasse "form-control". -->
+                    @Html.ValidationMessageFor(m => m.UserName)
+                    <!-- Eine Validierungsnachricht für das Benutzername-Feld. -->
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.IsActive)
+                    <!-- Ein Label für das Aktiv/Inaktiv-Feld. -->
+                    @Html.DropDownList("IsActive", new List<SelectListItem>
                         {
-                           new SelectListItem{ Text="Active", Value = "Y" },
-                           new SelectListItem{ Text="Not-Active", Value = "N" }
-                        }, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.Password)
-                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                        @Html.ValidationMessageFor(m => m.Password)
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.ConfirmPassword)
-                        @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.FirstName)
-                        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                        @Html.ValidationMessageFor(m => m.FirstName)
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.LastName)
-                        @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.Email)
-                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(model => model.UserRole)
-                        @Html.EnumDropDownListFor(model => model.UserRoleEnum, new { @class = "form-control", @id = "ddlUserRole" })
-                    </div>
+                        new SelectListItem{ Text="Aktiv", Value = "Y" },
+                        new SelectListItem{ Text="Inaktiv", Value = "N" }
+                    }, new { @class = "form-control" })
+                    <!-- Ein Dropdown-Feld für den Aktiv/Inaktiv-Status mit der CSS-Klasse "form-control". -->
                 </div>
             </div>
-        
-        //@Html.EditorForModel("tblUser")
-
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.Password)
+                    <!-- Ein Label für das Passwort-Feld. -->
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
+                    @Html.ValidationMessageFor(m => m.Password)
+                    <!-- Eine Validierungsnachricht für das Passwort-Feld. -->
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.ConfirmPassword)
+                    <!-- Ein Label für das Passwort-Bestätigungsfeld. -->
+                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für die Passwort-Bestätigung mit der CSS-Klasse "form-control". -->
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.FirstName)
+                    <!-- Ein Label für das Vorname-Feld. -->
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für den Vornamen mit der CSS-Klasse "form-control". -->
+                    @Html.ValidationMessageFor(m => m.FirstName)
+                    <!-- Eine Validierungsnachricht für das Vorname-Feld. -->
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.LastName)
+                    <!-- Ein Label für das Nachname-Feld. -->
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für den Nachnamen mit der CSS-Klasse "form-control". -->
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.Email)
+                    <!-- Ein Label für das E-Mail-Feld. -->
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <!-- Ein Eingabefeld für die E-Mail-Adresse mit der CSS-Klasse "form-control". -->
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.UserRole)
+                    <!-- Ein Label für das Benutzerrollen-Feld. -->
+                    @Html.EnumDropDownListFor(model => model.UserRoleEnum, new { @class = "form-control", @id = "ddlUserRole" })
+                    <!-- Ein Dropdown-Feld für die Benutzerrollen mit der CSS-Klasse "form-control". -->
+                </div>
+            </div>
+        </div>
 
         <div class="row mt-3 teamBudgetContainer">
+            <!-- Container für das Teambudget-Feld, das nur für Teamleiter angezeigt wird. -->
             <div class="col-md-6">
                 <label>Teambudget</label>
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
+                    <!-- Ein Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
                 }
                 else
                 {
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                    <!-- Ein deaktiviertes Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
                 }
             </div>
         </div>
         <div class="row mt-3 employeeContainer">
+            <!-- Container für die Mitarbeiter-spezifischen Felder. -->
             @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins)
             {
                 <div class="col-md-4">
                     <label>Teamleiter zuordnen</label>
                     @Html.DropDownListFor(model => model.TeamLeader, Model.availableTeamLeaderLst, new { @class = "form-control", @data_placement = "auto" })
+                    <!-- Ein Dropdown-Feld zur Zuordnung eines Teamleiters mit der CSS-Klasse "form-control". -->
                 </div>
             }
 
@@ -98,16 +121,19 @@
                 <label class="mt-3">Mitarbeiterbudget</label>
                 <div class="col-md-3">
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto" })
+                    <!-- Ein Eingabefeld für das Mitarbeiterbudget mit der CSS-Klasse "form-control". -->
                 </div>
 
                 <label class="mt-3">Zugeordnetes Teambudget</label>
                 <div class="col-md-3">
                     @Html.TextBoxFor(model => model.AssignedTeamBudget, new { @class = "form-control", @data_placement = "auto", @readonly = "readonly" })
+                    <!-- Ein schreibgeschütztes Eingabefeld für das zugeordnete Teambudget mit der CSS-Klasse "form-control". -->
                 </div>
 
                 <label class="mt-3">Übriges Teambudget</label>
                 <div class="col-md-3">
                     @Html.TextBoxFor(model => model.RemainingTeamBudget, new { @class = "form-control", @data_placement = "auto", @readonly = "readonly" })
+                    <!-- Ein schreibgeschütztes Eingabefeld für das übrige Teambudget mit der CSS-Klasse "form-control". -->
                 </div>
             }
             else
@@ -115,6 +141,7 @@
                 <label>Mitarbeiterbudget</label>
                 <div class="col-md-4 mt-3">
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                    <!-- Ein deaktiviertes Eingabefeld für das Mitarbeiterbudget mit der CSS-Klasse "form-control". -->
                 </div>
             }
         </div>
@@ -124,19 +151,20 @@
             <div>
                 <div class="pull-left">
                     @Html.ActionLink("Abbrechen", "EmployeeManagement", "Employee", new { @class = "btn btn-dark" })
+                    <!-- Ein Link, um den Vorgang abzubrechen und zur Mitarbeiterverwaltungsseite zurückzukehren. -->
                 </div>
             </div>
             <div style="text-align:right">
                 <input type="submit" class="btn btn-primary" value="Bestätigen" />
+                <!-- Eine Schaltfläche zum Absenden des Formulars mit der CSS-Klasse "btn btn-primary". -->
             </div>
         </div>
-
     }
 </div>
 
-
 <script type="text/javascript">
     $(document).ready(function (doc) {
+        // Zeigt oder versteckt die Container basierend auf der ausgewählten Benutzerrolle beim Laden der Seite.
         if ($("#ddlUserRole").val() == 40) {
             $(".teamBudgetContainer").show(300);
         }
@@ -146,6 +174,7 @@
     });
 
     $("#ddlUserRole").change(function (obj) {
+        // Zeigt oder versteckt die Container basierend auf der ausgewählten Benutzerrolle bei Änderung der Auswahl.
         if (this.value == 40) {
             $(".teamBudgetContainer").show(300);
         } else {

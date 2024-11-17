@@ -13,7 +13,6 @@
     .main-head {
         height: 150px;
         background: #FFF;
-        
     }
 
     .sidenav {
@@ -55,9 +54,9 @@
         color: #fff;
     }
 
-    .login-main-text h2 {
-        font-weight: 300;
-    }
+        .login-main-text h2 {
+            font-weight: 300;
+        }
 
     .btn-black {
         background-color: #000 !important;
@@ -66,39 +65,63 @@
 </style>
 
 <div class="sidenav">
-    
+    <!-- Dies ist der seitliche Navigationsbereich, der die gesamte Höhe des Bildschirms einnimmt.
+         Er hat einen schwarzen Hintergrund und ein zentriertes Hintergrundbild. -->
 </div>
 <div class="main" style="margin-top: 10%;">
+    <!-- Dies ist der Hauptbereich der Seite, der einen oberen Rand von 10% hat. -->
     <div class="">
-        <h2 style="font-weight: 300; text-decoration: unset; text-align: start;">Fiktiv GmbH</h2>
+        <!-- Ein Container für den Titel und die Beschreibung. -->
+        <h2 style="font-weight: 300; text-decoration: unset; text-align: start;">
+            <!-- Der Titel der Seite mit leichtem Schriftgewicht und ohne Textdekoration. -->
+            Fiktiv GmbH
+        </h2>
         <p>Melden Sie sich an, um die Seite zu betreten.</p>
+        <!-- Eine Beschreibung, die den Benutzer auffordert, sich anzumelden. -->
     </div>
     <hr />
+    <!-- Eine horizontale Linie zur Trennung der Abschnitte. -->
     <div class="col-md-6 col-sm-12">
+        <!-- Ein Container, der auf mittleren Bildschirmen die Hälfte und auf kleinen Bildschirmen die gesamte Breite einnimmt. -->
         <div class="login-form">
+            <!-- Ein Container für das Login-Formular. -->
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "frmLoginForm" }))
             {
+                <!-- Beginnt ein Formular, das eine POST-Anfrage an die Login-Aktion des Account-Controllers sendet.
+                     Es enthält ein Anti-Fälschungstoken und eine Validierungszusammenfassung. -->
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
 
                 <div class="text-left">
+                    <!-- Ein Container für das Benutzername-Feld. -->
                     @Html.LabelFor(m => m.UserName)
+                    <!-- Ein Label für das Benutzername-Feld. -->
                     @Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                    <!-- Ein Eingabefeld für den Benutzernamen mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.UserName)
+                    <!-- Eine Validierungsnachricht für das Benutzername-Feld. -->
                 </div>
 
                 <div class="text-left">
+                    <!-- Ein Container für das Passwort-Feld. -->
                     @Html.LabelFor(m => m.Password)
+                    <!-- Ein Label für das Passwort-Feld. -->
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                    <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.Password)
+                    <!-- Eine Validierungsnachricht für das Passwort-Feld. -->
                 </div>
 
                 <div class="remember">
+                    <!-- Ein Container für das "Angemeldet bleiben"-Feld. -->
                     @Html.CheckBoxFor(m => m.RememberMe) @Html.LabelFor(m => m.RememberMe)
+                    <!-- Ein Kontrollkästchen und ein Label für die "Angemeldet bleiben"-Option. -->
                 </div>
 
                 <div class="action">
+                    <!-- Ein Container für die Aktionsschaltfläche. -->
                     <input type="submit" class="btn btn-primary" value="Anmelden" data-loading-text="logging..." id="btnSubmit" />
+                    <!-- Eine Schaltfläche zum Absenden des Formulars mit der CSS-Klasse "btn btn-primary". -->
                 </div>
             }
         </div>

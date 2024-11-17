@@ -1,4 +1,4 @@
-﻿@model IEnumerable< WebShop.Models.Entity.tblItem>
+﻿@model IEnumerable<WebShop.Models.Entity.tblItem>
 
 @{
     ViewBag.Title = "Item Details";
@@ -6,7 +6,7 @@
 }
 
 <style>
-    .item-img{
+    .item-img {
         width: 100px;
     }
 </style>
@@ -14,6 +14,7 @@
 <h2>Warenverwaltung</h2>
 
 <div class="m-5">
+    <!-- Ein Link, um ein neues Item hinzuzufügen. -->
     @Html.ActionLink("Hinzufügen", "Add", "Item", null, new { @class = "btn btn-primary mb-2", @style = "float : right" })
     <table class="table table-bordered table-striped">
         <thead>
@@ -25,7 +26,6 @@
                 <th>Kosten (€ pro Monat)</th>
                 <th>Bild</th>
                 <th></th>
-
             </tr>
         </thead>
         <tbody>
@@ -37,23 +37,26 @@
                     <td>@item.Description</td>
                     <td>@item.tblItemTypeMaster.ItemType</td>
                     <td>@item.Cost</td>
-                    <td><img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded"/> </td>
                     <td>
+                        <img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded" />
+                        <!-- Zeigt das Bild des Artikels an. -->
+                    </td>
+                    <td>
+                        <!-- Ein Link, um den Artikel zu bearbeiten. -->
                         @Html.ActionLink("Bearbeiten", "Edit", "Item", new { id = item.Id }, new { @class = "btn btn-primary" })
                         @if (item.IsActive == "Y")
                         {
+                            <!-- Ein Link, um den Artikel zu deaktivieren, wenn er aktiv ist. -->
                             @Html.ActionLink("Deaktivieren", "Deactivate", "Item", new { id = item.Id }, new { @class = "btn btn-danger", @id = "btnDeactivate" })
                         }
                         else
                         {
+                            <!-- Ein Link, um den Artikel zu aktivieren, wenn er inaktiv ist. -->
                             @Html.ActionLink("Aktivieren", "Activate", "Item", new { id = item.Id }, new { @class = "btn btn-success", @id = "btnActivate" })
                         }
-
                     </td>
-                        
                 </tr>
             }
-
         </tbody>
     </table>
 </div>

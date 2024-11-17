@@ -1,13 +1,15 @@
 ﻿<ul class="nav navbar-nav navbar-right">
     <li>
+        @* Überprüfen, ob der Warenkorb-Zähler in der Session null ist *@
         @if (Session["CartCounter"] == null)
         {
+            @* Wenn der Warenkorb leer ist, wird nur "Warenkorb" angezeigt *@
             @Html.ActionLink("Warenkorb", "ShoppingCart", "Product", new { area = "" }, new { @class = "nav-link", @id = "cartItem" })
         }
         else
         {
+            @* Wenn der Warenkorb Artikel enthält, wird die Anzahl der Artikel in Klammern angezeigt *@
             @Html.ActionLink("Warenkorb(" + Session["CartCounter"] + ")", "ShoppingCart", "Product", new { area = "" }, new { @class = "nav-link", @id = "cartItem" })
         }
-
     </li>
 </ul>
