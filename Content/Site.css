@@ -58,26 +58,31 @@ textarea {
 }
 
 .product-tile:hover {
-    transform: scale(1.025);
+    transform: scale(1.005);
     cursor: pointer;
+    -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-tile > div:hover {
+    box-shadow: 10px 5px 5px #897e7e;
 }
 
 
-.cart-button {
-    position: relative;
-    padding: 10px;
-    width: 200px;
-    height: 60px;
-    border: 0;
-    border-radius: 10px;
-    background-color: #4834d4;
-    outline: none;
-    cursor: pointer;
-    color: #fff;
-    transition: .3s ease-in-out;
-    overflow: hidden;
-    font-size: x-small;
-}
+    .cart-button {
+        position: relative;
+        padding: 10px;
+        width: 100%;
+        height: 60px;
+        border: 0;
+        border-radius: 10px;
+        background-color: #4834d4;
+        outline: none;
+        cursor: pointer;
+        color: #fff;
+        transition: .3s ease-in-out;
+        overflow: hidden;
+        font-size: x-small;
+    }
 
     .cart-button:hover {
         background-color: #35269b;
@@ -201,4 +206,8 @@ body {
 
 .content {
     flex: 1;
+}
+
+hr {
+    border-top: 1px solid #7e7e7e !important;
 }

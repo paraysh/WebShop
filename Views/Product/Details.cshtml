@@ -27,7 +27,7 @@
                 }
             },
             error: function () {
-                alert("Something went wrong!");
+                ShowAlert('Error', "Something went wrong!", 'danger');
             }
         });
     }
@@ -35,69 +35,78 @@
 
 <h2>Artikelinformationen</h2>
 
-<div class="m-1 card p-3 bg-light">
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(model => model.Id)
-            @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @id = "txtItemId" })
+@if (Model == null)
+{
+    <h3 class="text-center">
+        No Item Found!
+    </h3>
+}
+else
+{
+    <div class="m-1 card p-3 bg-light">
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Id)
+                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", @id = "txtItemId" })
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(model => model.Name)
-            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.Name)
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+            </div>
+            <div class="col-md-6">
+                <label>Artikelart</label>
+                @Html.DropDownList("Type",
+                 EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+                 null,
+                 new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
+            </div>
         </div>
-        <div class="col-md-6">
-            <label>Artikelart</label>
-            @Html.DropDownList("Type",
-                    EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
-                    null,
-                    new { @class = "form-control", @id = "ddlItemType", @disabled = "disabled" })
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Beschreibung</label>
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+            </div>
+            <div class="col-md-6">
+                <label>Kosten (€ pro Monat)</label>
+                @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
+            </div>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <label>Beschreibung</label>
-            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Bild:</label>
+                <img src="~/Content/ItemImages/@Model.ImageName" height="250" class="object-fit-contain border rounded" />
+            </div>
         </div>
-        <div class="col-md-6">
-            <label>Kosten (€ pro Monat)</label>
-            @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <label>Bild:</label>
-            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
-        </div>
-    </div>
-    <hr />
+        <hr />
 
-    <div class="row">
-        <div class="col-md-6">
-            <a href="/Product/Index" class="btn btn-primary">
-                Zurück zu Artikeln
-            </a>
-        </div>
-        <div class="col-md-6" style="text-align: right">
-            @if (Model.tblStocks.Sum(p => p.Quantity) > 0)
-            {
-                if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+        <div class="row">
+            <div class="col-md-6 mt-4">
+                <a href="/Product/Index" class="btn btn-primary">
+                    Zurück zu Artikeln
+                </a>
+            </div>
+            <div class="col-md-6" style="text-align: right">
+                @if (Model.tblStocks.Sum(p => p.Quantity) > 0)
                 {
-                    // Button zum Hinzufügen des Artikels zum Warenkorb, wenn der Artikel auf Lager ist und der Benutzer die entsprechende Rolle hat.
-                    <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@Model.Id" id="btnAddToCart" onclick="AddToCart(this)">
-                        <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
-                        <span class="added">Hinzugefügt</span>
-                        <i class="fa fa-shopping-cart"></i>
-                        <i class="fa fa-box"></i>
-                    </button>
+                    if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                    {
+                        // Button zum Hinzufügen des Artikels zum Warenkorb, wenn der Artikel auf Lager ist und der Benutzer die entsprechende Rolle hat.
+                        <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@Model.Id" id="btnAddToCart" onclick="AddToCart(this)">
+                            <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
+                            <span class="added">Hinzugefügt</span>
+                            <i class="fa fa-shopping-cart"></i>
+                            <i class="fa fa-box"></i>
+                        </button>
+                    }
                 }
-            }
-            else
-            {
-                // Button, der anzeigt, dass der Artikel nicht verfügbar ist, wenn er nicht auf Lager ist.
-                <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning" id="btnOutOfStock" />
-            }
+                else
+                {
+                    // Button, der anzeigt, dass der Artikel nicht verfügbar ist, wenn er nicht auf Lager ist.
+                    <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning" id="btnOutOfStock" />
+                }
+            </div>
         </div>
     </div>
-</div>
+}

@@ -104,6 +104,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HashPassword" Type="varbinary(max)" />
           <Property Name="Password" Type="nvarchar(max)" />
           <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -470,6 +471,7 @@
           <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
           <NavigationProperty Name="tblUserRolesMaster" Relationship="Self.FK_tblUsers_tblUserRolesMaster" FromRole="tblUser" ToRole="tblUserRolesMaster" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HashPassword" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="tblUserRolesMaster">
           <Key>
@@ -779,6 +781,7 @@
           <EntitySetMapping Name="tblUsers">
             <EntityTypeMapping TypeName="WebShopModel.tblUser">
               <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="HashPassword" ColumnName="HashPassword" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />

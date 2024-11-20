@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WebShop.Helper;
 using WebShop.Models;
 using WebShop.Models.Entity;
+using WebShop.Models.Enum;
 
 namespace WebShop.Controllers
 {
@@ -56,10 +61,22 @@ namespace WebShop.Controllers
             {
                 try
                 {
-                    var user = db.tblUsers.Where(x => x.UserName == model.UserName && x.Password == model.Password).FirstOrDefault();
+                    var user = db.tblUsers.Where(x => x.UserName == model.UserName).FirstOrDefault();
 
                     if (user != null)
                     {
+                       
+                        //Uncomment after adding users
+                        //Check password against a stored hash
+
+                        //byte[] hashBytes = user.HashPassword; 
+                        //PasswordHash hash = new PasswordHash(hashBytes);
+                        //if (!hash.Verify(model.Password))
+                        //{
+                        //    ModelState.AddModelError("", "Benutzername oder Passwort ungültig.");
+                        //    return View(model);
+                        //}
+
                         if (user.IsActive != "Y")
                         {
                             TempData["ErrorMessage"] = "<h3>Account Suspended</h3>Your account is suspended. Please contact your company administrator.";
@@ -70,6 +87,7 @@ namespace WebShop.Controllers
                         SignIn(user);
                         ViewBag.CurrentUser = user;
                         return RedirectToAction("Index", "Product");
+
                     }
                     else
                     {

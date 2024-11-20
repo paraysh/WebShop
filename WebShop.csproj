@@ -268,6 +268,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\PasswordHash.cs" />
     <Compile Include="Helper\WebGridHelpers.cs" />
     <Compile Include="Models\AddStockModel.cs" />
     <Compile Include="Models\Entity\EntityModel.Context.cs">
@@ -323,6 +324,7 @@
     <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\MessageVM.cs" />
+    <Compile Include="Models\ItemModelEmployee.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ShoppingCartModel.cs" />

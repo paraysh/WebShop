@@ -67,7 +67,7 @@
                         <!-- Zeigt "Bearbeiten" Link für Teamleiter an, wenn der Benutzer zu ihrem Team gehört oder sie selbst sind. -->
                         if (user.tblTeamEmployees.Where(x => x.TeamLeaderId == ViewBag.UserId).Count() > 0 || user.Id == ViewBag.UserId)
                         {
-                            <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
+                            <td>@Html.ActionLink("Details", "Edit", "Employee", new { id = @user.Id }, null) </td>
                             <td> </td>
                         }
                         else

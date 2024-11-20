@@ -49,6 +49,8 @@
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
+                    <!-- Einbindung des Warenkorbs -->
+                    @Html.Partial("_ShoppingCart")
                 }
                 else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders) // Teamleiter
                 {
@@ -57,12 +59,14 @@
                         <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
+                    <!-- Einbindung des Warenkorbs -->
+                    @Html.Partial("_ShoppingCart")
                 }
                 else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Admins) // Administratoren
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                        @*<li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>*@
                         <li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }
@@ -70,7 +74,7 @@
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                        @*<li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>*@
                         @*<li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>*@
                         <li>@Html.ActionLink("Warenbestand", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
@@ -79,12 +83,11 @@
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>
+                        @*<li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>*@
                         <li>@Html.ActionLink("Lagerverwaltung", "StockDetails", "Stock", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }
-                <!-- Einbindung des Warenkorbs -->
-                @Html.Partial("_ShoppingCart")
+
             </div>
             <!-- Abmelden-Link -->
             <a class="nav-link" href="/account/signout/" style="color:white; margin-left:30px">Abmelden</a>
@@ -93,7 +96,7 @@
     <div class="container body-content">
         <div>
             <!-- Warnmeldung, die standardmäßig ausgeblendet ist -->
-            <div class="alert alert-danger" id="msgDiv" style="display: none">
+            <div class="alert alert-danger mt-3" id="msgDiv" style="display: none">
                 <strong>Warning!</strong>
                 <span>Better check yourself, you're not looking too good.</span>
             </div>
@@ -103,7 +106,7 @@
         @if (TempData["UserMessage"] != null)
         {
             var message = (MessageVM)TempData["UserMessage"];
-            <div class="alert @message.CssClassName">
+            <div class="mt-3 alert @message.CssClassName">
                 <strong>@message.Title</strong>
                 @message.Message
             </div>
@@ -134,5 +137,13 @@
             $(AlertMsg).show();
         };
     </script>
+
+    <style>
+        /*removing unnecessary style from logout button*/
+        .nav > li > a:focus, .nav > li > a:hover {
+            text-decoration : underline;
+            background-color : unset;
+        }
+    </style>
 </body>
 </html>

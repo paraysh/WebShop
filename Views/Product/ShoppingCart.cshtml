@@ -5,7 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Warenkorb</h2>
+<h2>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <span style="margin-left: 12%">Warenkorb</span>
+        <span class="pull-right">
+            <a class="btn btn-danger" href="/Product/ClearCart">
+                Warenkorb leeren
+                <i class="fa fa-remove"></i>
+            </a>
+        </span>
+    }
+    else
+    {
+        <span>Warenkorb leeren</span>
+    }
+</h2>
 
 @if (Model != null && Model.Count() > 0)
 {
@@ -35,7 +50,7 @@
                 </td>
                 <td>
                     @* Bild des Artikels *@
-                    <img src="~/Content/ItemImages/@item.ImageName" height="60px" width="60px" class="img-rounded" />
+                    <img src="~/Content/ItemImages/@item.ImageName" height="60" class="img-rounded" />
                 </td>
                 <td>
                     @* Name des Artikels *@
@@ -145,7 +160,7 @@ else
                 }
             },
             error: function () {
-                alert("Something went wrong!");
+                ShowAlert('Error', "Something went wrong!", 'danger');
             }
         });
     }
@@ -163,7 +178,7 @@ else
                 }
             },
             error: function (data) {
-                alert("Something went wrong!");
+                ShowAlert('Error', "Something went wrong!", 'danger');
             }
         });
     }

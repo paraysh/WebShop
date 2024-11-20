@@ -8,6 +8,10 @@
     .container {
         width: 100%;
     }
+
+    .btn-check:checked + .btn {
+        background: black !important;
+    }
 </style>
 
 <div class="container">
@@ -43,34 +47,34 @@
     <div class="mt-2" style="text-align:center">
         @* Filteroptionen für die Artikel *@
         <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
-        <label class="btn btn-secondary" for="rdBoth">Alle Artikel</label>
+        <label class="btn btn-secondary radioBtn" for="rdBoth">Alle Artikel</label>
 
         <input type="radio" class="btn-check" name="filterOptions" id="rdHardware" autocomplete="off" @Hardware>
-        <label class="btn btn-secondary" for="rdHardware">Hardware</label>
+        <label class="btn btn-secondary radioBtn" for="rdHardware">Hardware</label>
 
         <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
-        <label class="btn btn-secondary" for="rdSoftware">Software</label>
+        <label class="btn btn-secondary radioBtn" for="rdSoftware">Software</label>
     </div>
 
     <div class="row">
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-1 product-tile mt-3">
-                <div style="border-style: double; border-radius:7px" class="px-1">
-                    <div onclick="location.href='/Product/Details/@item.Id'">
+                <div style="border-style: double; border-radius: 7px; background: white" class="px-1">
+                    <div onclick="location.href='/Product/DetailsById/@item.Id'">
                         <div style="text-align: center; border-bottom: 1px solid maroon">
                             <h3>@item.Name</h3>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
+                        @*<div class="row">*@
+                            <div class="col-md-12 p-2" style="text-align:center">
                                 @* Bild des Artikels *@
-                                <img src="~/Content/ItemImages/@item.ImageName" width="100%" height="150px" />
+                                <img src="~/Content/ItemImages/@item.ImageName" height="150" />
                             </div>
-                        </div>
+                        @*</div>*@
                     </div>
-                    <div class="row p-1 mx-1" style="border-top: 1px solid maroon">
-                        <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/Details/@item.Id'">
+                    <div class="row p-1 mx-1" style="border-top: 2px solid maroon">
+                        <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/DetailsById/@item.Id'">
                             <b>@item.Cost</b> (€ pro Monat)
                         </div>
 
@@ -123,7 +127,7 @@
                 }
             },
             error: function () {
-                alert("Something went wrong!");
+                ShowAlert('Error', "Something went wrong!", 'danger');
             }
         });
     };
@@ -141,12 +145,12 @@
                     var dataList = document.getElementById('json-datalist');
                     $(dataList).empty();
                     $.each(data, function (key, value) {
-                        $(dataList).append($('<option>').text(value.Name.trim()).attr("value", value.Id));
+                        $(dataList).append($('<option>').text(value.Name.trim()).attr("value", value.Name));
                     });
                 }
             },
             error: function () {
-                alert("failure");
+                ShowAlert('Error', "failure", 'danger');
             }
         });
     });
@@ -154,8 +158,8 @@
     // Event-Handler für die Auswahl eines Artikels aus der Liste.
     $(".tag_input").change(function (e) {
         var $this = this;
-        var id = $this.value;
-        window.location.href = '/Product/Details/' + id;
+        var name = $this.value;
+        window.location.href = '/Product/Details?Name=' + name;
     });
 
     // Event-Handler für die Filteroptionen.

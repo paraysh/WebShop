@@ -215,14 +215,28 @@ namespace WebShop.Controllers
         /// <summary>
         /// Zeigt die Details eines Produkts an.
         /// </summary>
-        /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
+        /// <param name = "id" > Die ID des anzuzeigenden Produkts.</param>
         /// <returns>Die Detailansicht des Produkts.</returns>
-        public ActionResult Details(int id)
+        public ActionResult DetailsById(int id)
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
             var selectedItem = db.tblItems.Where(x => x.Id == id).Single();
+            return View("Details", selectedItem);
+        }
+
+        /// <summary>
+        /// Zeigt die Details eines Produkts an.
+        /// </summary>
+        /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
+        /// <returns>Die Detailansicht des Produkts.</returns>
+        public ActionResult Details(string name)
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            var selectedItem = db.tblItems.Where(x => x.Name.Contains(name)).FirstOrDefault();
             return View(selectedItem);
         }
 
@@ -323,6 +337,18 @@ namespace WebShop.Controllers
                 }).ToList();
 
             return Json(lstProducts, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ClearCart()
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+
+            Session["CartCounter"] = null;
+            Session["CartItem"] = null;
+
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = "Warenkorb geleert." };
+            return RedirectToAction("ShoppingCart");
         }
     }
 }

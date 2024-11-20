@@ -35,6 +35,7 @@ namespace WebShop.Models.Entity
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDt { get; set; }
         public string Password { get; set; }
+        public byte[] HashPassword { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblOrder> tblOrders { get; set; }

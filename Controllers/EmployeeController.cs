@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using WebShop.Helper;
 using WebShop.Models;
 using WebShop.Models.Entity;
 using WebShop.Models.Enum;
@@ -74,7 +75,11 @@ namespace WebShop.Controllers
             newUserObj.LastName = user.LastName;
             newUserObj.Email = user.Email;
             newUserObj.UserRole = (int)user.UserRoleEnum;
-            newUserObj.Password = user.Password; // Passwort wird auf den gleichen Wert wie der Benutzername gesetzt
+            //Store a password hash:
+            PasswordHash hash = new PasswordHash(user.Password);
+            byte[] hashBytes = hash.ToArray();
+            //newUserObj.Password = user.Password; // Passwort wird auf den gleichen Wert wie der Benutzername gesetzt
+            newUserObj.HashPassword = hashBytes;
             newUserObj.IsActive = user.IsActive;
 
             // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
@@ -149,8 +154,8 @@ namespace WebShop.Controllers
             usr.UserRole = employee.UserRole;
             usr.UserRoleEnum = (UserRoleEnum)employee.UserRole;
             usr.TeamBudget = employee.tblTeamBudgets.SingleOrDefault() == null ? 0 : employee.tblTeamBudgets.SingleOrDefault().TeamBudget;
-            usr.Password = employee.Password;
-            usr.ConfirmPassword = employee.Password;
+            //usr.Password = employee.Password;
+            //usr.ConfirmPassword = employee.Password;
             usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault().TeamLeaderId;
             usr.EmployeeBudget = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault().TeamEmployeeBudget;
 
@@ -167,8 +172,23 @@ namespace WebShop.Controllers
                 Text = x.UserName,
                 Value = x.Id.ToString()
             }).ToList();
-
             usr.availableTeamLeaderLst = admins;
+
+            //Employee Items
+            List<ItemModelEmployee> itemsOrders = db.tblOrderDetails
+                            .Include(x => x.tblOrder)
+                            .Include(x => x.tblItem)
+                            .Where(x => x.tblOrder.OrderedBy == id && x.tblOrder.OrderApproved == "Y")
+                            .SelectMany(x => new List<ItemModelEmployee> {
+                                    new ItemModelEmployee {
+                                        ItemName = x.tblItem.Name,
+                                        ImageName = x.tblItem.ImageName,
+                                        LendingPeriodMonths = (int)x.LendingPeriodMonths,
+                                        LendingStartDt = (DateTime)x.LendingStartDt,
+                                        LendingEndDt = (DateTime)x.LendingEndDt,
+                                    }
+                            }).ToList();
+            usr.ItemsOrdered = itemsOrders;
 
             return View(usr);
         }
@@ -232,11 +252,11 @@ namespace WebShop.Controllers
                 }
             }
 
-            if (user.Password != user.ConfirmPassword)
-            {
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Aktualisierung nicht möglich. Das Passwort stimmt nicht überein.") };
-                return RedirectToAction("EmployeeManagement");
-            }
+            //if (user.Password != user.ConfirmPassword)
+            //{
+            //    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Aktualisierung nicht möglich. Das Passwort stimmt nicht überein.") };
+            //    return RedirectToAction("EmployeeManagement");
+            //}
             db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Benutzer {0} aktualisiert.", user.UserName) };

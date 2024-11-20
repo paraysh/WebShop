@@ -41,22 +41,22 @@
                     <!-- Ein Dropdown-Feld für den Aktiv/Inaktiv-Status mit der CSS-Klasse "form-control". -->
                 </div>
             </div>
-            <div class="row mt-3">
+            <!--<div class="row mt-3">
                 <div class="col-md-6">
-                    @Html.LabelFor(model => model.Password)
-                    <!-- Ein Label für das Passwort-Feld. -->
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                    <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
-                    @Html.ValidationMessageFor(m => m.Password)
-                    <!-- Eine Validierungsnachricht für das Passwort-Feld. -->
-                </div>
-                <div class="col-md-6">
-                    @Html.LabelFor(model => model.ConfirmPassword)
-                    <!-- Ein Label für das Passwort-Bestätigungsfeld. -->
-                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
-                    <!-- Ein Eingabefeld für die Passwort-Bestätigung mit der CSS-Klasse "form-control". -->
-                </div>
-            </div>
+                    @Html.LabelFor(model => model.Password)-->
+            <!-- Ein Label für das Passwort-Feld. -->
+            <!--@Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })-->
+            <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
+            <!--@Html.ValidationMessageFor(m => m.Password)-->
+            <!-- Eine Validierungsnachricht für das Passwort-Feld. -->
+            <!--</div>
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.ConfirmPassword)-->
+            <!-- Ein Label für das Passwort-Bestätigungsfeld. -->
+            <!--@Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })-->
+            <!-- Ein Eingabefeld für die Passwort-Bestätigung mit der CSS-Klasse "form-control". -->
+            <!--</div>
+            </div>-->
             <div class="row mt-3">
                 <div class="col-md-6">
                     @Html.LabelFor(model => model.FirstName)
@@ -146,8 +146,7 @@
             }
         </div>
 
-        <hr />
-        <div>
+        <div class="mt-5">
             <div>
                 <div class="pull-left">
                     @Html.ActionLink("Abbrechen", "EmployeeManagement", "Employee", new { @class = "btn btn-dark" })
@@ -160,6 +159,37 @@
             </div>
         </div>
     }
+    @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+    {
+        <hr />
+        <div>
+            <h3>Items Orders By Employee @Model.FirstName</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Item Name</th>
+                        <th>Lending Period (Months)</th>
+                        <th>Lending Start Dt</th>
+                        <th>Lending End Dt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemsOrdered)
+                    {
+                        <tr>
+                            <td><img src="~/Content/ItemImages/@item.ImageName" height="60" class="img-rounded" /></td>
+                            <td>@item.ItemName</td>
+                            <td>@item.LendingPeriodMonths</td>
+                            <td>@item.LendingStartDt</td>
+                            <td>@item.LendingEndDt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
 </div>
 
 <script type="text/javascript">

@@ -24,6 +24,7 @@ namespace WebShop.Models
             //this.tblTeamBudgets = new HashSet<tblTeamBudget>();
             //this.tblTeamEmployees = new HashSet<tblTeamEmployee>();
             //this.tblTeamEmployees1 = new HashSet<tblTeamEmployee>();
+            ItemsOrdered = new List<ItemModelEmployee>();
         }
 
         /// <summary>
@@ -140,5 +141,9 @@ namespace WebShop.Models
         /// Die Benutzerrolle als Enumeration.
         /// </summary>
         public UserRoleEnum UserRoleEnum { get; set; }
+
+        public byte[] HashPassword { get; set; }
+
+        public List<ItemModelEmployee> ItemsOrdered { get; set; }
     }
 }
