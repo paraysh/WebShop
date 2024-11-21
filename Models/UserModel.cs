@@ -104,26 +104,6 @@ namespace WebShop.Models
         public int TeamLeader { get; set; }
 
         /// <summary>
-        /// Der Benutzer, der diesen Benutzer erstellt hat.
-        /// </summary>
-        public string CreatedBy { get; set; }
-
-        /// <summary>
-        /// Das Erstellungsdatum des Benutzers.
-        /// </summary>
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-
-        /// <summary>
-        /// Der Benutzer, der diesen Benutzer zuletzt geändert hat.
-        /// </summary>
-        public string ModifiedBy { get; set; }
-
-        /// <summary>
-        /// Das Datum der letzten Änderung des Benutzers.
-        /// </summary>
-        public Nullable<System.DateTime> ModifiedDt { get; set; }
-
-        /// <summary>
         /// Das Passwort des Benutzers.
         /// </summary>
         [Display(Name = "Passwort")]

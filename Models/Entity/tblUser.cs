@@ -27,13 +27,8 @@ namespace WebShop.Models.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public Nullable<decimal> Mobile { get; set; }
         public Nullable<int> UserRole { get; set; }
         public string IsActive { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public Nullable<System.DateTime> ModifiedDt { get; set; }
         public string Password { get; set; }
         public byte[] HashPassword { get; set; }
     

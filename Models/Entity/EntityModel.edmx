@@ -110,13 +110,8 @@
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
-          <Property Name="Mobile" Type="numeric" Precision="18" Scale="0" />
           <Property Name="UserRole" Type="int" />
           <Property Name="IsActive" Type="char" MaxLength="1" />
-          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
-          <Property Name="CreatedDate" Type="datetime" />
-          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
-          <Property Name="ModifiedDt" Type="datetime" />
         </EntityType>
         <EntityType Name="tblUserRolesMaster">
           <Key>
@@ -459,13 +454,8 @@
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Mobile" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="UserRole" Type="Int32" />
           <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblOrders" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblUser" ToRole="tblOrder" />
           <NavigationProperty Name="tblTeamBudgets" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblUser" ToRole="tblTeamBudget" />
           <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
@@ -788,13 +778,8 @@
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
                 <ScalarProperty Name="UserRole" ColumnName="UserRole" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="ModifiedDt" ColumnName="ModifiedDt" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
