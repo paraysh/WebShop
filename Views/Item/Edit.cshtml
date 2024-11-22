@@ -35,9 +35,9 @@
                 @Html.LabelFor(model => model.Type)
                 <!-- Ein Label für das Typ-Feld. -->
                 @Html.DropDownList("Type",
-                        EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
-                        null,
-                        new { @class = "form-control", @id = "ddlItemType" })
+                                  EnumHelper.GetSelectList(typeof(WebShop.Models.Enum.ItemTypeEnum)),
+                                  null,
+                                  new { @class = "form-control", @id = "ddlItemType" })
                 <!-- Ein Dropdown-Feld für die Typ-Optionen mit der CSS-Klasse "form-control". -->
             </div>
         </div>
@@ -46,7 +46,7 @@
                 <!-- Ein Container für das Beschreibung-Feld. -->
                 @Html.LabelFor(model => model.Description)
                 <!-- Ein Label für das Beschreibung-Feld. -->
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto" })
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", style = "height: 108px;" })
                 <!-- Ein Textbereich für die Beschreibung mit der CSS-Klasse "form-control". -->
             </div>
             <div class="col-md-6">
@@ -59,11 +59,15 @@
                 <!-- Eine Validierungsnachricht für das Kosten-Feld. -->
             </div>
         </div>
+        <div>
+            <label></label>
+        </div>
+        <label>Bild:</label>
         <div class="row mt-3">
-            <label>Bild:</label>
-            <!-- Ein Label für das aktuelle Bild. -->
-            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded" />
-            <!-- Zeigt das aktuelle Bild des Artikels an. -->
+            <div class="col-md-6">
+                <img src="~/Content/ItemImages/@Model.ImageName" height="250" class="object-fit-contain border rounded" />
+                <!-- Zeigt das aktuelle Bild des Artikels an. -->
+            </div>
         </div>
         <div class="row mt-3">
             <label>Neues Bild hochladen</label>

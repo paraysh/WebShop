@@ -34,7 +34,7 @@
         <div class="col-md-6">
             @* Beschreibung des Artikels (deaktiviert) *@
             @Html.LabelFor(model => model.Description)
-            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled", style = "height: 108px;" })
         </div>
         <div class="col-md-6">
             @* Kosten des Artikels (deaktiviert) *@
@@ -42,11 +42,14 @@
             @Html.TextBoxFor(model => model.Cost, new { @class = "form-control", @data_placement = "auto", @maxlength = "50", @disabled = "disabled" })
         </div>
     </div>
+    <div>
+        <label></label>
+    </div>
+    <label>Bild:</label>
     <div class="row mt-3">
         <div class="col-md-6">
             @* Bild des Artikels *@
-            <label>Bild:</label>
-            <img src="~/Content/ItemImages/@Model.ImageName" class="object-fit-contain border rounded form-control" />
+            <img src="~/Content/ItemImages/@Model.ImageName" height="250" class="object-fit-contain border rounded" />
         </div>
     </div>
     <hr />
