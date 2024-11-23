@@ -167,7 +167,6 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Bild</th>
                         <th>Artikelname</th>
                         <th>Leihdauer (Monate)</th>
                         <th>Leihbeginn</th>
@@ -178,7 +177,6 @@
                     @foreach (var item in Model.ItemsOrdered)
                     {
                         <tr>
-                            <td><img src="~/Content/ItemImages/@item.ImageName" height="60" class="img-rounded" /></td>
                             <td>@item.ItemName</td>
                             <td>@item.LendingPeriodMonths</td>
                             <td>@item.LendingStartDt</td>
