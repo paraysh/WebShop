@@ -81,7 +81,7 @@
     </div>
     <div class="col-md-4" style="text-align: -webkit-center">
         <div class="card bg-light mb-3" style="max-width: 24rem;">
-            <div class="card-header">Lagerbestand</div>
+            <div class="card-header">Aktuell verliehen</div>
             <div class="card-body">
                 <h5 class="card-title">@totalOrdered</h5>
             </div>
@@ -89,7 +89,7 @@
     </div>
     <div class="col-md-4" style="text-align: -webkit-center">
         <div class="card bg-light mb-3" style="max-width: 24rem;">
-            <div class="card-header">Aktuell verliehen</div>
+            <div class="card-header">Lagerbestand</div>
             <div class="card-body">
                 <h5 class="card-title">@totalInStock</h5>
             </div>
@@ -101,7 +101,7 @@
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#movement">Ein-/Ausgang</a></li>
     <li><a data-toggle="tab" href="#orders">Verliehen</a></li>
-    <li><a data-toggle="tab" href="#stock">Bestand</a></li>
+    <li><a data-toggle="tab" href="#stock">Lagerbestand</a></li>
 </ul>
 
 <div class="tab-content">
@@ -114,8 +114,8 @@
                           webGridMovement.Column(null, null, format: @<text>
                                 <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
             webGridMovement.Column("StockAddDate", "Datum"),
-            webGridMovement.Column("MovementType", "Typ"),
-            webGridMovement.Column("TotalItemsAddedRemoved", format: (item) => item.lstSerialNumbers.Count),
+            webGridMovement.Column("MovementType", "Bewegungsart"),
+            webGridMovement.Column("TotalItemsAddedRemoved", "Anzahl", format: (item) => item.lstSerialNumbers.Count),
             webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
 
             webGridMovement.Column(format: (item) =>
@@ -126,7 +126,7 @@
                 htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
                 headerStyle: "grid-header",
                 columns: childGrid.Columns(
-                    childGrid.Column("SerialNos", "serialnumbers"),
+                    childGrid.Column("SerialNos", "Seriennummer"),
                     childGrid.Column("DeleteReason", "Grund")
                 ));
             })
@@ -138,7 +138,7 @@
         <table class="table table-bordered table-striped table-condensed" >
             <thead>
                 <tr class="grid-header">
-                    <th>Serialnumbers</th>
+                    <th>Seriennummer</th>
                     <th>Name</th>
                     <th>Leihbeginn</th>
                     <th>Leihrückgabe</th>
@@ -164,7 +164,7 @@
         <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr class="grid-header">
-                    <th>Serialnumbers</th>
+                    <th>Seriennummer</th>
                 </tr>
             </thead>
             <tbody>
