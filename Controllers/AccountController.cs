@@ -65,17 +65,17 @@ namespace WebShop.Controllers
 
                     if (user != null)
                     {
-                       
+
                         //Uncomment after adding users
                         //Check password against a stored hash
 
-                        //byte[] hashBytes = user.HashPassword; 
-                        //PasswordHash hash = new PasswordHash(hashBytes);
-                        //if (!hash.Verify(model.Password))
-                        //{
-                        //    ModelState.AddModelError("", "Benutzername oder Passwort ungültig.");
-                        //    return View(model);
-                        //}
+                        byte[] hashBytes = user.HashPassword;
+                        PasswordHash hash = new PasswordHash(hashBytes);
+                        if (!hash.Verify(model.Password))
+                        {
+                            ModelState.AddModelError("", "Benutzername oder Passwort ungültig.");
+                            return View(model);
+                        }
 
                         if (user.IsActive != "Y")
                         {
