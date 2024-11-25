@@ -38,12 +38,13 @@ namespace WebShop.Controllers
         /// Zeigt die Hauptseite der Produktverwaltung an.
         /// </summary>
         /// <returns>Die Index-Ansicht mit einer Liste von Produkten.</returns>
-        public ActionResult Index()
+        public ActionResult Index(string searchString = "")
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
+            List<ProductModel> lstProducts = new List<ProductModel>();
 
-            List<ProductModel> lstProducts = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y").Select(l => new ProductModel
+            var query = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y").Select(l => new ProductModel
             {
                 Id = l.Id,
                 Name = l.Name,
@@ -52,7 +53,17 @@ namespace WebShop.Controllers
                 Cost = l.Cost,
                 ImageName = l.ImageName,
                 ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-            }).ToList();
+            });
+
+            if (string.IsNullOrEmpty(searchString))
+            {
+                lstProducts = query.ToList();
+            }
+            else
+            {
+                lstProducts = query.Where(x => x.Name.Contains(searchString)).ToList();
+                ViewBag.SearchString = searchString;
+            }
 
             return View(lstProducts);
         }

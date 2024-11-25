@@ -17,12 +17,12 @@
 <div class="container">
     <h2>Artikel</h2>
 
-    <div class="row input-group pe-3 ps-5">
-        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-        @* Suchfeld für die Artikelsuche *@
-        <input class="tag_input input-lg form-control" id="txtSearch" list="json-datalist" placeholder="Artikel suchen">
+    <!--<div class="row input-group pe-3 ps-5">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>-->
+    @* Suchfeld für die Artikelsuche *@
+    <!--<input class="tag_input input-lg form-control" id="txtSearch" list="json-datalist" placeholder="Artikel suchen">
         <datalist id="json-datalist"></datalist>
-    </div>
+    </div>-->
 
     @{
         // Initialisierung der Filteroptionen
@@ -44,7 +44,23 @@
         }
     }
 
-    <div class="mt-2" style="text-align:center">
+<div class="row">
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" class="form-control" id="txtSearch" value="@ViewBag.SearchString" placeholder="Artikel suchen">
+            <div class="input-group-append">
+                <button class="btn btn-secondary" type="button" id="btnSearch">
+                    <i class="fa fa-search"></i>
+                </button>
+                @if (@ViewBag.SearchString != null)
+                {
+                    @Html.ActionLink("Clear", "Index", new { }, new { @class = "btn btn-primary" })
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6" style="text-align:right">
         @* Filteroptionen für die Artikel *@
         <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
         <label class="btn btn-secondary radioBtn" for="rdBoth">Alle Artikel</label>
@@ -55,48 +71,55 @@
         <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
         <label class="btn btn-secondary radioBtn" for="rdSoftware">Software</label>
     </div>
+</div>
+
+
+
+    
 
     <div class="row">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 mb-1 product-tile mt-3">
-                <div style="border-style: double; border-radius: 7px; background: white" class="px-1">
-                    <div onclick="location.href='/Product/DetailsById/@item.Id'">
-                        <div style="text-align: center; border-bottom: 1px solid maroon">
-                            <h3>@item.Name</h3>
-                        </div>
+            <div class="col-md-4 mb-1 mt-3">
+                <div class="div-tile"> @*product-tile class for old style*@
+                    <div class="px-1">
+                        <div onclick="location.href='/Product/DetailsById/@item.Id'">
+                            <div style="text-align: center; border-bottom: 1px solid maroon">
+                                <h3>@item.Name</h3>
+                            </div>
 
-                        @*<div class="row">*@
+                            @*<div class="row">*@
                             <div class="col-md-12 p-2" style="text-align:center">
                                 @* Bild des Artikels *@
                                 <img src="~/Content/ItemImages/@item.ImageName" height="150" />
                             </div>
-                        @*</div>*@
-                    </div>
-                    <div class="row p-1 mx-1" style="border-top: 2px solid maroon">
-                        <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/DetailsById/@item.Id'">
-                            <b>@item.Cost</b> (€ pro Monat)
+                            @*</div>*@
                         </div>
+                        <div class="row p-1 mx-1" style="border-top: 2px solid maroon">
+                            <div class="col-md-5 mt-1" style="font-size: 18px;" onclick="location.href='/Product/DetailsById/@item.Id'">
+                                <b>@item.Cost</b> (€ pro Monat)
+                            </div>
 
-                        <div class="col-md-7" style="text-align: right;">
-                            @if (item.ItemsInStock > 0)
-                            {
-                                if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                            <div class="col-md-7" style="text-align: right;">
+                                @if (item.ItemsInStock > 0)
                                 {
-                                    @* Button zum Hinzufügen des Artikels zum Warenkorb *@
-                                    <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
-                                        <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
-                                        <span class="added">Hinzugefügt</span>
-                                        <i class="fa fa-shopping-cart"></i>
-                                        <i class="fa fa-box"></i>
-                                    </button>
+                                    if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.Employee || ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                                    {
+                                        @* Button zum Hinzufügen des Artikels zum Warenkorb *@
+                                        <button class="cart-button" name="AddToCart" value="Zum Warenkorb hinzufügen" itemid="@item.Id" id="btnAddToCart" onclick="AddToCart(this)">
+                                            <span class="add-to-cart">Zum Warenkorb hinzufügen</span>
+                                            <span class="added">Hinzugefügt</span>
+                                            <i class="fa fa-shopping-cart"></i>
+                                            <i class="fa fa-box"></i>
+                                        </button>
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                @* Button, der anzeigt, dass der Artikel nicht verfügbar ist *@
-                                <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning mt-2" id="btnOutOfStock" />
-                            }
+                                else
+                                {
+                                    @* Button, der anzeigt, dass der Artikel nicht verfügbar ist *@
+                                    <input type="button" name="OutOfStock" value="Nicht verfügbar" class="btn btn-warning mt-2" id="btnOutOfStock" />
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,35 +155,20 @@
         });
     };
 
-    // Event-Handler für die Eingabe im Suchfeld.
-    $(".tag_input").keyup(function (e) {
-        var sString = $("#txtSearch").val();
-        $.ajax({
-            url: "@Url.Action("Search","Product")",
-            type: "POST",
-            data: { 'SearchedString': sString },
-            dataType: "json",
-            success: function (data) {
-                if (data != null && data != "") {
-                    var dataList = document.getElementById('json-datalist');
-                    $(dataList).empty();
-                    $.each(data, function (key, value) {
-                        $(dataList).append($('<option>').text(value.Name.trim()).attr("value", value.Name));
-                    });
-                }
-            },
-            error: function () {
-                ShowAlert('Error', "failure", 'danger');
-            }
-        });
+    $("#txtSearch").keypress(function (e) {
+        if (e.key === "Enter") {
+            // Cancel the default action, if needed
+            e.preventDefault();
+            // Trigger the button element with a click
+            $("#btnSearch").click();
+        }
     });
 
-    // Event-Handler für die Auswahl eines Artikels aus der Liste.
-    $(".tag_input").change(function (e) {
-        var $this = this;
-        var name = $this.value;
-        window.location.href = '/Product/Details?Name=' + name;
+    $("#btnSearch").click(function (e) {
+        var searchText = $("#txtSearch").val();
+        window.location.href = '/Product/Index?SearchString=' + searchText;
     });
+
 
     // Event-Handler für die Filteroptionen.
     $('input[type=radio][name=filterOptions]').change(function () {

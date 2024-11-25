@@ -11,6 +11,13 @@ namespace WebShop.Models
     /// </summary>
     public class StockHistoryModel
     {
+        public StockHistoryModel()
+        {
+            lstStocks = new List<Stock>();
+            lstStockDetails = new List<StockDetail>();
+            lstInStockItems = new List<string>();
+            
+        }
         /// <summary>
         /// Die eindeutige Identifikationsnummer des Artikels.
         /// </summary>
@@ -40,6 +47,15 @@ namespace WebShop.Models
         /// Eine Liste der Lagerbestände des Artikels.
         /// </summary>
         public List<Stock> lstStocks { get; set; }
+
+        public List<OrderDetail> lstOrderDtls { get; set; }
+
+        /// <summary>
+        /// Eine Liste der Lagerdetails.
+        /// </summary>
+        public List<StockDetail> lstStockDetails { get; set; }
+
+        public List<string> lstInStockItems { get; set; }
     }
 
     /// <summary>
@@ -48,6 +64,10 @@ namespace WebShop.Models
     /// </summary>
     public class Stock
     {
+        public Stock()
+        {
+            lstSerialNumbers = new List<SerialNumbers>();
+        }
         /// <summary>
         /// Die aktuelle Menge des Lagerbestands.
         /// </summary>
@@ -58,6 +78,9 @@ namespace WebShop.Models
         /// </summary>
         public int InitialQuantity { get; set; }
 
+        public string MovementType { get; set; }
+        public int TotalItemsAddedRemoved { get; set; }
+
         /// <summary>
         /// Der Benutzer, der den Lagerbestand hinzugefügt hat.
         /// </summary>
@@ -66,7 +89,7 @@ namespace WebShop.Models
         /// <summary>
         /// Das Datum, an dem der Lagerbestand hinzugefügt wurde.
         /// </summary>
-        public DateTime StockAddDate { get; set; }
+        public string StockAddDate { get; set; }
 
         /// <summary>
         /// Der Benutzer, der den Lagerbestand gelöscht hat.
@@ -78,10 +101,13 @@ namespace WebShop.Models
         /// </summary>
         public DateTime? StockDeleteDate { get; set; }
 
-        /// <summary>
-        /// Eine Liste der Lagerdetails.
-        /// </summary>
-        public List<StockDetail> lstStockDetails { get; set; }
+        public List<SerialNumbers> lstSerialNumbers { get; set; }
+    }
+
+    public class SerialNumbers
+    {
+        public string SerialNos { get; set; }
+        public string DeleteReason { get; set; }
     }
 
     /// <summary>
@@ -104,6 +130,8 @@ namespace WebShop.Models
         /// Gibt an, ob der Artikel gelöscht wurde.
         /// </summary>
         public string IsDeleted { get; set; }
+
+        public string DeleteReason { get; set; }
 
         /// <summary>
         /// Die eindeutige Identifikationsnummer der Bestellung.

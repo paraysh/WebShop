@@ -207,7 +207,6 @@ namespace WebShop.Controllers
             employee.LastName = user.LastName;
             employee.Email = user.Email;
             employee.UserRole = (int)user.UserRoleEnum;
-            employee.Password = user.Password;
             employee.IsActive = user.IsActive;
 
             // Überprüfen, ob die Benutzerrolle "Teamleiter" ist

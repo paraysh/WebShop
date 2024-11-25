@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -208,35 +209,109 @@ namespace WebShop.Controllers
                     lstStocks = item.tblStocks.SelectMany(stock => new List<Stock> { new Stock {
                         InitialQuantity = (int)stock.InitialQuantity,
                         StockCurrentQuantity = (int)stock.Quantity,
-                        StockAddDate = (DateTime)stock.CreatedDate,
+                        //StockAddDate = (DateTime)stock.CreatedDate,
                         StockAddedBy = stock.CreatedBy,
                         StockDeletedBy = stock.ModifiedBy == null ? "NA" : stock.ModifiedBy,
                         StockDeleteDate = stock.ModifiedDt,
-                        lstStockDetails = stock.tblStockDetails.SelectMany(stockDtl => new List<StockDetail> { new StockDetail {
-                            SerialNo = stockDtl.SerialNumber,
-                            OrderId = stockDtl.OrderId,
-                            IsDeleted = stockDtl.IsDeleted,
-                            OrderID = stockDtl.tblOrder.OrderId,
-                            OrderedBy = stockDtl.tblOrder.tblUser.UserName,
-                            OrderDate = (DateTime)stockDtl.tblOrder.OrderDate,
-                            OrderApproved = stockDtl.tblOrder.OrderApproved,
-                            LendingPeriodMonths = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? 0 : (int)stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingPeriodMonths,
-                            LendingStartDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingStartDt,
-                            LendingEndDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingEndDt
-                                //lstOrderDetails = stockDtl.tblOrderDetails.SelectMany(orderDtl => new List<OrderDetails> { new OrderDetails {
-                                //        OrderID = orderDtl.tblOrder.OrderId,
-                                //        OrderedBy = orderDtl.tblOrder.tblUser.UserName,
-                                //        OrderDate = (DateTime)orderDtl.tblOrder.OrderDate,
-                                //        OrderApproved = orderDtl.tblOrder.OrderApproved,
-                                //        LendingPeriodMonths = (int)orderDtl.LendingPeriodMonths,
-                                //        LendingStartDt = (DateTime)orderDtl.LendingStartDt,
-                                //        LendingEndDt = (DateTime)orderDtl.LendingEndDt
-                                //} }).ToList()
-                        } }).ToList()
+                        //lstStockDetails = stock.tblStockDetails.SelectMany(stockDtl => new List<StockDetail> { new StockDetail {
+                        //    SerialNo = stockDtl.SerialNumber,
+                        //    OrderId = stockDtl.OrderId,
+                        //    IsDeleted = stockDtl.IsDeleted,
+                        //    OrderID = stockDtl.tblOrder.OrderId,
+                        //    OrderedBy = stockDtl.tblOrder.tblUser.UserName,
+                        //    OrderDate = (DateTime)stockDtl.tblOrder.OrderDate,
+                        //    OrderApproved = stockDtl.tblOrder.OrderApproved,
+                        //    LendingPeriodMonths = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? 0 : (int)stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingPeriodMonths,
+                        //    LendingStartDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingStartDt,
+                        //    LendingEndDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingEndDt
+                        //        //lstOrderDetails = stockDtl.tblOrderDetails.SelectMany(orderDtl => new List<OrderDetails> { new OrderDetails {
+                        //        //        OrderID = orderDtl.tblOrder.OrderId,
+                        //        //        OrderedBy = orderDtl.tblOrder.tblUser.UserName,
+                        //        //        OrderDate = (DateTime)orderDtl.tblOrder.OrderDate,
+                        //        //        OrderApproved = orderDtl.tblOrder.OrderApproved,
+                        //        //        LendingPeriodMonths = (int)orderDtl.LendingPeriodMonths,
+                        //        //        LendingStartDt = (DateTime)orderDtl.LendingStartDt,
+                        //        //        LendingEndDt = (DateTime)orderDtl.LendingEndDt
+                        //        //} }).ToList()
+                        //} }).ToList()
                     } }).ToList()
                 }).Single();
 
             return View(tblItem);
+        }
+
+        /// <summary>
+        /// Zeigt die Details eines bestimmten Produkts an.
+        /// </summary>
+        /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
+        /// <returns>Die Detailansicht des Produkts.</returns>
+        public ActionResult DetailsV2(int id, string itemName = "")
+        {
+            _userRole = User.Identity.GetUserId<int>();
+            ViewBag.UserRole = _userRole;
+            ViewBag.ItemName = itemName;
+
+            var counts = new List<int>();
+
+            StockHistoryModel model = new StockHistoryModel();
+            List<Stock> stocks = new List<Stock>();
+            List<StockDetail> stockDetail = new List<StockDetail>();
+
+            var stockAdded = db.tblStockDetails
+                .Include(x => x.tblStock)
+                .Where(x => x.tblStock.ItemId == id && x.tblStock.ModifiedBy == null)
+                .GroupBy(x => new { x.tblStock.CreatedBy, CreatedDate = SqlFunctions.DateName("dd", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("MM", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("yyyy", x.tblStock.CreatedDate.Value) })
+                .Select(item => new Stock
+                {
+                    StockAddDate = item.Key.CreatedDate,
+                    //TotalItemsAddedRemoved = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber }).ToList().Count,
+                    StockAddedBy = item.Key.CreatedBy,
+                    MovementType = "Eingang", // Added
+                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = "-" } ).ToList()
+                })
+                .ToList();
+
+            var stockDeleted = db.tblStockDetails
+                .Include(x => x.tblStock)
+                .Where(x => x.tblStock.ItemId == id && x.tblStock.ModifiedBy != null)
+                .GroupBy(x => new { x.tblStock.CreatedBy, CreatedDate = SqlFunctions.DateName("dd", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("MM", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("yyyy", x.tblStock.CreatedDate.Value) })
+                .Select(item => new Stock
+                {
+                    StockAddDate = item.Key.CreatedDate,
+                    StockAddedBy = item.Key.CreatedBy,
+                    MovementType = "Ausgang", // Deleted
+                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = x.DeleteReason }).ToList(),
+                    //TotalItemsAddedRemoved = lstSerialNumbers.Count,
+                })
+                .ToList();
+
+            stocks.AddRange(stockAdded);
+            stocks.AddRange(stockDeleted);
+
+            stocks = stocks.OrderBy(x => x.StockAddDate).ToList();
+
+            model.lstStocks = stocks;
+
+            var orderDetails = db.tblStockDetails
+                .Include(x => x.tblStock)
+                .Include(x => x.tblOrderDetails)
+                .Where(x => x.tblStock.ItemId == id && x.OrderId != null)
+                .Select(item => new StockDetail
+                {
+                    SerialNo = item.SerialNumber,
+                    OrderedBy = item.tblOrder.tblUser.UserName,
+                    LendingStartDt = item.tblOrderDetails.Where(x => x.StockDetailsId == item.Id).Select(x => x.LendingStartDt).FirstOrDefault(),
+                    LendingEndDt = item.tblOrderDetails.Where(x => x.StockDetailsId == item.Id).Select(x => x.LendingEndDt).FirstOrDefault(),
+                }).ToList();
+
+            model.lstStockDetails = orderDetails;
+
+            model.lstInStockItems = db.tblStockDetails
+                                    .Include(x => x.tblStock)
+                                    .Where(x => x.tblStock.ItemId == id && x.OrderId == null && x.tblStock.ModifiedBy == null)
+                                    .Select(x => x.SerialNumber).ToList();
+
+            return View(model);
         }
     }
 }

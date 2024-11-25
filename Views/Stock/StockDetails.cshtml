@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-6">
                             @* Anzeige des Artikelbildes *@
-                            <p><img src="~/Content/ItemImages/@item.ImageName" class="object-fit-contain border rounded" style="width: 100%; height:150px" /></p>
+                            <p><img src="~/Content/ItemImages/@item.ImageName" class="object-fit-contain border rounded" style="width: 150px; height:150px" /></p>
                         </div>
                     </div>
                 </td>
@@ -48,7 +48,7 @@
                 @* Link zum Entfernen des Artikels vom Warenbestand *@
                 <td>@Html.ActionLink("Artikel vom Warenbestand entfernen", "Remove", "Stock", new { id = item.Id }, new { @class = "btn btn-danger" })</td>
                 @* Link zu den Details des Artikels *@
-                <td>@Html.ActionLink("Details", "Details", "Stock", new { id = item.Id }, new { @class = "btn btn-warning" })</td>
+                <td>@Html.ActionLink("Details", "DetailsV2", "Stock", new { id = item.Id, itemName = item.Name }, new { @class = "btn btn-warning" })</td>
             </tr>
         }
     </tbody>

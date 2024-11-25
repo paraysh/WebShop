@@ -96,7 +96,7 @@
                     <!-- Ein Container für das Benutzername-Feld. -->
                     @Html.LabelFor(m => m.UserName)
                     <!-- Ein Label für das Benutzername-Feld. -->
-                    @Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
                     <!-- Ein Eingabefeld für den Benutzernamen mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.UserName)
                     <!-- Eine Validierungsnachricht für das Benutzername-Feld. -->
@@ -106,7 +106,7 @@
                     <!-- Ein Container für das Passwort-Feld. -->
                     @Html.LabelFor(m => m.Password)
                     <!-- Ein Label für das Passwort-Feld. -->
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control",  @autocomplete = "off" })
                     <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.Password)
                     <!-- Eine Validierungsnachricht für das Passwort-Feld. -->

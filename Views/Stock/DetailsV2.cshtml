@@ -1,0 +1,226 @@
+﻿@model WebShop.Models.StockHistoryModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    WebGrid webGridMovement = new WebGrid(source: Model.lstStocks, canSort: false, canPage: false);
+}
+
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    .Grid {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        /*background-color: #fff;*/
+    }
+
+    .Grid th {
+        /*background-color: #B8DBFD;*/
+        color: #333;
+        font-weight: bold;
+    }
+
+    .Grid th, .Grid td {
+        padding: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .Grid img {
+        cursor: pointer;
+    }
+
+    .ChildGrid {
+        width: 100%;
+    }
+
+    .ChildGrid th {
+        /*background-color: #6C6C6C;*/
+        /*color: #fff;*/
+        color: #333;
+        font-weight: bold;
+    }
+
+    .grid-header {
+        background: lightblue;
+    }
+
+    .card-header {
+        font-size: large;
+    }
+
+    .card-title {
+        font-weight: 1000;
+        font-size: -webkit-xxx-large;
+    }
+</style>
+
+<h2>Details (@ViewBag.ItemName)</h2>
+
+@{ 
+    var totalAdded = 0;
+    var totalOrdered = 0;
+    var totalInStock = 0;
+
+    totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count();
+    totalOrdered = Model.lstStockDetails.Count();
+    totalInStock = Model.lstInStockItems.Count();
+}
+
+<div class="row">
+    <div class="col-md-4" style="text-align: -webkit-center">
+        <div class="card bg-light mb-3" style="max-width: 24rem;">
+            <div class="card-header">Inventarbestand</div>
+            <div class="card-body">
+                <h5 class="card-title">@totalAdded</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style="text-align: -webkit-center">
+        <div class="card bg-light mb-3" style="max-width: 24rem;">
+            <div class="card-header">Lagerbestand</div>
+            <div class="card-body">
+                <h5 class="card-title">@totalOrdered</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style="text-align: -webkit-center">
+        <div class="card bg-light mb-3" style="max-width: 24rem;">
+            <div class="card-header">Aktuell verliehen</div>
+            <div class="card-body">
+                <h5 class="card-title">@totalInStock</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#movement">Ein-/Ausgang</a></li>
+    <li><a data-toggle="tab" href="#orders">Verliehen</a></li>
+    <li><a data-toggle="tab" href="#stock">Bestand</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="movement" class="tab-pane fade in active">
+
+        @webGridMovement.GetHtml(
+                 htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
+                 headerStyle: "grid-header",
+                 columns: webGridMovement.Columns(
+                          webGridMovement.Column(null, null, format: @<text>
+                                <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
+            webGridMovement.Column("StockAddDate", "Datum"),
+            webGridMovement.Column("MovementType", "Typ"),
+            webGridMovement.Column("TotalItemsAddedRemoved", format: (item) => item.lstSerialNumbers.Count),
+            webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
+
+            webGridMovement.Column(format: (item) =>
+            {
+                // Erstellt ein ChildGrid für die Bestelldetails.
+                WebGrid childGrid = new WebGrid(source: item.lstSerialNumbers, canSort: false, canPage: false);
+                return childGrid.GetHtml(
+                htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
+                headerStyle: "grid-header",
+                columns: childGrid.Columns(
+                    childGrid.Column("SerialNos", "serialnumbers"),
+                    childGrid.Column("DeleteReason", "Grund")
+                ));
+            })
+            ))
+    </div>
+
+    <div id="orders" class="tab-pane fade">
+
+        <table class="table table-bordered table-striped table-condensed" >
+            <thead>
+                <tr class="grid-header">
+                    <th>Serialnumbers</th>
+                    <th>Name</th>
+                    <th>Leihbeginn</th>
+                    <th>Leihrückgabe</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.lstStockDetails)
+                {
+                    <tr>
+                        <td>@item.SerialNo</td>
+                        <td>@item.OrderedBy</td>
+                        <td>@item.LendingStartDt</td>
+                        <td>@item.LendingEndDt</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="stock" class="tab-pane fade">
+
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr class="grid-header">
+                    <th>Serialnumbers</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.lstInStockItems)
+                {
+                    <tr>
+                        <td>@item</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        // Schleife durch alle Child Grids.
+        $("#WebGrid .ChildGrid").each(function () {
+            console.log('test');
+            // Kopiert das Child Grid in ein DIV.
+            var childGrid = $(this).clone();
+            $(this).closest("TR").find("TD").eq(0).find("DIV").append(childGrid);
+
+            // Entfernt die letzte Spalte aus der Zeile.
+            $(this).parent().remove();
+        });
+
+        // Entfernt die letzte Spalte aus der Kopfzeile.
+        $("#WebGrid TH:last-child").eq(0).remove();
+
+        // Schleife durch alle Child Grids.
+        $("#WebGridEmp .ChildGrid").each(function () {
+            console.log('test');
+            // Kopiert das Child Grid in ein DIV.
+            var childGrid = $(this).clone();
+            $(this).closest("TR").find("TD").eq(0).find("DIV").append(childGrid);
+
+            // Entfernt die letzte Spalte aus der Zeile.
+            $(this).parent().remove();
+        });
+
+        // Entfernt die letzte Spalte aus der Kopfzeile.
+        $("#WebGridEmp TH:last-child").eq(0).remove();
+    });
+
+    // Weist das Klick-Ereignis dem Plus-Bild zu.
+    $("body").on("click", "img[src*='plus.png']", function () {
+        $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>");
+        $(this).attr("src", "/Content/images/minus.png");
+    });
+
+    // Weist das Klick-Ereignis dem Minus-Bild zu.
+    $("body").on("click", "img[src*='minus.png']", function () {
+        $(this).attr("src", "/Content/images/plus.png");
+        $(this).closest("tr").next().remove();
+    });
+</script>

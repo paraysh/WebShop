@@ -14,6 +14,32 @@ h2 {
     padding-bottom: 7px;
 }
 
+.toggle-password {
+    float: right;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: -25px;
+}
+
+/*3d floating effect stop div*/
+.div-tile {
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+    .div-tile:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+        -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+       /* box-shadow: 10px 5px 5px #897e7e;*/
+    }
+
+    /*.div-tile > div:hover {
+        box-shadow: 10px 5px 5px #897e7e;
+    }*/
+
 .form-control.input-validation-error {
     border-color: #dc3545;
     padding-right: calc(1.5em + 0.75rem);
@@ -55,6 +81,12 @@ textarea {
     border-style: groove;
     border-width: 5px;
     padding: 15px;
+}
+
+.product-tile > div {
+    border-style: double;
+    border-radius: 7px;
+    background: white;
 }
 
 .product-tile:hover {

@@ -18,6 +18,7 @@
 <div class="m-1 card p-3 bg-light">
     @using (Html.BeginForm())
     {
+        @Html.HiddenFor(model => model.TeamLeader);
         <!-- Beginnt ein Formular, das eine POST-Anfrage an die aktuelle Aktion sendet. -->
         <div style="@adminDisplay">
             <!-- Container für Admin-spezifische Felder, die nur angezeigt werden, wenn der Benutzer ein Admin ist. -->

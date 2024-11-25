@@ -11,6 +11,12 @@
     .teamBudgetContainer, .employeeContainer {
         display: none;
     }
+
+    input,
+    select,
+    textarea {
+        max-width: unset;
+    }
 </style>
 
 <h2>Bearbeiten</h2>
@@ -49,6 +55,7 @@
                     @Html.LabelFor(model => model.Password)
                     <!-- Ein Label für das Passwort-Feld. -->
                     @Html.PasswordFor(model => model.Password, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <i class="toggle-password fa fa-fw fa-eye-slash"></i>
                     <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.Password)
                     <!-- Eine Validierungsnachricht für das Passwort-Feld. -->
@@ -57,7 +64,8 @@
                     <!-- Ein Container für das Bestätigungs-Passwort-Feld. -->
                     @Html.LabelFor(model => model.ConfirmPassword)
                     <!-- Ein Label für das Bestätigungs-Passwort-Feld. -->
-                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", @data_placement = "auto", @maxlength = "50" })
+                    <i class="toggle-password fa fa-fw fa-eye-slash"></i>
                     <!-- Ein Eingabefeld für das Bestätigungs-Passwort mit der CSS-Klasse "form-control". -->
                 </div>
             </div>
@@ -193,6 +201,16 @@
             $(".employeeContainer").show(300);
         } else {
             $(".employeeContainer").hide(300);
+        }
+    });
+
+    $(".toggle-password").click(function () {
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        input = $(this).parent().find("input");
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
         }
     });
 </script>
