@@ -44,6 +44,8 @@
                     <td>
                         <!-- Ein Link, um den Artikel zu bearbeiten. -->
                         @Html.ActionLink("Bearbeiten", "Edit", "Item", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    </td>
+                    <td>
                         @if (item.IsActive == "Y")
                         {
                             <!-- Ein Link, um den Artikel zu deaktivieren, wenn er aktiv ist. -->

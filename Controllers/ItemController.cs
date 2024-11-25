@@ -66,7 +66,7 @@ namespace WebShop.Controllers
             newItemObj.Name = item.Name;
             newItemObj.Description = item.Description;
             newItemObj.Type = item.Type;
-            newItemObj.Cost = item.Cost;
+            newItemObj.Cost = CommaHandler(item.Cost);
             newItemObj.IsActive = item.IsActive;
 
             // Speichert das Bild des Artikels, falls vorhanden
@@ -121,7 +121,7 @@ namespace WebShop.Controllers
             selectedItem.Name = item.Name;
             selectedItem.Description = item.Description;
             selectedItem.Type = item.Type;
-            selectedItem.Cost = item.Cost;
+            selectedItem.Cost = CommaHandler(item.Cost);
 
             // Speichert das neue Bild des Artikels, falls vorhanden
             if (item.ImageData != null)
@@ -182,6 +182,22 @@ namespace WebShop.Controllers
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} aktiviert.", selectedItem.Name) };
 
             return RedirectToAction("ItemDetails");
+        }
+
+        private string CommaHandler(string input)
+        {
+            if (input.IndexOf(",") > 0)
+            {
+                if (input.Split(',')[1].Length == 1)
+                {
+                    return input + "0";
+                }
+                return input;
+            }
+            else
+            {
+                return input + ",00";
+            }
         }
     }
 }

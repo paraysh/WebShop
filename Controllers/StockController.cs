@@ -267,7 +267,7 @@ namespace WebShop.Controllers
                     //TotalItemsAddedRemoved = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber }).ToList().Count,
                     StockAddedBy = item.Key.CreatedBy,
                     MovementType = "Eingang", // Added
-                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = "-" } ).ToList()
+                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = "Eingang" } ).ToList()
                 })
                 .ToList();
 
