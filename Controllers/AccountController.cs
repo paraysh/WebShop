@@ -65,10 +65,7 @@ namespace WebShop.Controllers
 
                     if (user != null)
                     {
-
-                        //Uncomment after adding users
-                        //Check password against a stored hash
-
+                        //Prüft das Passwort gegen den Hash
                         byte[] hashBytes = user.HashPassword;
                         PasswordHash hash = new PasswordHash(hashBytes);
                         if (!hash.Verify(model.Password))
