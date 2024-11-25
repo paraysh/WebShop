@@ -23,19 +23,10 @@ namespace WebShop.Controllers
         private WebShopEntities db = new WebShopEntities();
 
         /// <summary>
-        /// Zeigt die Hauptseite der Bestandsverwaltung an.
-        /// </summary>
-        /// <returns>Die Index-Ansicht.</returns>
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        /// <summary>
         /// Zeigt die Details des gesamten Bestands an.
         /// </summary>
         /// <returns>Die Ansicht mit der Liste aller Bestände.</returns>
-        public ActionResult StockDetails()
+        public ActionResult Index()
         {
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
@@ -182,7 +173,7 @@ namespace WebShop.Controllers
             db.Entry(stockDetailModel).State = EntityState.Modified;
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} entfernt.", stockDetailModel.SerialNumber) };
-            return RedirectToAction("StockDetails");
+            return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -281,7 +272,6 @@ namespace WebShop.Controllers
                     StockAddedBy = item.Key.CreatedBy,
                     MovementType = "Ausgang", // Deleted
                     lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = x.DeleteReason }).ToList(),
-                    //TotalItemsAddedRemoved = lstSerialNumbers.Count,
                 })
                 .ToList();
 
