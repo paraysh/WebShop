@@ -11,6 +11,7 @@ using WebShop.Models.Entity;
 using WebShop.Models.Enum;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Globalization;
 
 namespace WebShop.Controllers
 {
@@ -149,7 +150,7 @@ namespace WebShop.Controllers
                 objShoppingCart.LendingStartDt = DateTime.Now;
                 objShoppingCart.LendingEndDt = DateTime.Now.AddMonths(1);
                 objShoppingCart.CartQuantity = 1;
-                objShoppingCart.UnitPrice = addedItem.Cost.Value;
+                objShoppingCart.UnitPrice = decimal.Parse(addedItem.Cost, new NumberFormatInfo() { NumberDecimalSeparator = "," });
                 objShoppingCart.Total = objShoppingCart.UnitPrice * objShoppingCart.LendingPeriodMonths;
 
                 lstShoppingCartModel.Add(objShoppingCart);

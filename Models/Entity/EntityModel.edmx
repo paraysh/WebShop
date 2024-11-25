@@ -23,9 +23,10 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="Type" Type="int" Nullable="false" />
-          <Property Name="Cost" Type="numeric" Precision="18" Scale="2" />
           <Property Name="ImageName" Type="nvarchar" MaxLength="50" />
           <Property Name="IsActive" Type="char" MaxLength="1" />
+          <Property Name="Cost" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cost1" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tblItemTypeMaster">
           <Key>
@@ -352,12 +353,12 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="Int32" Nullable="false" />
-          <Property Name="Cost" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="ImageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblItemTypeMaster" Relationship="Self.FK_tblItem_tblItemTypeMaster" FromRole="tblItem" ToRole="tblItemTypeMaster" />
           <NavigationProperty Name="tblStocks" Relationship="Self.FK_tblStock_tblItem" FromRole="tblItem" ToRole="tblStock" />
           <NavigationProperty Name="tblOrderDetails" Relationship="WebShopModel.FK_tblOrderDetails_tblItem" FromRole="tblItem" ToRole="tblOrderDetail" />
           <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Cost" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblItemTypeMaster">
           <Key>
@@ -679,12 +680,12 @@
           <EntitySetMapping Name="tblItems">
             <EntityTypeMapping TypeName="WebShopModel.tblItem">
               <MappingFragment StoreEntitySet="tblItem">
+                <ScalarProperty Name="Cost" ColumnName="Cost1" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Cost" ColumnName="Cost" />
                 <ScalarProperty Name="ImageName" ColumnName="ImageName" />
               </MappingFragment>
             </EntityTypeMapping>

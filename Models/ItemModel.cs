@@ -53,7 +53,7 @@ namespace WebShop.Models
         /// </summary>
         [Required(ErrorMessage = "Kosten sind erforderlich")]
         [Display(Name = "Kosten (€ pro Monat)")]
-        public Nullable<decimal> Cost { get; set; }
+        public string Cost { get; set; }
 
         /// <summary>
         /// Der Name des Bildes, das den Artikel darstellt.

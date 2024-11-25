@@ -203,7 +203,7 @@ namespace WebShop.Controllers
                 {
                     ItemId = item.Id,
                     ItemName = item.Name,
-                    ItemCost = (decimal)item.Cost,
+                    //ItemCost = (decimal)item.Cost,
                     ItemImageName = item.ImageName,
                     ItemType = item.tblItemTypeMaster.ItemType,
                     lstStocks = item.tblStocks.SelectMany(stock => new List<Stock> { new Stock {

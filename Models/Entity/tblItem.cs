@@ -25,9 +25,9 @@ namespace WebShop.Models.Entity
         public string Name { get; set; }
         public string Description { get; set; }
         public int Type { get; set; }
-        public Nullable<decimal> Cost { get; set; }
         public string ImageName { get; set; }
         public string IsActive { get; set; }
+        public string Cost { get; set; }
     
         public virtual tblItemTypeMaster tblItemTypeMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
