@@ -290,7 +290,7 @@ namespace WebShop.Controllers
                     StockAddDate = item.Key.CreatedDate,
                     StockAddedBy = item.Key.CreatedBy,
                     MovementType = "Ausgang", // Deleted
-                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = x.DeleteReason }).ToList(),
+                    lstSerialNumbers = item.Where(x => x.IsDeleted == "Y").Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = x.DeleteReason }).ToList(),
                 })
                 .ToList();
 

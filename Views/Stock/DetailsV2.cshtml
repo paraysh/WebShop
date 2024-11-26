@@ -67,7 +67,7 @@
     var totalInStock = 0;
 
     // Berechnet die Gesamtanzahl der hinzugefügten, verliehenen und auf Lager befindlichen Artikel.
-    totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count();
+    totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count() - Model.lstStocks.Where(x => x.MovementType == "Ausgang").SelectMany(x => x.lstSerialNumbers).Count();
     totalOrdered = Model.lstStockDetails.Count();
     totalInStock = Model.lstInStockItems.Count();
 }
