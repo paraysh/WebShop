@@ -36,7 +36,20 @@
                         </div>
                         <div class="col-6">
                             @* Anzeige des Artikelbildes *@
-                            <p><img src="~/Content/ItemImages/@item.ImageName" class="object-fit-contain border rounded" style="width: 150px; height:150px" /></p>
+                            @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                            {
+                                <p>
+                                    <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" class="object-fit-contain border rounded" style="width: 150px; height:150px" />
+                                    <!-- Zeigt das Bild des Artikels an. -->
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" class="object-fit-contain border rounded" style="width: 150px; height:150px" />
+                                    <!-- Zeigt das Bild des Artikels an. -->
+                                </p>
+                            }
                         </div>
                     </div>
                 </td>

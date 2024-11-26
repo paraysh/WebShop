@@ -458,6 +458,7 @@
     <Content Include="Views\Shared\_webGridFilter.cshtml" />
     <Content Include="Views\Stock\DetailsV2.cshtml" />
     <Content Include="Views\Stock\StockDetails.cshtml" />
+    <Content Include="Views\Stock\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
