@@ -28,12 +28,15 @@ namespace WebShop.Helper
         IEnumerable<OrderModel> users, Func<OrderModel, string> property,
             string headingText) where T : class
         {
+            // Erstellt ein Modell für den WebGrid-Filter
             var model = new WebGridFilterModel
             {
+                // Gruppiert die Benutzer nach der angegebenen Eigenschaft und wählt das erste Element jeder Gruppe aus
                 OrderBy = users.GroupBy(property).Select(g => g.First()),
                 Property = property,
                 HeadingText = headingText
             };
+            // Rendert das Partial-View für den Filter und gibt es als HtmlString zurück
             return helper.Partial("_webGridFilter", model);
         }
     }

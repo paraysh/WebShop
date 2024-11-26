@@ -140,6 +140,7 @@ else
 }
 
 <script type="text/javascript">
+    // Funktion zum Bearbeiten des Warenkorbs
     function EditCart(item) {
         var itemId = $(item).attr("itemid");
         var lendingPeriod = $(item).val();
@@ -160,11 +161,12 @@ else
                 }
             },
             error: function () {
-                ShowAlert('Error', "Something went wrong!", 'danger');
+                ShowAlert('Error', "Etwas ist schiefgelaufen!", 'danger');
             }
         });
     }
 
+    // Funktion zum Aufgeben der Bestellung
     function PlaceOrder() {
         $.ajax({
             async: true,
@@ -178,7 +180,7 @@ else
                 }
             },
             error: function (data) {
-                ShowAlert('Error', "Something went wrong!", 'danger');
+                ShowAlert('Error', "Etwas ist schiefgelaufen!", 'danger');
             }
         });
     }

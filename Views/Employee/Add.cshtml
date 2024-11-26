@@ -206,21 +206,36 @@
     });
 
     $(".toggle-password").click(function () {
+        // Klick-Ereignis für das Passwort-Sichtbarkeits-Symbol
         $(this).toggleClass("fa-eye fa-eye-slash");
+        // Wechselt zwischen den Klassen "fa-eye" und "fa-eye-slash" für das Symbol
+
         input = $(this).parent().find("input");
+        // Sucht das Eingabefeld, das sich im übergeordneten Element des Symbols befindet
+
         if (input.attr("type") == "password") {
             input.attr("type", "text");
+            // Ändert den Typ des Eingabefelds von "password" zu "text"
         } else {
             input.attr("type", "password");
+            // Ändert den Typ des Eingabefelds von "text" zu "password"
         }
     });
 
+    // Diese Funktion überprüft, ob eine Eingabe in ein Textfeld eine gültige Dezimalzahl ist.
+    // Sie wird aufgerufen, wenn eine Taste gedrückt wird.
+    // Wenn die gedrückte Taste das Komma-Zeichen ist, wird überprüft, ob das Textfeld bereits ein Komma enthält.
+    // Wenn das Textfeld kein Komma enthält, wird true zurückgegeben, um die Eingabe zuzulassen.
+    // Andernfalls wird false zurückgegeben, um die Eingabe zu verhindern.
+    // Wenn die gedrückte Taste keine Ziffer oder ein Leerzeichen ist, wird false zurückgegeben, um die Eingabe zu verhindern.
+    // Wenn das Textfeld bereits ein Komma enthält und die Anzahl der Dezimalstellen 2 erreicht hat, wird false zurückgegeben, um die Eingabe zu verhindern.
+    // Ansonsten wird true zurückgegeben, um die Eingabe zuzulassen.
     $(".web-shop-decimal").keypress(function (evt) {
         var $this = this;
 
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode == 44) {
-            //Check if the text already contains the , character
+            // Überprüft, ob der Text bereits das , Zeichen enthält
             if ($this.value.indexOf(',') === -1) {
                 return true;
             } else {
@@ -232,7 +247,7 @@
                 return false;
             }
             else {
-                if ($this.value.indexOf(',') !== -1 && $this.value.split(",")[1] !== '' && $this.value.split(",")[1].length === 2) { // restricting to 2 decimal
+                if ($this.value.indexOf(',') !== -1 && $this.value.split(",")[1] !== '' && $this.value.split(",")[1].length === 2) { // Beschränkung auf 2 Dezimalstellen
                     return false;
                 }
             }

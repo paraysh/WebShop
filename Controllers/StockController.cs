@@ -28,9 +28,11 @@ namespace WebShop.Controllers
         /// <returns>Die Ansicht mit der Liste aller Bestände.</returns>
         public ActionResult Index()
         {
+            // Setzt die Benutzerrolle
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
+            // Holt alle Artikel und deren Bestände aus der Datenbank
             var allItems = db.tblItems.Include(x => x.tblStocks).Select(x => new AddStockModel
             {
                 Id = x.Id,
@@ -51,12 +53,15 @@ namespace WebShop.Controllers
         /// <returns>Die Ansicht zum Hinzufügen von Bestand.</returns>
         public ActionResult Add(int id)
         {
+            // Setzt die Benutzerrolle
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
+            // Holt die Informationen des Artikels aus der Datenbank
             AddStockModel addStockModel = new AddStockModel();
             var itemInfo = db.tblItems.Where(x => x.Id == id).Include(x => x.tblStocks).FirstOrDefault();
 
+            // Setzt die Informationen des Artikels im Modell
             addStockModel.Id = id;
             addStockModel.Name = itemInfo.Name;
             addStockModel.Description = itemInfo.Description;
@@ -88,6 +93,7 @@ namespace WebShop.Controllers
                 }
             }
 
+            // Erstellt einen neuen Bestandseintrag
             tblStock _tblStock = new tblStock();
             _tblStock.ItemId = addStockModel.Id;
             _tblStock.Quantity = addStockModel.Quantity;
@@ -98,6 +104,7 @@ namespace WebShop.Controllers
             db.tblStocks.Add(_tblStock);
             db.SaveChanges();
 
+            // Fügt die Seriennummern zum Bestand hinzu
             if (addStockModel.LstSerialNumbers != null && addStockModel.LstSerialNumbers.Count > 0)
             {
                 int generatedStockId = _tblStock.Id;
@@ -123,12 +130,15 @@ namespace WebShop.Controllers
         /// <returns>Die Ansicht zum Entfernen von Bestand.</returns>
         public ActionResult Remove(int id)
         {
+            // Setzt die Benutzerrolle
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
+            // Holt die Informationen des Artikels aus der Datenbank
             AddStockModel addStockModel = new AddStockModel();
             var itemInfo = db.tblItems.Where(x => x.Id == id).Single();
 
+            // Holt die Seriennummern des Bestands, die entfernt werden können
             var stockInfo = itemInfo.tblStocks.SelectMany(x => x.tblStockDetails).Where(x => x.OrderId == null && x.IsDeleted == "N").SelectMany(s => new List<SelectListItem> {
                 new SelectListItem
                 {
@@ -138,6 +148,7 @@ namespace WebShop.Controllers
                 }
             }).ToList(); // Wählt nur die Seriennummern aus, deren OrderId == null ist
 
+            // Setzt die Informationen des Artikels im Modell
             addStockModel.Id = id;
             addStockModel.Name = itemInfo.Name;
             addStockModel.Description = itemInfo.Description;
@@ -158,9 +169,11 @@ namespace WebShop.Controllers
         [HttpPost]
         public ActionResult Remove(AddStockModel stockModel)
         {
+            // Holt die Bestandsdetails aus der Datenbank
             int stockDetailsId = Convert.ToInt32(stockModel.SelectedSerialNo);
             var stockDetailModel = db.tblStockDetails.Where(x => x.Id == stockDetailsId).Single();
 
+            // Holt den Bestandseintrag aus der Datenbank und aktualisiert die Menge
             var tblStockModel = db.tblStocks.Where(x => x.Id == stockDetailModel.StockId).Single();
             tblStockModel.Quantity = tblStockModel.Quantity - 1;
             tblStockModel.ModifiedBy = User.Identity.GetUserName();
@@ -168,6 +181,7 @@ namespace WebShop.Controllers
 
             db.Entry(tblStockModel).State = EntityState.Modified;
 
+            // Markiert die Bestandsdetails als gelöscht
             stockDetailModel.IsDeleted = "Y";
             stockDetailModel.DeleteReason = stockModel.DeleteReason;
             db.Entry(stockDetailModel).State = EntityState.Modified;
@@ -183,9 +197,11 @@ namespace WebShop.Controllers
         /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult Details(int id)
         {
+            // Setzt die Benutzerrolle
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
+            // Holt die Details des Artikels aus der Datenbank
             var tblItem = db.tblItems
                 .Include(x => x.tblStocks)
                 .Include(x => x.tblOrderDetails)
@@ -238,6 +254,7 @@ namespace WebShop.Controllers
         /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult DetailsV2(int id, string itemName = "")
         {
+            // Setzt die Benutzerrolle
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
             ViewBag.ItemName = itemName;
@@ -248,6 +265,7 @@ namespace WebShop.Controllers
             List<Stock> stocks = new List<Stock>();
             List<StockDetail> stockDetail = new List<StockDetail>();
 
+            // Holt die hinzugefügten Bestände aus der Datenbank
             var stockAdded = db.tblStockDetails
                 .Include(x => x.tblStock)
                 .Where(x => x.tblStock.ItemId == id)
@@ -258,10 +276,11 @@ namespace WebShop.Controllers
                     //TotalItemsAddedRemoved = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber }).ToList().Count,
                     StockAddedBy = item.Key.CreatedBy,
                     MovementType = "Eingang", // Added
-                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = "Eingang" } ).ToList()
+                    lstSerialNumbers = item.Select(x => new SerialNumbers { SerialNos = x.SerialNumber, DeleteReason = "Eingang" }).ToList()
                 })
                 .ToList();
 
+            // Holt die entfernten Bestände aus der Datenbank
             var stockDeleted = db.tblStockDetails
                 .Include(x => x.tblStock)
                 .Where(x => x.tblStock.ItemId == id && x.tblStock.ModifiedBy != null)
@@ -275,13 +294,16 @@ namespace WebShop.Controllers
                 })
                 .ToList();
 
+            // Fügt die hinzugefügten und entfernten Bestände zur Liste hinzu
             stocks.AddRange(stockAdded);
             stocks.AddRange(stockDeleted);
 
+            // Sortiert die Bestände nach Datum
             stocks = stocks.OrderBy(x => x.StockAddDate).ToList();
 
             model.lstStocks = stocks;
 
+            // Holt die Bestelldetails aus der Datenbank
             var orderDetails = db.tblStockDetails
                 .Include(x => x.tblStock)
                 .Include(x => x.tblOrderDetails)
@@ -296,6 +318,7 @@ namespace WebShop.Controllers
 
             model.lstStockDetails = orderDetails;
 
+            // Holt die im Bestand befindlichen Artikel aus der Datenbank
             model.lstInStockItems = db.tblStockDetails
                                     .Include(x => x.tblStock)
                                     .Where(x => x.tblStock.ItemId == id && x.OrderId == null && x.tblStock.ModifiedBy == null)

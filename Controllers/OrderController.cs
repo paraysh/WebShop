@@ -43,13 +43,17 @@ namespace WebShop.Controllers
         /// <returns>Die Index-Ansicht mit einer Liste von Bestellungen.</returns>
         public ActionResult Index()
         {
+            // Bestimmt die Rolle des aktuellen Benutzers
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
+
+            // Bestimmt die ID des aktuellen Benutzers
             int userID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
             ViewBag.UserId = userID;
 
             List<OrderModel> model = new List<OrderModel>();
 
+            // Ruft die Liste der Bestellungen aus der Datenbank ab und erstellt eine Liste von OrderModel-Objekten
             var lstOrders = db.tblOrders.Include(x => x.tblOrderDetails).Include(x => x.tblStockDetails).Include(x => x.tblUser).SelectMany(x => new List<OrderModel> {
                 new OrderModel
                 {
@@ -73,6 +77,7 @@ namespace WebShop.Controllers
                 }
             });
 
+            // Filtert die Bestellungen basierend auf der Rolle des Benutzers
             if (_userRole == (int)UserRoleEnum.TeamLeaders)
             {
                 int currUserID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
@@ -97,22 +102,28 @@ namespace WebShop.Controllers
         /// <returns>Eine JSON-Antwort, die den Erfolg oder Fehler der Genehmigung anzeigt.</returns>
         public ActionResult Approve(int OrderId)
         {
+            // Ruft die Bestellung aus der Datenbank ab
             var OrderTblRow = db.tblOrders.Where(x => x.Id == OrderId).Single();
 
+            // Bestimmt den aktuellen Benutzernamen und das Budget des Mitarbeiters
             var currUserName = User.Identity.GetUserName();
             var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy).Single().TeamEmployeeBudget;
             var utilisedBudget = db.tblOrders.Where(x => x.OrderedBy == OrderTblRow.OrderedBy && x.OrderApproved != "R").Sum(x => x.TotalCost);
 
+            // Überprüft, ob das genutzte Budget das Mitarbeiterbudget überschreitet
             if (utilisedBudget > decimal.Parse(empBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }))
             {
                 return Json(data: new { Error = true, Message = string.Format("Verwendetes Budget {0} überschreitet das Mitarbeiterbudget von {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }
 
+            // Setzt den Status der Bestellung auf "Genehmigt"
             OrderTblRow.OrderApproved = "Y";
 
+            // Speichert die Änderungen in der Datenbank
             db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
 
+            // Setzt eine Erfolgsmeldung und gibt eine JSON-Antwort zurück
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = string.Format("Bestellung {0} genehmigt.", OrderTblRow.OrderId) }, JsonRequestBehavior.AllowGet);
         }
@@ -124,15 +135,19 @@ namespace WebShop.Controllers
         /// <returns>Eine JSON-Antwort, die den Erfolg der Ablehnung anzeigt.</returns>
         public ActionResult Reject(int OrderId)
         {
+            // Ruft die Bestellung und die zugehörigen Lagerdetails aus der Datenbank ab
             var OrderTblRow = db.tblOrders.Include(x => x.tblStockDetails).Where(x => x.Id == OrderId).Single();
             OrderTblRow.OrderApproved = "R";
 
+            // Setzt die OrderId der Lagerdetails auf null und erhöht die Menge im Lager
             OrderTblRow.tblStockDetails.ForEach(x => x.OrderId = null);
             OrderTblRow.tblStockDetails.ForEach(x => x.tblStock.Quantity = x.tblStock.Quantity + 1);
 
+            // Speichert die Änderungen in der Datenbank
             db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
 
+            // Setzt eine Erfolgsmeldung und gibt eine JSON-Antwort zurück
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Bestellung {0} abgelehnt.", OrderTblRow.OrderId) };
             return Json(data: new { Success = true, Message = "Order Rejected" }, JsonRequestBehavior.AllowGet);
         }

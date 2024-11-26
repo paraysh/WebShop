@@ -77,10 +77,9 @@ namespace WebShop.Controllers
             newUserObj.LastName = user.LastName;
             newUserObj.Email = user.Email;
             newUserObj.UserRole = (int)user.UserRoleEnum;
-            //Store a password hash:
+            // Passwort-Hash speichern
             PasswordHash hash = new PasswordHash(user.Password);
             byte[] hashBytes = hash.ToArray();
-            //newUserObj.Password = user.Password; // Passwort wird auf den gleichen Wert wie der Benutzername gesetzt
             newUserObj.HashPassword = hashBytes;
             newUserObj.IsActive = user.IsActive;
 
@@ -156,8 +155,6 @@ namespace WebShop.Controllers
             usr.UserRole = employee.UserRole;
             usr.UserRoleEnum = (UserRoleEnum)employee.UserRole;
             usr.TeamBudget = employee.tblTeamBudgets.SingleOrDefault() == null ? "0,00" : employee.tblTeamBudgets.SingleOrDefault().TeamBudget;
-            //usr.Password = employee.Password;
-            //usr.ConfirmPassword = employee.Password;
             usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault().TeamLeaderId;
             usr.EmployeeBudget = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault() == null ? "0,00" : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault().TeamEmployeeBudget;
 
@@ -169,8 +166,6 @@ namespace WebShop.Controllers
                 decimal teamEmployeesTotalBudget = 0;
                 foreach (var budget in lstteamEmployeesTotalBudget)
                     teamEmployeesTotalBudget += decimal.Parse(budget, new NumberFormatInfo() { NumberDecimalSeparator = "," });
-
-                //var teamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Sum(x => decimal.Parse(x.TeamEmployeeBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }));
                 usr.RemainingTeamBudget = Convert.ToString(decimal.Parse(usr.AssignedTeamBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) - teamEmployeesTotalBudget);
                 usr.RemainingTeamBudget = usr.RemainingTeamBudget.Replace('.', ',');
             }
@@ -183,7 +178,7 @@ namespace WebShop.Controllers
             }).ToList();
             usr.availableTeamLeaderLst = admins;
 
-            //Employee Items
+            // Mitarbeiter-Artikel
             List<ItemModelEmployee> itemsOrders = db.tblOrderDetails
                             .Include(x => x.tblOrder)
                             .Include(x => x.tblItem)
@@ -219,7 +214,7 @@ namespace WebShop.Controllers
             employee.IsActive = user.IsActive;
 
             // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
-            if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && Convert.ToDecimal(user.TeamBudget) > 0 )
+            if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && Convert.ToDecimal(user.TeamBudget) > 0)
             {
                 if (employee.tblTeamBudgets.Count > 0)
                 {
@@ -260,11 +255,6 @@ namespace WebShop.Controllers
                 }
             }
 
-            //if (user.Password != user.ConfirmPassword)
-            //{
-            //    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Aktualisierung nicht möglich. Das Passwort stimmt nicht überein.") };
-            //    return RedirectToAction("EmployeeManagement");
-            //}
             db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Benutzer {0} aktualisiert.", user.UserName) };

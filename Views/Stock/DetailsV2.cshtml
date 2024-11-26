@@ -3,6 +3,7 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    // Erstellt ein WebGrid für die Bestandsbewegungen.
     WebGrid webGridMovement = new WebGrid(source: Model.lstStocks, canSort: false, canPage: false);
 }
 
@@ -18,31 +19,31 @@
         /*background-color: #fff;*/
     }
 
-    .Grid th {
-        /*background-color: #B8DBFD;*/
-        color: #333;
-        font-weight: bold;
-    }
+        .Grid th {
+            /*background-color: #B8DBFD;*/
+            color: #333;
+            font-weight: bold;
+        }
 
-    .Grid th, .Grid td {
-        padding: 5px;
-        border: 1px solid #ccc;
-    }
+        .Grid th, .Grid td {
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
 
-    .Grid img {
-        cursor: pointer;
-    }
+        .Grid img {
+            cursor: pointer;
+        }
 
     .ChildGrid {
         width: 100%;
     }
 
-    .ChildGrid th {
-        /*background-color: #6C6C6C;*/
-        /*color: #fff;*/
-        color: #333;
-        font-weight: bold;
-    }
+        .ChildGrid th {
+            /*background-color: #6C6C6C;*/
+            /*color: #fff;*/
+            color: #333;
+            font-weight: bold;
+        }
 
     .grid-header {
         background: lightblue;
@@ -60,11 +61,12 @@
 
 <h2>Details (@ViewBag.ItemName)</h2>
 
-@{ 
+@{
     var totalAdded = 0;
     var totalOrdered = 0;
     var totalInStock = 0;
 
+    // Berechnet die Gesamtanzahl der hinzugefügten, verliehenen und auf Lager befindlichen Artikel.
     totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count();
     totalOrdered = Model.lstStockDetails.Count();
     totalInStock = Model.lstInStockItems.Count();
@@ -97,7 +99,6 @@
     </div>
 </div>
 
-
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#movement">Ein-/Ausgang</a></li>
     <li><a data-toggle="tab" href="#orders">Verliehen</a></li>
@@ -108,34 +109,34 @@
     <div id="movement" class="tab-pane fade in active">
 
         @webGridMovement.GetHtml(
-                 htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
-                 headerStyle: "grid-header",
-                 columns: webGridMovement.Columns(
-                          webGridMovement.Column(null, null, format: @<text>
+                      htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
+                      headerStyle: "grid-header",
+                      columns: webGridMovement.Columns(
+                               webGridMovement.Column(null, null, format: @<text>
                                 <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
-            webGridMovement.Column("StockAddDate", "Datum"),
-            webGridMovement.Column("MovementType", "Bewegungsart"),
-            webGridMovement.Column("TotalItemsAddedRemoved", "Anzahl", format: (item) => item.lstSerialNumbers.Count),
-            webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
+          webGridMovement.Column("StockAddDate", "Datum"),
+          webGridMovement.Column("MovementType", "Bewegungsart"),
+          webGridMovement.Column("TotalItemsAddedRemoved", "Anzahl", format: (item) => item.lstSerialNumbers.Count),
+          webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
 
-            webGridMovement.Column(format: (item) =>
-            {
-                // Erstellt ein ChildGrid für die Bestelldetails.
-                WebGrid childGrid = new WebGrid(source: item.lstSerialNumbers, canSort: false, canPage: false);
-                return childGrid.GetHtml(
-                htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
-                headerStyle: "grid-header",
-                columns: childGrid.Columns(
-                    childGrid.Column("SerialNos", "Seriennummer"),
-                    childGrid.Column("DeleteReason", "Grund")
-                ));
-            })
-            ))
+          webGridMovement.Column(format: (item) =>
+          {
+              // Erstellt ein ChildGrid für die Bestelldetails.
+              WebGrid childGrid = new WebGrid(source: item.lstSerialNumbers, canSort: false, canPage: false);
+              return childGrid.GetHtml(
+              htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
+              headerStyle: "grid-header",
+              columns: childGrid.Columns(
+                  childGrid.Column("SerialNos", "Seriennummer"),
+                  childGrid.Column("DeleteReason", "Grund")
+              ));
+          })
+          ))
     </div>
 
     <div id="orders" class="tab-pane fade">
 
-        <table class="table table-bordered table-striped table-condensed" >
+        <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr class="grid-header">
                     <th>Seriennummer</th>
@@ -179,7 +180,6 @@
 
     </div>
 </div>
-
 
 <script type="text/javascript">
     $(function () {

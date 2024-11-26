@@ -121,9 +121,13 @@ namespace WebShop.Models
         /// Die Benutzerrolle als Enumeration.
         /// </summary>
         public UserRoleEnum UserRoleEnum { get; set; }
-
+        /// <summary>
+        /// Der Hash des Passworts.
+        /// </summary>
         public byte[] HashPassword { get; set; }
-
+        /// <summary>
+        /// Eine Liste der bestellten Artikel.
+        /// </summary>
         public List<ItemModelEmployee> ItemsOrdered { get; set; }
     }
 }
