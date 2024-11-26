@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -153,17 +155,24 @@ namespace WebShop.Controllers
             usr.Email = employee.Email;
             usr.UserRole = employee.UserRole;
             usr.UserRoleEnum = (UserRoleEnum)employee.UserRole;
-            usr.TeamBudget = employee.tblTeamBudgets.SingleOrDefault() == null ? 0 : employee.tblTeamBudgets.SingleOrDefault().TeamBudget;
+            usr.TeamBudget = employee.tblTeamBudgets.SingleOrDefault() == null ? "0,00" : employee.tblTeamBudgets.SingleOrDefault().TeamBudget;
             //usr.Password = employee.Password;
             //usr.ConfirmPassword = employee.Password;
             usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault().TeamLeaderId;
-            usr.EmployeeBudget = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault().TeamEmployeeBudget;
+            usr.EmployeeBudget = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault() == null ? "0,00" : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault().TeamEmployeeBudget;
 
             if (usr.UserRole == (int)UserRoleEnum.Employee)
             {
                 usr.AssignedTeamBudget = db.tblTeamBudgets.Where(x => x.TeamLeaderId == usr.TeamLeader).Single().TeamBudget;
-                var teamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Sum(x => x.TeamEmployeeBudget);
-                usr.RemainingTeamBudget = usr.AssignedTeamBudget - (teamEmployeesTotalBudget == null ? 0 : teamEmployeesTotalBudget);
+                var lstteamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Select(x => x.TeamEmployeeBudget).ToList();
+
+                decimal teamEmployeesTotalBudget = 0;
+                foreach (var budget in lstteamEmployeesTotalBudget)
+                    teamEmployeesTotalBudget += decimal.Parse(budget, new NumberFormatInfo() { NumberDecimalSeparator = "," });
+
+                //var teamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Sum(x => decimal.Parse(x.TeamEmployeeBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }));
+                usr.RemainingTeamBudget = Convert.ToString(decimal.Parse(usr.AssignedTeamBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) - teamEmployeesTotalBudget);
+                usr.RemainingTeamBudget = usr.RemainingTeamBudget.Replace('.', ',');
             }
 
             // Erstellen der verfügbaren Teamleiter-Auswahlliste
@@ -210,7 +219,7 @@ namespace WebShop.Controllers
             employee.IsActive = user.IsActive;
 
             // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
-            if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && user.TeamBudget.HasValue)
+            if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && Convert.ToDecimal(user.TeamBudget) > 0 )
             {
                 if (employee.tblTeamBudgets.Count > 0)
                 {
@@ -227,9 +236,9 @@ namespace WebShop.Controllers
             }
 
             // Überprüfen, ob die Benutzerrolle "Mitarbeiter" ist
-            if (user.UserRoleEnum == UserRoleEnum.Employee && user.EmployeeBudget.HasValue)
+            if (user.UserRoleEnum == UserRoleEnum.Employee && Convert.ToDecimal(user.EmployeeBudget) > 0)
             {
-                if (user.EmployeeBudget > user.RemainingTeamBudget)
+                if (decimal.Parse(user.EmployeeBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) > decimal.Parse(user.RemainingTeamBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }))
                 {
                     TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Update nicht möglich. Das übrige Teambudget ist geringer als das Mitarbeiterbudget.") };
                     return RedirectToAction("EmployeeManagement");

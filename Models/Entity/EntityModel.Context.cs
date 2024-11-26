@@ -31,10 +31,10 @@ namespace WebShop.Models.Entity
         public virtual DbSet<tblOrderDetail> tblOrderDetails { get; set; }
         public virtual DbSet<tblStock> tblStocks { get; set; }
         public virtual DbSet<tblStockDetail> tblStockDetails { get; set; }
-        public virtual DbSet<tblTeamBudget> tblTeamBudgets { get; set; }
-        public virtual DbSet<tblTeamEmployee> tblTeamEmployees { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblUserRolesMaster> tblUserRolesMasters { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<tblTeamBudget> tblTeamBudgets { get; set; }
+        public virtual DbSet<tblTeamEmployee> tblTeamEmployees { get; set; }
     }
 }

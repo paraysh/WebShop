@@ -11,8 +11,6 @@
         <EntityTypeShape EntityType="WebShopModel.tblOrderDetail" Width="2.25" PointX="7.5" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="WebShopModel.tblStock" Width="2" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WebShopModel.tblStockDetail" Width="1.5" PointX="10.5" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="WebShopModel.tblTeamBudget" Width="1.5" PointX="5.25" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="WebShopModel.tblTeamEmployee" Width="1.5" PointX="5.25" PointY="10.875" IsExpanded="true" />
         <EntityTypeShape EntityType="WebShopModel.tblUser" Width="1.875" PointX="3" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WebShopModel.tblUserRolesMaster" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
         <AssociationConnector Association="WebShopModel.FK_tblItem_tblItemTypeMaster" ManuallyRouted="false" />
@@ -22,11 +20,13 @@
         <AssociationConnector Association="WebShopModel.FK_tblStockDetails_tblOrder" ManuallyRouted="false" />
         <AssociationConnector Association="WebShopModel.FK_tblOrderDetails_tblStockDetails" ManuallyRouted="false" />
         <AssociationConnector Association="WebShopModel.FK_tblStockDetails_tblStock" ManuallyRouted="false" />
-        <AssociationConnector Association="WebShopModel.FK_tblTeamBudget_tblUsers" ManuallyRouted="false" />
-        <AssociationConnector Association="WebShopModel.FK_tblTeamEmployee_tblUsers1" ManuallyRouted="false" />
         <AssociationConnector Association="WebShopModel.FK_tblUsers_tblUserRolesMaster" ManuallyRouted="false" />
         <EntityTypeShape EntityType="WebShopModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
         <AssociationConnector Association="WebShopModel.FK_tblOrderDetails_tblItem" />
+        <EntityTypeShape EntityType="WebShopModel.tblTeamBudget" Width="1.5" PointX="5.625" PointY="18.875" />
+        <EntityTypeShape EntityType="WebShopModel.tblTeamEmployee" Width="1.5" PointX="5.625" PointY="9.125" />
+        <AssociationConnector Association="WebShopModel.FK_tblTeamBudget_tblUsers" />
+        <AssociationConnector Association="WebShopModel.FK_tblTeamEmployee_tblUsers1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

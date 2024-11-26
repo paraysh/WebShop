@@ -33,10 +33,10 @@ namespace WebShop.Models.Entity
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblOrder> tblOrders { get; set; }
+        public virtual tblUserRolesMaster tblUserRolesMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblTeamBudget> tblTeamBudgets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblTeamEmployee> tblTeamEmployees { get; set; }
-        public virtual tblUserRolesMaster tblUserRolesMaster { get; set; }
     }
 }

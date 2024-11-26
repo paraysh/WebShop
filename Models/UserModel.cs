@@ -75,23 +75,23 @@ namespace WebShop.Models
         /// Das Team-Budget des Benutzers.
         /// </summary>
         [Display(Name = "Team Budget")]
-        public decimal? TeamBudget { get; set; } = 0;
+        public string TeamBudget { get; set; } = "0,00";
 
         /// <summary>
         /// Das Mitarbeiter-Budget des Benutzers.
         /// </summary>
         [Display(Name = "Employee Budget")]
-        public decimal? EmployeeBudget { get; set; } = 0;
+        public string EmployeeBudget { get; set; } = "0,00";
 
         /// <summary>
         /// Das zugewiesene Team-Budget des Benutzers.
         /// </summary>
-        public decimal? AssignedTeamBudget { get; set; } = 0;
+        public string AssignedTeamBudget { get; set; } = "0,00";
 
         /// <summary>
         /// Das verbleibende Team-Budget des Benutzers.
         /// </summary>
-        public decimal? RemainingTeamBudget { get; set; } = 0;
+        public string RemainingTeamBudget { get; set; } = "0,00";
 
         /// <summary>
         /// Eine Liste der verfügbaren Teamleiter.

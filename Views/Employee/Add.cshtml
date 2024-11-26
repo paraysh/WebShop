@@ -108,17 +108,18 @@
         <div class="row mt-3 teamBudgetContainer">
             <div class="col-md-6">
                 <!-- Ein Container für das Teambudget-Feld. -->
-                <label>Teambudget</label>
+
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
+                    <label>Teambudget</label>
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto" })
                     <!-- Ein Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
                 }
-                else
+                <!--else
                 {
-                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
-                    <!-- Ein deaktiviertes Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
-                }
+                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })-->
+                <!-- Ein deaktiviertes Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
+                <!--}-->
             </div>
         </div>
         <div class="row mt-3 employeeContainer">
@@ -152,14 +153,14 @@
                     <!-- Ein schreibgeschütztes Eingabefeld für das übrige Teambudget mit der CSS-Klasse "form-control". -->
                 </div>
             }
-            else
+            <!--else
             {
                 <label>Mitarbeiterbudget</label>
                 <div class="col-md-4 mt-3">
-                    @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })
+                    @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })-->
                     <!-- Ein deaktiviertes Eingabefeld für das Mitarbeiterbudget mit der CSS-Klasse "form-control". -->
-                </div>
-            }
+                <!--</div>
+            }-->
         </div>
 
         <hr />
@@ -213,4 +214,29 @@
             input.attr("type", "password");
         }
     });
+
+    $(".web-shop-decimal").keypress(function (evt) {
+        var $this = this;
+
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode == 44) {
+            //Check if the text already contains the , character
+            if ($this.value.indexOf(',') === -1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (charCode > 31 &&
+                (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            else {
+                if ($this.value.indexOf(',') !== -1 && $this.value.split(",")[1] !== '' && $this.value.split(",")[1].length === 2) { // restricting to 2 decimal
+                    return false;
+                }
+            }
+        }
+        return true;
+    })
 </script>

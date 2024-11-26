@@ -88,7 +88,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TeamLeaderId" Type="int" Nullable="false" />
-          <Property Name="TeamBudget" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="TeamBudget" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tblTeamEmployee">
           <Key>
@@ -97,7 +97,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TeamLeaderId" Type="int" Nullable="false" />
           <Property Name="TeamEmployeeId" Type="int" Nullable="false" />
-          <Property Name="TeamEmployeeBudget" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="TeamEmployeeBudget" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tblUser">
           <Key>
@@ -425,25 +425,6 @@
           <Property Name="IsDeleted" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="DeleteReason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="tblTeamBudget">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
-          <Property Name="TeamBudget" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblTeamBudget" ToRole="tblUser" />
-        </EntityType>
-        <EntityType Name="tblTeamEmployee">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
-          <Property Name="TeamEmployeeId" Type="Int32" Nullable="false" />
-          <Property Name="TeamEmployeeBudget" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="tblUser" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
-        </EntityType>
         <EntityType Name="tblUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -456,10 +437,10 @@
           <Property Name="UserRole" Type="Int32" />
           <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="tblOrders" Relationship="Self.FK_tblOrder_tblUser" FromRole="tblUser" ToRole="tblOrder" />
-          <NavigationProperty Name="tblTeamBudgets" Relationship="Self.FK_tblTeamBudget_tblUsers" FromRole="tblUser" ToRole="tblTeamBudget" />
-          <NavigationProperty Name="tblTeamEmployees" Relationship="Self.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
           <NavigationProperty Name="tblUserRolesMaster" Relationship="Self.FK_tblUsers_tblUserRolesMaster" FromRole="tblUser" ToRole="tblUserRolesMaster" />
           <Property Name="HashPassword" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="tblTeamBudgets" Relationship="WebShopModel.FK_tblTeamBudget_tblUsers" FromRole="tblUser" ToRole="tblTeamBudget" />
+          <NavigationProperty Name="tblTeamEmployees" Relationship="WebShopModel.FK_tblTeamEmployee_tblUsers1" FromRole="tblUser" ToRole="tblTeamEmployee" />
         </EntityType>
         <EntityType Name="tblUserRolesMaster">
           <Key>
@@ -553,30 +534,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblTeamBudget_tblUsers">
-          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
-          <End Role="tblTeamBudget" Type="Self.tblTeamBudget" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tblTeamBudget">
-              <PropertyRef Name="TeamLeaderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblTeamEmployee_tblUsers1">
-          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
-          <End Role="tblTeamEmployee" Type="Self.tblTeamEmployee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tblTeamEmployee">
-              <PropertyRef Name="TeamEmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblUsers_tblUserRolesMaster">
           <End Role="tblUserRolesMaster" Type="Self.tblUserRolesMaster" Multiplicity="0..1" />
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
@@ -596,8 +553,6 @@
           <EntitySet Name="tblOrderDetails" EntityType="Self.tblOrderDetail" />
           <EntitySet Name="tblStocks" EntityType="Self.tblStock" />
           <EntitySet Name="tblStockDetails" EntityType="Self.tblStockDetail" />
-          <EntitySet Name="tblTeamBudgets" EntityType="Self.tblTeamBudget" />
-          <EntitySet Name="tblTeamEmployees" EntityType="Self.tblTeamEmployee" />
           <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
           <EntitySet Name="tblUserRolesMasters" EntityType="Self.tblUserRolesMaster" />
           <AssociationSet Name="FK_tblItem_tblItemTypeMaster" Association="Self.FK_tblItem_tblItemTypeMaster">
@@ -628,14 +583,6 @@
             <End Role="tblStock" EntitySet="tblStocks" />
             <End Role="tblStockDetails" EntitySet="tblStockDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="Self.FK_tblTeamBudget_tblUsers">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblTeamBudget" EntitySet="tblTeamBudgets" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="Self.FK_tblTeamEmployee_tblUsers1">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployees" />
-          </AssociationSet>
           <AssociationSet Name="FK_tblUsers_tblUserRolesMaster" Association="Self.FK_tblUsers_tblUserRolesMaster">
             <End Role="tblUserRolesMaster" EntitySet="tblUserRolesMasters" />
             <End Role="tblUser" EntitySet="tblUsers" />
@@ -644,6 +591,16 @@
           <AssociationSet Name="FK_tblOrderDetails_tblItem" Association="WebShopModel.FK_tblOrderDetails_tblItem">
             <End Role="tblItem" EntitySet="tblItems" />
             <End Role="tblOrderDetail" EntitySet="tblOrderDetails" />
+          </AssociationSet>
+          <EntitySet Name="tblTeamBudgets" EntityType="WebShopModel.tblTeamBudget" />
+          <EntitySet Name="tblTeamEmployees" EntityType="WebShopModel.tblTeamEmployee" />
+          <AssociationSet Name="FK_tblTeamBudget_tblUsers" Association="WebShopModel.FK_tblTeamBudget_tblUsers">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTeamBudget" EntitySet="tblTeamBudgets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTeamEmployee_tblUsers1" Association="WebShopModel.FK_tblTeamEmployee_tblUsers1">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblTeamEmployee" EntitySet="tblTeamEmployees" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="sysdiagram">
@@ -665,6 +622,49 @@
             </Principal>
             <Dependent Role="tblOrderDetail">
               <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblTeamBudget">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
+          <Property Name="TeamBudget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUser" Relationship="WebShopModel.FK_tblTeamBudget_tblUsers" FromRole="tblTeamBudget" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblTeamEmployee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
+          <Property Name="TeamEmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="TeamEmployeeBudget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUser" Relationship="WebShopModel.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK_tblTeamBudget_tblUsers">
+          <End Type="WebShopModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="WebShopModel.tblTeamBudget" Role="tblTeamBudget" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamBudget">
+              <PropertyRef Name="TeamLeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTeamEmployee_tblUsers1">
+          <End Type="WebShopModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="WebShopModel.tblTeamEmployee" Role="tblTeamEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblTeamEmployee">
+              <PropertyRef Name="TeamEmployeeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -747,25 +747,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblTeamBudgets">
-            <EntityTypeMapping TypeName="WebShopModel.tblTeamBudget">
-              <MappingFragment StoreEntitySet="tblTeamBudget">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
-                <ScalarProperty Name="TeamBudget" ColumnName="TeamBudget" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblTeamEmployees">
-            <EntityTypeMapping TypeName="WebShopModel.tblTeamEmployee">
-              <MappingFragment StoreEntitySet="tblTeamEmployee">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
-                <ScalarProperty Name="TeamEmployeeId" ColumnName="TeamEmployeeId" />
-                <ScalarProperty Name="TeamEmployeeBudget" ColumnName="TeamEmployeeBudget" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblUsers">
             <EntityTypeMapping TypeName="WebShopModel.tblUser">
               <MappingFragment StoreEntitySet="tblUser">
@@ -796,6 +777,25 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
                 <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTeamBudgets">
+            <EntityTypeMapping TypeName="WebShopModel.tblTeamBudget">
+              <MappingFragment StoreEntitySet="tblTeamBudget">
+                <ScalarProperty Name="TeamBudget" ColumnName="TeamBudget" />
+                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTeamEmployees">
+            <EntityTypeMapping TypeName="WebShopModel.tblTeamEmployee">
+              <MappingFragment StoreEntitySet="tblTeamEmployee">
+                <ScalarProperty Name="TeamEmployeeBudget" ColumnName="TeamEmployeeBudget" />
+                <ScalarProperty Name="TeamEmployeeId" ColumnName="TeamEmployeeId" />
+                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

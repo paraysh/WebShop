@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Threading;
 using Microsoft.Ajax.Utilities;
+using System.Globalization;
 
 namespace WebShop.Controllers
 {
@@ -102,7 +103,7 @@ namespace WebShop.Controllers
             var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy).Single().TeamEmployeeBudget;
             var utilisedBudget = db.tblOrders.Where(x => x.OrderedBy == OrderTblRow.OrderedBy && x.OrderApproved != "R").Sum(x => x.TotalCost);
 
-            if (utilisedBudget > empBudget)
+            if (utilisedBudget > decimal.Parse(empBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }))
             {
                 return Json(data: new { Error = true, Message = string.Format("Verwendetes Budget {0} überschreitet das Mitarbeiterbudget von {1}.", utilisedBudget, empBudget) }, JsonRequestBehavior.AllowGet);
             }

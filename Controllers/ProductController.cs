@@ -300,7 +300,10 @@ namespace WebShop.Controllers
                         _tblOrderDetail.ItemId = item.Id;
                     }
                     else
+                    {
+                        _tblOrderDetail.ItemId = item.Id;
                         _tblOrderDetail.StockDetailsId = availableStockDetail.Id;
+                    }
 
                     db.tblOrderDetails.Add(_tblOrderDetail);
                     if (availableStockDetail != null)

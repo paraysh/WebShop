@@ -17,7 +17,7 @@ namespace WebShop.Models.Entity
         public int Id { get; set; }
         public int TeamLeaderId { get; set; }
         public int TeamEmployeeId { get; set; }
-        public Nullable<decimal> TeamEmployeeBudget { get; set; }
+        public string TeamEmployeeBudget { get; set; }
     
         public virtual tblUser tblUser { get; set; }
     }
