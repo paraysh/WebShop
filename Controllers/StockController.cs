@@ -93,6 +93,11 @@ namespace WebShop.Controllers
                 }
             }
 
+            if (addStockModel.Quantity == 0)
+            {
+                return Json(data: new { Error = true, Message = "Ungültige Menge." }, JsonRequestBehavior.AllowGet);
+            }
+
             // Erstellt einen neuen Bestandseintrag
             tblStock _tblStock = new tblStock();
             _tblStock.ItemId = addStockModel.Id;
@@ -104,11 +109,11 @@ namespace WebShop.Controllers
             db.tblStocks.Add(_tblStock);
             db.SaveChanges();
 
+            int generatedStockId = _tblStock.Id;
+
             // Fügt die Seriennummern zum Bestand hinzu
             if (addStockModel.LstSerialNumbers != null && addStockModel.LstSerialNumbers.Count > 0)
             {
-                int generatedStockId = _tblStock.Id;
-
                 foreach (var item in addStockModel.LstSerialNumbers)
                 {
                     tblStockDetail _tblStockDetail = new tblStockDetail();
@@ -119,8 +124,20 @@ namespace WebShop.Controllers
                 }
                 db.SaveChanges();
             }
+            else // for Rental software/ Mietsoftware
+            {
+                for (int i = 0; i < addStockModel.Quantity; i++)
+                {
+                    tblStockDetail _tblStockDetail = new tblStockDetail();
+                    _tblStockDetail.SerialNumber = null;
+                    _tblStockDetail.StockId = generatedStockId;
+                    _tblStockDetail.IsDeleted = "N";
+                    db.tblStockDetails.Add(_tblStockDetail);
+                }
+                db.SaveChanges();
+            }
 
-            return Json(data: new { Success = true, Message = "{0} zum Bestand hinzugefügt." }, JsonRequestBehavior.AllowGet);
+            return Json(data: new { Success = true, Message = "Zum Bestand hinzugefügt." }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -169,6 +186,43 @@ namespace WebShop.Controllers
         [HttpPost]
         public ActionResult Remove(AddStockModel stockModel)
         {
+            var itemObj = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == stockModel.Id).Single();
+            if (itemObj.Type == (int)ItemTypeEnum.RentalSoftware)
+            {
+                if (stockModel.Quantity <= 0)
+                {
+                    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = "Ungültige Menge." };
+                    return RedirectToAction("Index");
+                }
+
+                var totalQuantity = itemObj.tblStocks.Sum(x => x.Quantity);
+                if (stockModel.Quantity > totalQuantity)
+                {
+                    TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = string.Format("Die verfügbare Menge {0} ist kleiner als die Löschmenge.", totalQuantity) };
+                    return RedirectToAction("Index");
+                }
+
+                var objTblStock = itemObj.tblStocks.Where(x => x.Quantity > 0).FirstOrDefault();
+                objTblStock.Quantity = objTblStock.Quantity - stockModel.Quantity;
+                objTblStock.ModifiedBy = User.Identity.GetUserName();
+                objTblStock.ModifiedDt = DateTime.Now;
+
+                db.Entry(objTblStock).State = EntityState.Modified;
+
+                var lstTblStockDtls = objTblStock.tblStockDetails.Where(x => x.IsDeleted == "N" && x.OrderId == null).Take(stockModel.Quantity).ToList();
+                foreach (var objTblStockDtls in lstTblStockDtls)
+                {
+                    objTblStockDtls.IsDeleted = "Y";
+                    objTblStockDtls.DeleteReason = stockModel.DeleteReason;
+                    db.Entry(objTblStockDtls).State = EntityState.Modified;
+                }
+                
+                db.SaveChanges();
+
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel entfernt.") };
+                return RedirectToAction("Index");
+            }
+
             // Holt die Bestandsdetails aus der Datenbank
             int stockDetailsId = Convert.ToInt32(stockModel.SelectedSerialNo);
             var stockDetailModel = db.tblStockDetails.Where(x => x.Id == stockDetailsId).Single();
@@ -313,7 +367,7 @@ namespace WebShop.Controllers
                     SerialNo = item.SerialNumber,
                     OrderedBy = item.tblOrder.tblUser.UserName,
                     LendingStartDt = item.tblOrderDetails.Where(x => x.StockDetailsId == item.Id).Select(x => x.LendingStartDt).FirstOrDefault(),
-                    LendingEndDt = item.tblOrderDetails.Where(x => x.StockDetailsId == item.Id).Select(x => x.LendingEndDt).FirstOrDefault(),
+                    LendingEndDt = item.tblOrderDetails.Where(x => x.StockDetailsId == item.Id).Select(x => x.LendingEndDt).FirstOrDefault()
                 }).ToList();
 
             model.lstStockDetails = orderDetails;
@@ -321,7 +375,7 @@ namespace WebShop.Controllers
             // Holt die im Bestand befindlichen Artikel aus der Datenbank
             model.lstInStockItems = db.tblStockDetails
                                     .Include(x => x.tblStock)
-                                    .Where(x => x.tblStock.ItemId == id && x.OrderId == null && x.tblStock.ModifiedBy == null)
+                                    .Where(x => x.tblStock.ItemId == id && x.OrderId == null && x.IsDeleted == "N")
                                     .Select(x => x.SerialNumber).ToList();
 
             return View(model);

@@ -296,7 +296,8 @@ namespace WebShop.Controllers
 
                     if (item.Type == (int)ItemTypeEnum.RentalSoftware) // Wenn der Artikel Mietsoftware ist
                     {
-                        _tblOrderDetail.StockDetailsId = null;
+                        //_tblOrderDetail.StockDetailsId = null;
+                        _tblOrderDetail.StockDetailsId = availableStockDetail.Id;
                         _tblOrderDetail.ItemId = item.Id;
                     }
                     else
