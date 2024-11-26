@@ -259,7 +259,7 @@ namespace WebShop.Controllers
 
             var stockAdded = db.tblStockDetails
                 .Include(x => x.tblStock)
-                .Where(x => x.tblStock.ItemId == id && x.tblStock.ModifiedBy == null)
+                .Where(x => x.tblStock.ItemId == id)
                 .GroupBy(x => new { x.tblStock.CreatedBy, CreatedDate = SqlFunctions.DateName("dd", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("MM", x.tblStock.CreatedDate.Value) + " " + SqlFunctions.DateName("yyyy", x.tblStock.CreatedDate.Value) })
                 .Select(item => new Stock
                 {
