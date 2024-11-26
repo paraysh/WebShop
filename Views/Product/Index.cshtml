@@ -89,10 +89,19 @@
                             </div>
 
                             @*<div class="row">*@
-                            <div class="col-md-12 p-2" style="text-align:center">
-                                @* Bild des Artikels *@
-                                <img src="~/Content/ItemImages/@item.ImageName" height="150" />
-                            </div>
+                        <div class="col-md-12 p-2" style="text-align:center">
+                            @* Bild des Artikels *@
+                            @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                            {
+                                <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" height="150" />
+                                <!-- Zeigt das Bild des Artikels an. -->
+                            }
+                            else
+                            {
+                                <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" height="150" />
+                                <!-- Zeigt das Bild des Artikels an. -->
+                            }
+                        </div>
                             @*</div>*@
                         </div>
                         <div class="row p-1 mx-1" style="border-top: 2px solid maroon">

@@ -65,8 +65,16 @@
         <label>Bild:</label>
         <div class="row mt-3">
             <div class="col-md-6">
-                <img src="~/Content/ItemImages/@Model.ImageName" height="250" class="object-fit-contain border rounded" />
-                <!-- Zeigt das aktuelle Bild des Artikels an. -->
+                @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                {
+                    <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@Model.ImageName" height="250" class="object-fit-contain border rounded" />
+                    <!-- Zeigt das aktuelle Bild des Artikels an. -->
+                }
+                else
+                {
+                    <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@Model.ImageName" height="250" class="object-fit-contain border rounded" />
+                    <!-- Zeigt das aktuelle Bild des Artikels an. -->
+                }
             </div>
         </div>
         <div class="row mt-3">

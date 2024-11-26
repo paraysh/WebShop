@@ -50,7 +50,16 @@
                 </td>
                 <td>
                     @* Bild des Artikels *@
-                    <img src="~/Content/ItemImages/@item.ImageName" height="60" class="img-rounded" />
+                    @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                    {
+                        <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" height="60" class="img-rounded" />
+                        <!-- Zeigt das Bild des Artikels an. -->
+                    }
+                    else
+                    {
+                        <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" height="60" class="img-rounded" />
+                        <!-- Zeigt das Bild des Artikels an. -->
+                    }
                 </td>
                 <td>
                     @* Name des Artikels *@

@@ -12,6 +12,11 @@ using WebShop.Models.Enum;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Web.Services.Description;
+using System.Configuration;
+using System.Web.Helpers;
+using Microsoft.Azure; // Namespace for CloudConfigurationManager
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob; // Namespace for Blob storage types
 
 namespace WebShop.Controllers
 {
@@ -73,8 +78,33 @@ namespace WebShop.Controllers
             if (item.ImageData != null)
             {
                 var uniqueFileName = $@"{Guid.NewGuid()}" + "." + item.ImageData.ContentType.Substring(item.ImageData.ContentType.IndexOf("/") + 1);
-                item.ImageData.SaveAs(Server.MapPath("~/Content/ItemImages") + "/" + uniqueFileName);
+                if (ConfigurationManager.AppSettings["Env"] == "local")
+                {
+                    item.ImageData.SaveAs(Server.MapPath("~/Content/ItemImages") + "/" + uniqueFileName);
+                }
+                else
+                {
+                    var image = new WebImage(item.ImageData.InputStream);
+                    // Parse the connection string and return a reference to the storage account.
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["BlobStorageConnectionString"].ConnectionString);
+
+                    // Retrieve a reference to a container.
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+                    // Retrieve a reference to a container.
+                    CloudBlobContainer container = blobClient.GetContainerReference(ConfigurationManager.AppSettings["ImagesContainer"]);
+
+                    // Retrieve reference to a blob named "myblob".
+                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(uniqueFileName);
+                    var fileBytes = image.GetBytes();
+
+                    //upload image
+                    blockBlob.UploadFromByteArray(fileBytes, 0, fileBytes.Length);
+                }
+
                 newItemObj.ImageName = uniqueFileName;
+
+
             }
 
             // Fügt den neuen Artikel zur Datenbank hinzu und speichert die Änderungen

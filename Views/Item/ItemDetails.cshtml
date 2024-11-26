@@ -38,8 +38,16 @@
                     <td>@item.tblItemTypeMaster.ItemType</td>
                     <td>@item.Cost</td>
                     <td>
-                        <img src="~/Content/ItemImages/@item.ImageName" class="item-img object-fit-contain border rounded" />
-                        <!-- Zeigt das Bild des Artikels an. -->
+                        @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                        {
+                            <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" class="item-img object-fit-contain border rounded" />
+                            <!-- Zeigt das Bild des Artikels an. -->
+                        }
+                        else
+                        {
+                            <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" class="item-img object-fit-contain border rounded" />
+                            <!-- Zeigt das Bild des Artikels an. -->
+                        }
                     </td>
                     <td>
                         <!-- Ein Link, um den Artikel zu bearbeiten. -->
