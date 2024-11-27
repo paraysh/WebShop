@@ -250,63 +250,6 @@ namespace WebShop.Controllers
         /// </summary>
         /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
         /// <returns>Die Detailansicht des Produkts.</returns>
-        public ActionResult Details(int id)
-        {
-            // Setzt die Benutzerrolle
-            _userRole = User.Identity.GetUserId<int>();
-            ViewBag.UserRole = _userRole;
-
-            // Holt die Details des Artikels aus der Datenbank
-            var tblItem = db.tblItems
-                .Include(x => x.tblStocks)
-                .Include(x => x.tblOrderDetails)
-                .Where(x => x.Id == id)
-                .Select(item => new StockHistoryModel
-                {
-                    ItemId = item.Id,
-                    ItemName = item.Name,
-                    //ItemCost = (decimal)item.Cost,
-                    ItemImageName = item.ImageName,
-                    ItemType = item.tblItemTypeMaster.ItemType,
-                    lstStocks = item.tblStocks.SelectMany(stock => new List<Stock> { new Stock {
-                        InitialQuantity = (int)stock.InitialQuantity,
-                        StockCurrentQuantity = (int)stock.Quantity,
-                        //StockAddDate = (DateTime)stock.CreatedDate,
-                        StockAddedBy = stock.CreatedBy,
-                        StockDeletedBy = stock.ModifiedBy == null ? "NA" : stock.ModifiedBy,
-                        StockDeleteDate = stock.ModifiedDt,
-                        //lstStockDetails = stock.tblStockDetails.SelectMany(stockDtl => new List<StockDetail> { new StockDetail {
-                        //    SerialNo = stockDtl.SerialNumber,
-                        //    OrderId = stockDtl.OrderId,
-                        //    IsDeleted = stockDtl.IsDeleted,
-                        //    OrderID = stockDtl.tblOrder.OrderId,
-                        //    OrderedBy = stockDtl.tblOrder.tblUser.UserName,
-                        //    OrderDate = (DateTime)stockDtl.tblOrder.OrderDate,
-                        //    OrderApproved = stockDtl.tblOrder.OrderApproved,
-                        //    LendingPeriodMonths = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? 0 : (int)stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingPeriodMonths,
-                        //    LendingStartDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingStartDt,
-                        //    LendingEndDt = stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault() == null ? null : stockDtl.tblOrderDetails.Where(o => o.StockDetailsId == stockDtl.Id).FirstOrDefault().LendingEndDt
-                        //        //lstOrderDetails = stockDtl.tblOrderDetails.SelectMany(orderDtl => new List<OrderDetails> { new OrderDetails {
-                        //        //        OrderID = orderDtl.tblOrder.OrderId,
-                        //        //        OrderedBy = orderDtl.tblOrder.tblUser.UserName,
-                        //        //        OrderDate = (DateTime)orderDtl.tblOrder.OrderDate,
-                        //        //        OrderApproved = orderDtl.tblOrder.OrderApproved,
-                        //        //        LendingPeriodMonths = (int)orderDtl.LendingPeriodMonths,
-                        //        //        LendingStartDt = (DateTime)orderDtl.LendingStartDt,
-                        //        //        LendingEndDt = (DateTime)orderDtl.LendingEndDt
-                        //        //} }).ToList()
-                        //} }).ToList()
-                    } }).ToList()
-                }).Single();
-
-            return View(tblItem);
-        }
-
-        /// <summary>
-        /// Zeigt die Details eines bestimmten Produkts an.
-        /// </summary>
-        /// <param name="id">Die ID des anzuzeigenden Produkts.</param>
-        /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult DetailsV2(int id, string itemName = "")
         {
             // Setzt die Benutzerrolle
