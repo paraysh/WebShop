@@ -124,7 +124,7 @@ namespace WebShop.Controllers
                 }
                 db.SaveChanges();
             }
-            else // for Rental software/ Mietsoftware
+            else // Für Software
             {
                 for (int i = 0; i < addStockModel.Quantity; i++)
                 {
