@@ -1,10 +1,11 @@
-﻿@model WebShop.Models.StockHistoryModel
+﻿<!--//Bearbeiter: Abbas Dayeh(Bestanddetails)-->
+@model WebShop.Models.StockHistoryModel
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     // Erstellt ein WebGrid für die Bestandsbewegungen.
-    WebGrid webGridMovement = new WebGrid(source: Model.lstStocks, canSort: false, canPage: false);
+    WebGrid webGridMovement = New WebGrid(source:    Model.lstStocks, canSort: false, canPage: false);
 }
 
 <style type="text/css">
@@ -62,14 +63,14 @@
 <h2>Details (@ViewBag.ItemName)</h2>
 
 @{
-    var totalAdded = 0;
-    var totalOrdered = 0;
-    var totalInStock = 0;
+        var totalAdded = 0;
+        var totalOrdered = 0;
+        var totalInStock = 0;
 
-    // Berechnet die Gesamtanzahl der hinzugefügten, verliehenen und auf Lager befindlichen Artikel.
-    totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count() - Model.lstStocks.Where(x => x.MovementType == "Ausgang").SelectMany(x => x.lstSerialNumbers).Count();
-    totalOrdered = Model.lstStockDetails.Count();
-    totalInStock = Model.lstInStockItems.Count();
+        // Berechnet die Gesamtanzahl der hinzugefügten, verliehenen und auf Lager befindlichen Artikel.
+        totalAdded = Model.lstStocks.Where(x => x.MovementType == "Eingang").SelectMany(x => x.lstSerialNumbers).Count() - Model.lstStocks.Where(x => x.MovementType == "Ausgang").SelectMany(x => x.lstSerialNumbers).Count();
+        totalOrdered = Model.lstStockDetails.Count();
+        totalInStock = Model.lstInStockItems.Count();
 }
 
 <div class="row">
@@ -113,25 +114,25 @@
                       headerStyle: "grid-header",
                       columns: webGridMovement.Columns(
                                webGridMovement.Column(null, null, format: @<text>
-                                <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
-          webGridMovement.Column("StockAddDate", "Datum"),
-          webGridMovement.Column("MovementType", "Bewegungsart"),
-          webGridMovement.Column("TotalItemsAddedRemoved", "Anzahl", format: (item) => item.lstSerialNumbers.Count),
-          webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
+            <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
+webGridMovement.Column("StockAddDate", "Datum"),
+webGridMovement.Column("MovementType", "Bewegungsart"),
+webGridMovement.Column("TotalItemsAddedRemoved", "Anzahl", format: (item) => item.lstSerialNumbers.Count),
+webGridMovement.Column("StockAddedBy", "Mitarbeiter"),
 
-          webGridMovement.Column(format: (item) =>
-          {
-              // Erstellt ein ChildGrid für die Bestelldetails.
-              WebGrid childGrid = new WebGrid(source: item.lstSerialNumbers, canSort: false, canPage: false);
-              return childGrid.GetHtml(
-              htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
-              headerStyle: "grid-header",
-              columns: childGrid.Columns(
-                  childGrid.Column("SerialNos", "Seriennummer"),
-                  childGrid.Column("DeleteReason", "Grund")
-              ));
-          })
-          ))
+webGridMovement.Column(format: (item) =>
+{
+// Erstellt ein ChildGrid für die Bestelldetails.
+WebGrid childGrid = new WebGrid(source:  item.lstSerialNumbers, canSort: false, canPage: false);
+return childGrid.GetHtml(
+htmlAttributes:  new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
+headerStyle: "grid-header",
+columns: childGrid.Columns(
+childGrid.Column("SerialNos", "Seriennummer"),
+childGrid.Column("DeleteReason", "Grund")
+));
+})
+))
     </div>
 
     <div id="orders" class="tab-pane fade">
@@ -147,14 +148,14 @@
             </thead>
             <tbody>
                 @foreach (var item in Model.lstStockDetails)
-                {
-                    <tr>
-                        <td>@item.SerialNo</td>
-                        <td>@item.OrderedBy</td>
-                        <td>@item.LendingStartDt</td>
-                        <td>@item.LendingEndDt</td>
-                    </tr>
-                }
+                                {
+                <tr>
+                    <td>@item.SerialNo</td>
+                    <td>@item.OrderedBy</td>
+                    <td>@item.LendingStartDt</td>
+                    <td>@item.LendingEndDt</td>
+                </tr>
+                                }
             </tbody>
         </table>
 
@@ -170,11 +171,11 @@
             </thead>
             <tbody>
                 @foreach (var item in Model.lstInStockItems)
-                {
-                    <tr>
-                        <td>@item</td>
-                    </tr>
-                }
+                                {
+                <tr>
+                    <td>@item</td>
+                </tr>
+                                }
             </tbody>
         </table>
 

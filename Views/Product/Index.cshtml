@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebShop.Models.ProductModel>
+﻿<!--Bearbeiter: Abbas Dayeh (Grundmaske)-->
+@model IEnumerable<WebShop.Models.ProductModel>
 @{
     ViewBag.Title = "Product List";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -44,44 +45,45 @@
         }
     }
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="input-group">
-            <input type="text" class="form-control" id="txtSearch" value="@ViewBag.SearchString" placeholder="Artikel suchen">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="button" id="btnSearch">
-                    <i class="fa fa-search"></i>
-                </button>
-                @if (@ViewBag.SearchString != null)
-                {
-                    @Html.ActionLink("Zurücksetzen", "Index", new { }, new { @class = "btn btn-primary" })
-                }
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtSearch" value="@ViewBag.SearchString" placeholder="Artikel suchen">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" id="btnSearch">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    @if (@ViewBag.SearchString != null)
+                    {
+                        @Html.ActionLink("Zurücksetzen", "Index", new { }, new { @class = "btn btn-primary" })
+                    }
+                </div>
             </div>
+        </div>
+
+        <div class="col-md-6" style="text-align:right">
+            @* Filteroptionen für die Artikel *@
+            <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
+            <label class="btn btn-secondary radioBtn" for="rdBoth">Alle Artikel</label>
+
+            <input type="radio" class="btn-check" name="filterOptions" id="rdHardware" autocomplete="off" @Hardware>
+            <label class="btn btn-secondary radioBtn" for="rdHardware">Hardware</label>
+
+            <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
+            <label class="btn btn-secondary radioBtn" for="rdSoftware">Software</label>
         </div>
     </div>
 
-    <div class="col-md-6" style="text-align:right">
-        @* Filteroptionen für die Artikel *@
-        <input type="radio" class="btn-check" name="filterOptions" id="rdBoth" autocomplete="off" @both>
-        <label class="btn btn-secondary radioBtn" for="rdBoth">Alle Artikel</label>
-
-        <input type="radio" class="btn-check" name="filterOptions" id="rdHardware" autocomplete="off" @Hardware>
-        <label class="btn btn-secondary radioBtn" for="rdHardware">Hardware</label>
-
-        <input type="radio" class="btn-check" name="filterOptions" id="rdSoftware" autocomplete="off" @Software>
-        <label class="btn btn-secondary radioBtn" for="rdSoftware">Software</label>
-    </div>
-</div>
 
 
 
-    
 
     <div class="row">
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-1 mt-3">
-                <div class="div-tile"> @*product-tile class for old style*@
+                <div class="div-tile">
+                    @*product-tile class for old style*@
                     <div class="px-1">
                         <div onclick="location.href='/Product/DetailsById/@item.Id'">
                             <div style="text-align: center; border-bottom: 1px solid maroon">
@@ -89,19 +91,19 @@
                             </div>
 
                             @*<div class="row">*@
-                        <div class="col-md-12 p-2" style="text-align:center">
-                            @* Bild des Artikels *@
-                            @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
-                            {
-                                <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" height="150" />
-                                <!-- Zeigt das Bild des Artikels an. -->
-                            }
-                            else
-                            {
-                                <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" height="150" />
-                                <!-- Zeigt das Bild des Artikels an. -->
-                            }
-                        </div>
+                            <div class="col-md-12 p-2" style="text-align:center">
+                                @* Bild des Artikels *@
+                                @if (System.Configuration.ConfigurationManager.AppSettings["Env"] == "local")
+                                {
+                                    <img src="@System.Configuration.ConfigurationManager.AppSettings["LocalStoragePath"]@item.ImageName" height="150" />
+                                    <!-- Zeigt das Bild des Artikels an. -->
+                                }
+                                else
+                                {
+                                    <img src="@System.Configuration.ConfigurationManager.AppSettings["AzureStoragePath"]@item.ImageName" height="150" />
+                                    <!-- Zeigt das Bild des Artikels an. -->
+                                }
+                            </div>
                             @*</div>*@
                         </div>
                         <div class="row p-1 mx-1" style="border-top: 2px solid maroon">

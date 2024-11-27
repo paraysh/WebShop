@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿//Bearbeiter: Abbas Dayeh(Artikel hinzufügen/ bearbeiten)
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,9 @@ using Microsoft.AspNetCore.Http;
 using System.Web.Services.Description;
 using System.Configuration;
 using System.Web.Helpers;
-using Microsoft.Azure; // Namespace for CloudConfigurationManager
+using Microsoft.Azure; // Namespace für CloudConfigurationManager
 using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob; // Namespace for Blob storage types
-
+using Microsoft.Azure.Storage.Blob; // Namespace für Blob Storage Arten
 namespace WebShop.Controllers
 {
     /// <summary>

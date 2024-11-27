@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿//Bearbeiter: Abbas Dayeh(Warenkorb hinzufügen, Übersicht, Leihdauerauswahl, Artikel entfernen, Warenkorb leeren)
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,5 @@
-﻿@model WebShop.Models.LoginModel
+﻿<!--Bearbeiter: Abbas Dayeh (Loginmaske)-->
+@model WebShop.Models.LoginModel
 
 @{
     ViewBag.Title = "Log in";
@@ -106,7 +107,7 @@
                     <!-- Ein Container für das Passwort-Feld. -->
                     @Html.LabelFor(m => m.Password)
                     <!-- Ein Label für das Passwort-Feld. -->
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control",  @autocomplete = "off" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @autocomplete = "off" })
                     <!-- Ein Eingabefeld für das Passwort mit der CSS-Klasse "form-control". -->
                     @Html.ValidationMessageFor(m => m.Password)
                     <!-- Eine Validierungsnachricht für das Passwort-Feld. -->

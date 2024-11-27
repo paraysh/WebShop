@@ -1,4 +1,5 @@
-﻿@using WebShop.Helper;
+﻿<!--Bearbeiter: Abbas Dayeh(Aufgegebene Bestellungen)-->
+@using WebShop.Helper;
 
 @model IEnumerable<WebShop.Models.OrderModel>
 @{
@@ -70,64 +71,64 @@
     <div id="own" class="tab-pane fade in active">
         <h3>Eigene Bestellungen</h3>
         @webGridOwn.GetHtml(
-                  htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
-                  headerStyle: "grid-header",
-                  columns: webGridOwn.Columns(
-                           webGridOwn.Column(null, null, format: @<text>
-                            <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
-                     webGridOwn.Column("OrderId", "Bestell-ID"),
-                     webGridOwn.Column("OrderDt", "Bestelldatum"),
-                     webGridOwn.Column("OrderedByName", "Bestellt von"),
-                     webGridOwn.Column("OrderStatus", "Bestellstatus"),
-                     webGridOwn.Column("TotalItems", "Artikelanzahl"),
-                     webGridOwn.Column("TotalCost", "Gesamtbetrag"),
-                     webGridOwn.Column("Prüfen", format: (item) =>
-                     {
-                         if (item.OrderApproved == "N" && ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
-                         {
-                             // Zeigt Genehmigen/Ablehnen-Buttons für Teamleiter, wenn die Bestellung nicht genehmigt ist.
-                             return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Genehmigen</a></text>", item.Id)
-                    + "  " + string.Format("<text><a href=\"#\" id=\"Reject_{0}\" class=\"reject btn btn-danger\">Ablehnen</a></text>", item.Id));
-                         }
-                         else
-                         {
-                             return "-";
-                         }
+                       htmlAttributes: new { @id = "WebGrid", @class = "table table-bordered table-striped table-condensed" },
+                       headerStyle: "grid-header",
+                       columns: webGridOwn.Columns(
+                                webGridOwn.Column(null, null, format: @<text>
+                                    <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
+                      webGridOwn.Column("OrderId", "Bestell-ID"),
+                      webGridOwn.Column("OrderDt", "Bestelldatum"),
+                      webGridOwn.Column("OrderedByName", "Bestellt von"),
+                      webGridOwn.Column("OrderStatus", "Bestellstatus"),
+                      webGridOwn.Column("TotalItems", "Artikelanzahl"),
+                      webGridOwn.Column("TotalCost", "Gesamtbetrag"),
+                      webGridOwn.Column("Prüfen", format: (item) =>
+                      {
+                          if (item.OrderApproved == "N" && ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+                          {
+                              // Zeigt Genehmigen/Ablehnen-Buttons für Teamleiter, wenn die Bestellung nicht genehmigt ist.
+                              return Html.Raw(string.Format("<text><a href=\"#\" id=\"Approve_{0}\" class=\"approve btn btn-success\">Genehmigen</a></text>", item.Id)
+                     + "  " + string.Format("<text><a href=\"#\" id=\"Reject_{0}\" class=\"reject btn btn-danger\">Ablehnen</a></text>", item.Id));
+                          }
+                          else
+                          {
+                              return "-";
+                          }
 
-                     }),
-                     webGridOwn.Column(format: (item) =>
-                     {
-                         // Erstellt ein ChildGrid für die Bestelldetails.
-                         WebGrid childGrid = new WebGrid(source: item.lstOrderDetails, canSort: false, canPage: false);
-                         return childGrid.GetHtml(
-                htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
-                headerStyle: "grid-header",
-                columns: childGrid.Columns(
-                childGrid.Column("ItemName", "Artikelname"),
-                childGrid.Column("SerialNo", "Seriennummer"),
-                childGrid.Column("LendingPeriodMonths", "Leihdauer (Monate)"),
-                childGrid.Column("LendingStartDt", "Leihbeginn"),
-                childGrid.Column("LendingEndDt", "Leihrückgabe")
-                ));
-                     })
-                     ))
+                      }),
+                      webGridOwn.Column(format: (item) =>
+                      {
+                          // Erstellt ein ChildGrid für die Bestelldetails.
+                          WebGrid childGrid = new WebGrid(source: item.lstOrderDetails, canSort: false, canPage: false);
+                          return childGrid.GetHtml(
+                 htmlAttributes: new { @class = "ChildGrid table table-bordered table-striped table-condensed" },
+                 headerStyle: "grid-header",
+                 columns: childGrid.Columns(
+                 childGrid.Column("ItemName", "Artikelname"),
+                 childGrid.Column("SerialNo", "Seriennummer"),
+                 childGrid.Column("LendingPeriodMonths", "Leihdauer (Monate)"),
+                 childGrid.Column("LendingStartDt", "Leihbeginn"),
+                 childGrid.Column("LendingEndDt", "Leihrückgabe")
+                 ));
+                      })
+                      ))
     </div>
     <div id="employee" class="tab-pane fade">
         <h3>Mitarbeiterbestellungen</h3>
         <p>Filtern durch klicken auf "Bestellt von"</p>
 
         @MvcHtmlString.Create(
-                           webGridEmp.GetHtml(
-                               htmlAttributes: new
-                               {
-                                   @id = "WebGridEmp",
-                                   @class = "table table-bordered table-striped table-condensed"
-                               },
-                               emptyRowCellValue: "No Records Found",
-                               headerStyle: "grid-header",
-                               columns: webGridEmp.Columns(
-                                webGridEmp.Column(null, null, format: @<text>
-                                    <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
+                                webGridEmp.GetHtml(
+                                    htmlAttributes: new
+                                    {
+                                        @id = "WebGridEmp",
+                                        @class = "table table-bordered table-striped table-condensed"
+                                    },
+                                    emptyRowCellValue: "No Records Found",
+                                    headerStyle: "grid-header",
+                                    columns: webGridEmp.Columns(
+                                     webGridEmp.Column(null, null, format: @<text>
+                                        <img src="~/Content/Images/plus.png" /><div style="display:none"></div></text>),
                           webGridEmp.Column("OrderId", "Bestell-ID"),
                           webGridEmp.Column("OrderDt", "Bestelldatum"),
                           webGridEmp.Column("OrderedByName", "{UserName-filter}"), //"Bestellt von"
