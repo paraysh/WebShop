@@ -1,4 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Warenkorb hinzufügen, Übersicht, Leihdauerauswahl, Artikel entfernen, Warenkorb leeren)
+//            Alper Daglioglu(Warenkorb hinzufügen, Bestellung aufgeben, Warenkorb Artikel entfernen, Filterfunktion, Suchleiste)
+//            Yusuf Can Sönmez(Index, Details, Filterfunktion)
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;

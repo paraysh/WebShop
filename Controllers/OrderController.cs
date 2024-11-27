@@ -1,4 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Aufgegebene Bestellungen einsehen)
+//            Alper Daglioglu(Aufgegebene Bestellungen einsehen)
+//            Yusuf Can Sönmez(Nur Mitarbeiter & Teamleiter können Bestellungen aufgeben
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;

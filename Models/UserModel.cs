@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Bearbeiter: Alper Daglioglu
+//            Yusuf Can Sönmez(Anpassungen für Hashing)
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Bearbeiter: Yusuf Can Sönmez
+using System;
 using System.Security.Cryptography;
 
 namespace WebShop.Helper
