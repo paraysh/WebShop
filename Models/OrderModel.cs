@@ -1,5 +1,4 @@
-﻿//Bearbeiter: Abbas Dayeh
-//            Alper Daglioglu
+﻿//Bearbeiter: Hamza Elouari
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;

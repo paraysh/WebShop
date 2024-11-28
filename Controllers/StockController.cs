@@ -1,5 +1,5 @@
-﻿//Bearbeiter: Abbas Dayeh(Details)
-//            Alper Daglioglu(Details, Artikel entfernen Funktionen)
+﻿//Bearbeiter: Abbas Dayeh(Details V2)
+//            Alper Daglioglu(Details V1, Artikel entfernen Funktionen)
 //            Yusuf Can Sönmez(V1 von Details, Artikel ein-/ ausgang Funktionen)
 using Microsoft.AspNet.Identity;
 using System;

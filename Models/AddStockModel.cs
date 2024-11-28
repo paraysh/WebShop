@@ -1,6 +1,5 @@
-﻿//Bearbeiter: Abbas Dayeh
-//            Alper Daglioglu
-//            Yusuf Can Sönmez
+﻿//Bearbeiter: Abbas Dayeh(V1, V2)
+//            Yusuf Can Sönmez(V2)
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

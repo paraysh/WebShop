@@ -1,4 +1,4 @@
-﻿//Bearbeiter: Alper Daglioglu
+﻿//Bearbeiter: Hamza Elouari
 //            Yusuf Can Sönmez(Anpassungen für Hashing)
 using System;
 using System.Collections.Generic;
