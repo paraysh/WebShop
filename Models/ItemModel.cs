@@ -1,4 +1,5 @@
 ﻿//Bearbeiter: Hamza Elouari
+//            Bekir Kurtuldu
 using Microsoft.AspNetCore.Http;
 using Microsoft.SqlServer.Server;
 using System;

@@ -1,5 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Mitarbeiteranlegen/ deaktivieren Funktion)
 //            Alper Daglioglu(Mitarbeiteranlegen/ deaktivieren Funktion)
+//            Bekir Kurtuldu(Mitarbeiterverwaltung)   
 //            Yusuf Can Sönmez(Mitarbeiterverwaltung Budget Bugfix)
 using Microsoft.AspNet.Identity;
 using System;
