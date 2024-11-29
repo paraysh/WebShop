@@ -331,7 +331,7 @@ namespace WebShop.Controllers
             catch (Exception)
             {
                 transaction.Rollback();
-                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = "Bestellung fehlgeschlagen" };
+                TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = "Bestellung fehlgeschlagen" };
                 return Json(data: new { Success = false, Message = "Bestellung fehlgeschlagen" }, JsonRequestBehavior.AllowGet);
             }
         }
