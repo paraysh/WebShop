@@ -89,6 +89,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TeamLeaderId" Type="int" Nullable="false" />
           <Property Name="TeamBudget" Type="nvarchar" MaxLength="50" />
+          <Property Name="Year" Type="int" />
         </EntityType>
         <EntityType Name="tblTeamEmployee">
           <Key>
@@ -98,6 +99,7 @@
           <Property Name="TeamLeaderId" Type="int" Nullable="false" />
           <Property Name="TeamEmployeeId" Type="int" Nullable="false" />
           <Property Name="TeamEmployeeBudget" Type="nvarchar" MaxLength="50" />
+          <Property Name="Year" Type="int" />
         </EntityType>
         <EntityType Name="tblUser">
           <Key>
@@ -633,6 +635,7 @@
           <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
           <Property Name="TeamBudget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblUser" Relationship="WebShopModel.FK_tblTeamBudget_tblUsers" FromRole="tblTeamBudget" ToRole="tblUser" />
+          <Property Name="Year" Type="Int32" />
         </EntityType>
         <EntityType Name="tblTeamEmployee">
           <Key>
@@ -643,6 +646,7 @@
           <Property Name="TeamEmployeeId" Type="Int32" Nullable="false" />
           <Property Name="TeamEmployeeBudget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblUser" Relationship="WebShopModel.FK_tblTeamEmployee_tblUsers1" FromRole="tblTeamEmployee" ToRole="tblUser" />
+          <Property Name="Year" Type="Int32" />
         </EntityType>
         <Association Name="FK_tblTeamBudget_tblUsers">
           <End Type="WebShopModel.tblUser" Role="tblUser" Multiplicity="1" />
@@ -783,6 +787,7 @@
           <EntitySetMapping Name="tblTeamBudgets">
             <EntityTypeMapping TypeName="WebShopModel.tblTeamBudget">
               <MappingFragment StoreEntitySet="tblTeamBudget">
+                <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="TeamBudget" ColumnName="TeamBudget" />
                 <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -792,6 +797,7 @@
           <EntitySetMapping Name="tblTeamEmployees">
             <EntityTypeMapping TypeName="WebShopModel.tblTeamEmployee">
               <MappingFragment StoreEntitySet="tblTeamEmployee">
+                <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="TeamEmployeeBudget" ColumnName="TeamEmployeeBudget" />
                 <ScalarProperty Name="TeamEmployeeId" ColumnName="TeamEmployeeId" />
                 <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />

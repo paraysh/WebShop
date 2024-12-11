@@ -5,6 +5,7 @@
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
@@ -92,7 +93,8 @@ namespace WebShop.Controllers
             {
                 tblTeamBudget _tblbudgetObj = new tblTeamBudget();
                 _tblbudgetObj.TeamLeaderId = user.Id;
-                _tblbudgetObj.TeamBudget = user.TeamBudget;
+                _tblbudgetObj.TeamBudget = CommaHandler.AddComma(user.TeamBudget);
+                _tblbudgetObj.Year = DateTime.Now.Year;
                 newUserObj.tblTeamBudgets.Add(_tblbudgetObj);
             }
 
@@ -102,7 +104,8 @@ namespace WebShop.Controllers
                 tblTeamEmployee _tblTeamObj = new tblTeamEmployee();
                 _tblTeamObj.TeamEmployeeId = user.Id;
                 _tblTeamObj.TeamLeaderId = user.TeamLeader;
-                _tblTeamObj.TeamEmployeeBudget = user.EmployeeBudget;
+                _tblTeamObj.TeamEmployeeBudget = CommaHandler.AddComma(user.EmployeeBudget);
+                _tblTeamObj.Year = DateTime.Now.Year;
                 newUserObj.tblTeamEmployees.Add(_tblTeamObj);
             }
 
@@ -158,14 +161,33 @@ namespace WebShop.Controllers
             usr.Email = employee.Email;
             usr.UserRole = employee.UserRole;
             usr.UserRoleEnum = (UserRoleEnum)employee.UserRole;
-            usr.TeamBudget = employee.tblTeamBudgets.SingleOrDefault() == null ? "0,00" : employee.tblTeamBudgets.SingleOrDefault().TeamBudget;
-            usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault().TeamLeaderId;
-            usr.EmployeeBudget = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault() == null ? "0,00" : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).SingleOrDefault().TeamEmployeeBudget;
+
+            usr.TeamBudget = employee.tblTeamBudgets
+                                .Where(x => x.Year == DateTime.Now.Year)
+                                .SingleOrDefault() == null ? "0,00" : employee.tblTeamBudgets
+                                                                    .Where(x => x.Year == DateTime.Now.Year)
+                                                                    .SingleOrDefault().TeamBudget;
+
+            usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 
+                           : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).First().TeamLeaderId;
+
+            usr.EmployeeBudget = employee.tblTeamEmployees
+                                .Where(x => x.TeamEmployeeId == id && x.Year == DateTime.Now.Year)
+                                .SingleOrDefault() == null ? "0,00" 
+                                : employee.tblTeamEmployees
+                                .Where(x => x.TeamEmployeeId == id && x.Year == DateTime.Now.Year)
+                                .Single().TeamEmployeeBudget;
 
             if (usr.UserRole == (int)UserRoleEnum.Employee)
             {
-                usr.AssignedTeamBudget = db.tblTeamBudgets.Where(x => x.TeamLeaderId == usr.TeamLeader).Single().TeamBudget;
-                var lstteamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader).Select(x => x.TeamEmployeeBudget).ToList();
+                usr.AssignedTeamBudget = db.tblTeamBudgets
+                                        .Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year)
+                                        .SingleOrDefault() == null ? "0,00" :
+                                        db.tblTeamBudgets
+                                        .Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year)
+                                        .Single().TeamBudget;
+
+                var lstteamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year).Select(x => x.TeamEmployeeBudget).ToList();
 
                 decimal teamEmployeesTotalBudget = 0;
                 foreach (var budget in lstteamEmployeesTotalBudget)
@@ -198,6 +220,72 @@ namespace WebShop.Controllers
                             }).ToList();
             usr.ItemsOrdered = itemsOrders;
 
+            //Budget utilization 
+            var allOrders = db.tblOrderDetails
+                            .Include(x => x.tblOrder)
+                            .Include(x => x.tblItem)
+                            .Where(x => x.tblOrder.OrderedBy == id
+                                        && x.tblOrder.OrderApproved == "Y"
+                                        //&& x.LendingStartDt.Value.Year >= DateTime.Now.Year
+                                        );
+
+            decimal currYearItemCost = 0;
+            decimal nextYearItemCost = 0;
+            decimal nextToNextYearItemCost = 0;
+            foreach (var r in allOrders)
+            {
+                var currYearMonths = 0;
+                if (r.LendingEndDt.Value.Year == DateTime.Now.Year && r.LendingStartDt.Value.Year == DateTime.Now.Year)
+                    currYearMonths = r.LendingPeriodMonths.Value;
+                else if (r.LendingStartDt.Value.Year == DateTime.Now.Year && r.LendingEndDt.Value.Year > DateTime.Now.Year)
+                    currYearMonths = 13 - r.LendingStartDt.Value.Month;
+                else if (r.LendingStartDt.Value.Year < DateTime.Now.Year && r.LendingEndDt.Value.Year == DateTime.Now.Year)
+                    currYearMonths = r.LendingEndDt.Value.Month;
+                currYearItemCost += decimal.Parse(r.tblItem.Cost, new NumberFormatInfo() { NumberDecimalSeparator = "," }) * currYearMonths;
+
+                var nextYearMonths = 0;
+                if (r.LendingEndDt.Value.Year == DateTime.Now.AddYears(1).Year)
+                    nextYearMonths = r.LendingEndDt.Value.Month;
+                else if (r.LendingEndDt.Value.Year > DateTime.Now.AddYears(1).Year)
+                    nextYearMonths = 12;
+                nextYearItemCost += decimal.Parse(r.tblItem.Cost, new NumberFormatInfo() { NumberDecimalSeparator = "," }) * nextYearMonths;
+
+                var nextToNextYearMonths = 0;
+                if (r.LendingEndDt.Value.Year == DateTime.Now.AddYears(2).Year)
+                    nextToNextYearMonths = r.LendingEndDt.Value.Month;
+                nextToNextYearItemCost += decimal.Parse(r.tblItem.Cost, new NumberFormatInfo() { NumberDecimalSeparator = "," }) * nextToNextYearMonths;
+
+            }
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("-");
+            dataTable.Columns.Add(DateTime.Now.Year.ToString());
+            dataTable.Columns.Add(DateTime.Now.AddYears(1).Year.ToString());
+            dataTable.Columns.Add(DateTime.Now.AddYears(2).Year.ToString());
+
+            DataRow row = dataTable.NewRow();
+            row["-"] = "Utilised Budget";
+            row[DateTime.Now.Year.ToString()] = CommaHandler.AddComma(currYearItemCost.ToString());
+            row[DateTime.Now.AddYears(1).Year.ToString()] = CommaHandler.AddComma(nextYearItemCost.ToString());
+            row[DateTime.Now.AddYears(2).Year.ToString()] = CommaHandler.AddComma(nextToNextYearItemCost.ToString());
+            dataTable.Rows.Add(row);
+
+            DataRow row2 = dataTable.NewRow();
+            row2["-"] = "Assigned Budget";
+            row2[DateTime.Now.Year.ToString()] = usr.EmployeeBudget;
+            row2[DateTime.Now.AddYears(1).Year.ToString()] = "0,00";
+            row2[DateTime.Now.AddYears(2).Year.ToString()] = "0,00";
+            dataTable.Rows.Add(row2);
+
+            DataRow row3 = dataTable.NewRow();
+            row3["-"] = "Remaining Budget";
+            row3[DateTime.Now.Year.ToString()] = decimal.Parse(usr.EmployeeBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) - currYearItemCost;
+            row3[DateTime.Now.AddYears(1).Year.ToString()] = decimal.Parse("0,00", new NumberFormatInfo() { NumberDecimalSeparator = "," }) - nextYearItemCost;
+            row3[DateTime.Now.AddYears(2).Year.ToString()] = decimal.Parse("0,00", new NumberFormatInfo() { NumberDecimalSeparator = "," }) - nextToNextYearItemCost;
+            dataTable.Rows.Add(row3);
+
+            usr.BudgetUtilisation = dataTable;
+
             return View(usr);
         }
 
@@ -220,16 +308,17 @@ namespace WebShop.Controllers
             // Überprüfen, ob die Benutzerrolle "Teamleiter" ist
             if (user.UserRoleEnum == UserRoleEnum.TeamLeaders && Convert.ToDecimal(user.TeamBudget) > 0)
             {
-                if (employee.tblTeamBudgets.Count > 0)
+                if (employee.tblTeamBudgets.Where(x => x.Year == DateTime.Now.Year).ToList().Count > 0) // has value for current year
                 {
                     var teamBudgetRow = employee.tblTeamBudgets.SingleOrDefault();
-                    teamBudgetRow.TeamBudget = user.TeamBudget;
+                    teamBudgetRow.TeamBudget = CommaHandler.AddComma(user.TeamBudget);
                 }
-                else
+                else // do not have value for current year
                 {
                     tblTeamBudget _tblbudgetObj = new tblTeamBudget();
                     _tblbudgetObj.TeamLeaderId = user.Id;
-                    _tblbudgetObj.TeamBudget = user.TeamBudget;
+                    _tblbudgetObj.TeamBudget = CommaHandler.AddComma(user.TeamBudget);
+                    _tblbudgetObj.Year = DateTime.Now.Year;
                     employee.tblTeamBudgets.Add(_tblbudgetObj);
                 }
             }
@@ -243,18 +332,20 @@ namespace WebShop.Controllers
                     return RedirectToAction("EmployeeManagement");
                 }
 
-                if (employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == user.Id).Count() > 0)
+                // check if employee has row for current year
+                if (employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == user.Id && x.Year == DateTime.Now.Year).Count() > 0)
                 {
                     var teamEmployeeRow = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == user.Id).SingleOrDefault();
                     teamEmployeeRow.TeamLeaderId = user.TeamLeader;
-                    teamEmployeeRow.TeamEmployeeBudget = user.EmployeeBudget;
+                    teamEmployeeRow.TeamEmployeeBudget = CommaHandler.AddComma(user.EmployeeBudget);
                 }
                 else
                 {
                     tblTeamEmployee _tblTeamObj = new tblTeamEmployee();
                     _tblTeamObj.TeamEmployeeId = user.Id;
                     _tblTeamObj.TeamLeaderId = user.TeamLeader;
-                    _tblTeamObj.TeamEmployeeBudget = user.EmployeeBudget;
+                    _tblTeamObj.TeamEmployeeBudget = CommaHandler.AddComma(user.EmployeeBudget);
+                    _tblTeamObj.Year = DateTime.Now.Year;
                     employee.tblTeamEmployees.Add(_tblTeamObj);
                 }
             }

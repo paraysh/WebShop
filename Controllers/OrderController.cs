@@ -111,7 +111,9 @@ namespace WebShop.Controllers
 
             // Bestimmt den aktuellen Benutzernamen und das Budget des Mitarbeiters
             var currUserName = User.Identity.GetUserName();
-            var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy).Single().TeamEmployeeBudget;
+            var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy && x.Year == DateTime.Now.Year).Single().TeamEmployeeBudget;
+            //var costForCurrYear = db.tblOrderDetails.Where(x => x.LendingStartDt)
+
             var utilisedBudget = db.tblOrders.Where(x => x.OrderedBy == OrderTblRow.OrderedBy && x.OrderApproved != "R").Sum(x => x.TotalCost);
 
             // Überprüft, ob das genutzte Budget das Mitarbeiterbudget überschreitet

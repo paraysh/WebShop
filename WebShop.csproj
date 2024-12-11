@@ -307,6 +307,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\CommaHandler.cs" />
     <Compile Include="Helper\PasswordHash.cs" />
     <Compile Include="Helper\WebGridHelpers.cs" />
     <Compile Include="Models\AddStockModel.cs" />

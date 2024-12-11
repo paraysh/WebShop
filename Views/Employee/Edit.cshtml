@@ -125,7 +125,7 @@
 
             @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
             {
-                <label class="mt-3">Mitarbeiterbudget</label>
+                <label class="mt-3">Mitarbeiterbudget (@DateTime.Now.Year)</label>
                 <div class="col-md-3">
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control web-shop-decimal", @data_placement = "auto" })
                     <!-- Ein Eingabefeld für das Mitarbeiterbudget mit der CSS-Klasse "form-control". -->
@@ -188,6 +188,35 @@
                             <td>@item.LendingPeriodMonths</td>
                             <td>@item.LendingStartDt</td>
                             <td>@item.LendingEndDt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+    {
+        <hr />
+        <div>
+            <h3>Budget Summary: @Model.FirstName</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.BudgetUtilisation.Columns)
+                        {
+                            <th> @col.Caption </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.BudgetUtilisation.Rows)
+                    {
+                        <tr>
+                           @foreach (var cell in row.ItemArray)
+                           {
+                               <td> @cell.ToString() </td>
+                           }
                         </tr>
                     }
                 </tbody>

@@ -266,12 +266,28 @@ namespace WebShop.Controllers
             _userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
             var currUser = User.Identity.GetUserName();
+            
             lstShoppingCartModel = Session["CartItem"] as List<ShoppingCartModel>;
             try
             {
+                int orderedById = db.tblUsers.Where(x => x.UserName == currUser).Single().Id;
+
+                //validation to check if budget is assigned for current year, need to check this because when team leader will approve the order
+                //we have a validation to check if order value is greater than assigned budget
+
+                if (_userRole == (int)UserRoleEnum.Employee)
+                {
+                    var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == orderedById && x.Year == DateTime.Now.Year).SingleOrDefault();
+                    if (empBudget == null)
+                    {
+                        TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Error!", Message = string.Format("Budget Not Assigned For Year {0}", DateTime.Now.Year) };
+                        return Json(data: new { Success = false, Message = string.Format("Budget Not Assigned For Year {0}", DateTime.Now.Year) }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
                 tblOrder _tblOrder = new tblOrder();
                 _tblOrder.OrderId = Guid.NewGuid().ToString();
-                _tblOrder.OrderedBy = db.tblUsers.Where(x => x.UserName == currUser).Single().Id;
+                _tblOrder.OrderedBy = orderedById;
                 _tblOrder.OrderDate = DateTime.Now;
                 _tblOrder.OrderApproved = _userRole == (int)UserRoleEnum.Employee ? "N" : "Y";
                 _tblOrder.TotalCost = lstShoppingCartModel.Sum(x => x.Total);
