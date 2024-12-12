@@ -264,21 +264,21 @@ namespace WebShop.Controllers
             dataTable.Columns.Add(DateTime.Now.AddYears(2).Year.ToString());
 
             DataRow row = dataTable.NewRow();
-            row["-"] = "Utilised Budget";
+            row["-"] = "Verbrauchtes Budget";
             row[DateTime.Now.Year.ToString()] = CommaHandler.AddComma(currYearItemCost.ToString());
             row[DateTime.Now.AddYears(1).Year.ToString()] = CommaHandler.AddComma(nextYearItemCost.ToString());
             row[DateTime.Now.AddYears(2).Year.ToString()] = CommaHandler.AddComma(nextToNextYearItemCost.ToString());
             dataTable.Rows.Add(row);
 
             DataRow row2 = dataTable.NewRow();
-            row2["-"] = "Assigned Budget";
+            row2["-"] = "Zugewiesenes Budget";
             row2[DateTime.Now.Year.ToString()] = usr.EmployeeBudget;
             row2[DateTime.Now.AddYears(1).Year.ToString()] = "0,00";
             row2[DateTime.Now.AddYears(2).Year.ToString()] = "0,00";
             dataTable.Rows.Add(row2);
 
             DataRow row3 = dataTable.NewRow();
-            row3["-"] = "Remaining Budget";
+            row3["-"] = "Übriges Budget";
             row3[DateTime.Now.Year.ToString()] = decimal.Parse(usr.EmployeeBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) - currYearItemCost;
             row3[DateTime.Now.AddYears(1).Year.ToString()] = decimal.Parse("0,00", new NumberFormatInfo() { NumberDecimalSeparator = "," }) - nextYearItemCost;
             row3[DateTime.Now.AddYears(2).Year.ToString()] = decimal.Parse("0,00", new NumberFormatInfo() { NumberDecimalSeparator = "," }) - nextToNextYearItemCost;

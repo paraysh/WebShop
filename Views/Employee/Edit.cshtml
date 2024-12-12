@@ -101,7 +101,7 @@
             <div class="col-md-6">
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
-                    <label>Teambudget</label>
+                    <label>Teambudget zuweisen</label>
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control web-shop-decimal", @data_placement = "auto" })
                     <!-- Ein Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
                 }
@@ -125,7 +125,7 @@
 
             @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
             {
-                <label class="mt-3">Mitarbeiterbudget (@DateTime.Now.Year)</label>
+                <label class="mt-3">Mitarbeiterbudget zuweisen (@DateTime.Now.Year)</label>
                 <div class="col-md-3">
                     @Html.TextBoxFor(model => model.EmployeeBudget, new { @class = "form-control web-shop-decimal", @data_placement = "auto" })
                     <!-- Ein Eingabefeld für das Mitarbeiterbudget mit der CSS-Klasse "form-control". -->
@@ -199,7 +199,7 @@
     {
         <hr />
         <div>
-            <h3>Budget Summary: @Model.FirstName</h3>
+            <h3>Budget Übersicht: @Model.FirstName</h3>
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
