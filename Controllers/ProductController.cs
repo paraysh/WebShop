@@ -228,7 +228,7 @@ namespace WebShop.Controllers
         }
 
         /// <summary>
-        /// Zeigt die Details eines Produkts an.
+        /// Zeigt die Produktseite eines Produkts an.
         /// </summary>
         /// <param name = "id" > Die ID des anzuzeigenden Produkts.</param>
         /// <returns>Die Detailansicht des Produkts.</returns>
