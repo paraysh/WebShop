@@ -79,7 +79,7 @@
                         <li>@Html.ActionLink("Artikel", "Index", "Product", new { area = "" }, new { @class = "nav-link" })</li>
                         @*<li>@Html.ActionLink("Bestellverlauf", "Index", "Order", new { area = "" }, new { @class = "nav-link" })</li>*@
                         @*<li>@Html.ActionLink("Mitarbeiterverwaltung", "EmployeeManagement", "Employee", new { area = "" }, new { @class = "nav-link" })</li>*@
-                        <li>@Html.ActionLink("Warenbestand", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Warenverwaltung", "ItemDetails", "Item", new { area = "" }, new { @class = "nav-link" })</li>
                     </ul>
                 }
                 else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.WarehouseWorkers) // Lagerarbeiter
