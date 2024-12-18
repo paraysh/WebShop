@@ -1,4 +1,5 @@
 ﻿//Bearbeiter: Abbas Dayeh
+//            Yusuf Can Sönmez(Unterstützung bei der Implementierung)
 using Microsoft.Owin.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
