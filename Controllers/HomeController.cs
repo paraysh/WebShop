@@ -1,5 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Navigationselement)
 //            Alper Daglioglu(Navigationselement)
+//            Yusuf Can Sönmez(BaseController Erweiterung)
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;

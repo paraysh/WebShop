@@ -11,8 +11,9 @@ using WebShop.Helper;
 using WebShop.Models.Enum;
 using System.Web;
 using System.Web.Routing;
+using WebShop.Controllers;
 
-namespace WebShop.Controllers.Tests
+namespace WebShop.Tests.Controllers
 {
     [TestClass()]
     public class AccountControllerTests

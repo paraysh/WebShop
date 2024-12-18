@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebShop.Helper;
 
-namespace WebShop.Tests.Controllers
+namespace WebShop.Tests.Helper
 {
     [TestClass]
     public class CommaHandlerTest

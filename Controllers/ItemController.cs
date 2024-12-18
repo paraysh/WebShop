@@ -1,6 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Artikel hinzufügen/ bearbeiten)
 //            Alper Daglioglu(Artikel hinzufügen/ bearbeiten)
-//            Yusuf Can Sönmez(Artikel hinzufügen/ bearbeiten, Deaktivieren/ Aktivieren, Budget Bugfix)
+//            Yusuf Can Sönmez(Artikel hinzufügen/ bearbeiten, Deaktivieren/ Aktivieren, Budget Bugfix, BaseController Erweiterung)
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;

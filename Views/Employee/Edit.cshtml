@@ -2,7 +2,7 @@
                 Alper Daglioglu (Formular Überarbeitungen)
                 Hamza Elouari (Teamleiterfunktionen)
                 Bekir Kurtuldu (Teamleiterfunktionen)
-                Yusuf Can Sönmez (Viewbag, Budget Bugfix)-->
+                Yusuf Can Sönmez (Viewbag, Budget Übersicht)-->
 @model WebShop.Models.UserModel
 
 @{
@@ -213,10 +213,10 @@
                     @foreach (System.Data.DataRow row in Model.BudgetUtilisation.Rows)
                     {
                         <tr>
-                           @foreach (var cell in row.ItemArray)
-                           {
-                               <td> @cell.ToString() </td>
-                           }
+                            @foreach (var cell in row.ItemArray)
+                            {
+                                <td> @cell.ToString() </td>
+                            }
                         </tr>
                     }
                 </tbody>

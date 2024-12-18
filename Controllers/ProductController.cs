@@ -1,6 +1,6 @@
 ﻿//Bearbeiter: Abbas Dayeh(Warenkorb hinzufügen, Übersicht, Leihdauerauswahl, Artikel entfernen, Warenkorb leeren)
 //            Alper Daglioglu(Warenkorb hinzufügen, Bestellung aufgeben, Warenkorb Artikel entfernen, Filterfunktion, Suchleiste)
-//            Yusuf Can Sönmez(Index, Details, Filterfunktion)
+//            Yusuf Can Sönmez(Index, Details, Filterfunktion, BaseController Erweiterung)
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet;
 using System;
@@ -389,14 +389,21 @@ namespace WebShop.Controllers
             return Json(lstProducts, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Leert den Warenkorb des aktuellen Benutzers.
+        /// </summary>
+        /// <returns>Leitet zur Warenkorbansicht weiter.</returns>
         public ActionResult ClearCart()
         {
+            // Setzt die Benutzerrolle
             _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
+            // Leert den Warenkorb
             Session["CartCounter"] = null;
             Session["CartItem"] = null;
 
+            // Setzt eine Erfolgsmeldung
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = "Warenkorb geleert." };
             return RedirectToAction("ShoppingCart");
         }
