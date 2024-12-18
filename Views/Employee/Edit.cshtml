@@ -101,13 +101,16 @@
             <div class="col-md-6">
                 @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                 {
-                    <label>Teambudget zuweisen</label>
+                    <label>Teambudget zuweisen (@DateTime.Now.Year) </label>
                     @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control web-shop-decimal", @data_placement = "auto" })
                     <!-- Ein Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
+
+                    <label class="mt-3">Verbrauchtes Teambudget (@DateTime.Now.Year) </label>
+                    @Html.TextBoxFor(model => model.AssignedTeamBudget, new { @class = "form-control web-shop-decimal", @data_placement = "auto", @readonly = "readonly" })
                 }
                 <!--else
-                {
-                    @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })-->
+                    {
+        @Html.TextBoxFor(model => model.TeamBudget, new { @class = "form-control", @data_placement = "auto", @disabled = "disabled" })-->
                 <!-- Ein deaktiviertes Eingabefeld für das Teambudget mit der CSS-Klasse "form-control". -->
                 <!--}-->
             </div>
@@ -169,37 +172,47 @@
     @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
     {
         <hr />
-        <div>
-            <h3>Ausgeliehene Artikel von: @Model.FirstName</h3>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Artikelname</th>
-                        <th>Leihdauer (Monate)</th>
-                        <th>Leihbeginn</th>
-                        <th>Leihrückgabe</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ItemsOrdered)
-                    {
+        <h3 class="text-center">Ausgeliehene Artikel von: @Model.FirstName</h3>
+        if (Model.ItemsOrdered.Count > 0)
+        {
+            <div>
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>@item.ItemName</td>
-                            <td>@item.LendingPeriodMonths</td>
-                            <td>@item.LendingStartDt</td>
-                            <td>@item.LendingEndDt</td>
+                            <th>Artikelname</th>
+                            <th>Leihdauer (Monate)</th>
+                            <th>Leihbeginn</th>
+                            <th>Leihrückgabe</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ItemsOrdered)
+                        {
+                            <tr>
+                                <td>@item.ItemName</td>
+                                <td>@item.LendingPeriodMonths</td>
+                                <td>@item.LendingStartDt</td>
+                                <td>@item.LendingEndDt</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h4 class="text-center">
+                Noch keine Bestellungen
+            </h4>
+        }
+
     }
 
-    @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
+    @if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders && Model.UserRoleEnum == WebShop.Models.Enum.UserRoleEnum.Employee)
     {
         <hr />
         <div>
-            <h3>Budget Übersicht: @Model.FirstName</h3>
+            <h3 class="text-center">Budget Übersicht: @Model.FirstName</h3>
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>

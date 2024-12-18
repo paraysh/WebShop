@@ -187,7 +187,7 @@ namespace WebShop.Controllers
                                 : employee.tblTeamEmployees
                                 .Where(x => x.TeamEmployeeId == id && x.Year == DateTime.Now.Year)
                                 .Single().TeamEmployeeBudget;
-
+                         
             if (usr.UserRole == (int)UserRoleEnum.Employee)
             {
                 usr.AssignedTeamBudget = db.tblTeamBudgets
@@ -197,13 +197,22 @@ namespace WebShop.Controllers
                                         .Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year)
                                         .Single().TeamBudget;
 
-                var lstteamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year).Select(x => x.TeamEmployeeBudget).ToList();
+                var lstTeamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == usr.TeamLeader && x.Year == DateTime.Now.Year).Select(x => x.TeamEmployeeBudget).ToList();
 
                 decimal teamEmployeesTotalBudget = 0;
-                foreach (var budget in lstteamEmployeesTotalBudget)
+                foreach (var budget in lstTeamEmployeesTotalBudget)
                     teamEmployeesTotalBudget += decimal.Parse(budget, new NumberFormatInfo() { NumberDecimalSeparator = "," });
                 usr.RemainingTeamBudget = Convert.ToString(decimal.Parse(usr.AssignedTeamBudget, new NumberFormatInfo() { NumberDecimalSeparator = "," }) - teamEmployeesTotalBudget);
                 usr.RemainingTeamBudget = usr.RemainingTeamBudget.Replace('.', ',');
+            }
+
+            if (usr.UserRole == (int)UserRoleEnum.TeamLeaders)
+            {
+                var lstTeamEmployeesTotalBudget = db.tblTeamEmployees.Where(x => x.TeamLeaderId == id && x.Year == DateTime.Now.Year).Select(x => x.TeamEmployeeBudget).ToList();
+                decimal teamEmployeesTotalBudget = 0;
+                foreach (var budget in lstTeamEmployeesTotalBudget)
+                    teamEmployeesTotalBudget += decimal.Parse(budget, new NumberFormatInfo() { NumberDecimalSeparator = "," });
+                usr.AssignedTeamBudget = CommaHandler.AddComma(teamEmployeesTotalBudget.ToString());
             }
 
             // Erstellen der verfügbaren Teamleiter-Auswahlliste
@@ -358,6 +367,13 @@ namespace WebShop.Controllers
                     _tblTeamObj.Year = DateTime.Now.Year;
                     employee.tblTeamEmployees.Add(_tblTeamObj);
                 }
+            }
+
+            // handle team leader change
+            if (user.UserRoleEnum == UserRoleEnum.Employee && Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value) == (int)UserRoleEnum.Admins)
+            {
+                var teamEmployeeRow = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == user.Id).SingleOrDefault();
+                teamEmployeeRow.TeamLeaderId = user.TeamLeader;
             }
 
 

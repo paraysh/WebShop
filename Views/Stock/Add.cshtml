@@ -110,8 +110,11 @@
                 data: { Id: $("#txtItemId").val(), Quantity: $("#txtQuantity").val(), LstSerialNumbers: lstSerialNo },
                 success: function (data) {
                     if (data.Success) {
-                        ShowAlert('Success', data.Message, 'success');
-                        window.location.href = '/Stock/Index';
+                        window.scrollTo(0, 0);
+                        ShowAlert('Erledigt!', data.Message, 'success');
+                        setTimeout(function () {
+                            window.location.href = '/Stock/Index';
+                        }, 3000); // delay by 2 sec to show success message.
                     }
                     if (data.Error) {
                         ShowAlert('Fehler!', data.Message, 'danger');
@@ -123,11 +126,12 @@
         // Event-Handler für den Button zum Hinzufügen von Seriennummern
         $('#btnAddSerialNo').on('click', function() {
             var val = $('#txtQuantity').val();
-            $('#btnAddSerialNo').prop('disabled', true);
-            $('#txtQuantity').prop('disabled', true);
 
             if (val > 0 && val <= 10) {
+                $('#btnAddSerialNo').prop('disabled', true);
+                $('#txtQuantity').prop('disabled', true);
                 var template = '';
+
                 for (var i = 0; i < val; i++) {
                     if ($('#ddlItemType').val() == 10) {
                         template = '<div class="row mt-3"><label>Seriennummer </label><input class="form-control" data-placement="auto" data-val="true" data-val-required="The Serial Number field is required." id="txtSerialNo_' + i + '" name="SerialNo" type="text" value=""></div>';
