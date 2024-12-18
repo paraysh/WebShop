@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using WebShop.Models;
@@ -20,10 +23,20 @@ namespace WebShop.Controllers
     /// Er bietet Funktionen zum Anzeigen, Hinzufügen, Entfernen und Anzeigen von Details des Bestands.
     /// </summary>
     [Authorize]
-    public class StockController : Controller
+    public class StockController : BaseController
     {
         int _userRole;
         private WebShopEntities db = new WebShopEntities();
+        ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+        public StockController()
+        {
+                
+        }
+        public StockController(WebShopEntities _db) : base(_db)
+        {
+            db = _db; 
+        }
 
         /// <summary>
         /// Zeigt die Details des gesamten Bestands an.
@@ -32,7 +45,7 @@ namespace WebShop.Controllers
         public ActionResult Index()
         {
             // Setzt die Benutzerrolle
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             // Holt alle Artikel und deren Bestände aus der Datenbank
@@ -57,7 +70,7 @@ namespace WebShop.Controllers
         public ActionResult Add(int id)
         {
             // Setzt die Benutzerrolle
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
             ViewBag.UserRole = _userRole;
 
             // Holt die Informationen des Artikels aus der Datenbank
@@ -105,7 +118,9 @@ namespace WebShop.Controllers
             tblStock _tblStock = new tblStock();
             _tblStock.ItemId = addStockModel.Id;
             _tblStock.Quantity = addStockModel.Quantity;
-            _tblStock.CreatedBy = User.Identity.GetUserName();
+            _tblStock.CreatedBy = prinicpal.Claims.Where(c => c.Type == ClaimTypes.Name)
+                                    .Select(c => c.Value)
+                                    .SingleOrDefault();
             _tblStock.CreatedDate = DateTime.Now;
             _tblStock.InitialQuantity = addStockModel.Quantity;
 
@@ -151,7 +166,7 @@ namespace WebShop.Controllers
         public ActionResult Remove(int id)
         {
             // Setzt die Benutzerrolle
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
             ViewBag.UserRole = _userRole;
 
             // Holt die Informationen des Artikels aus der Datenbank
@@ -207,17 +222,17 @@ namespace WebShop.Controllers
 
                 var objTblStock = itemObj.tblStocks.Where(x => x.Quantity > 0).FirstOrDefault();
                 objTblStock.Quantity = objTblStock.Quantity - stockModel.Quantity;
-                objTblStock.ModifiedBy = User.Identity.GetUserName();
+                objTblStock.ModifiedBy = prinicpal.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
                 objTblStock.ModifiedDt = DateTime.Now;
 
-                db.Entry(objTblStock).State = EntityState.Modified;
+                db.SetModified(objTblStock);
 
                 var lstTblStockDtls = objTblStock.tblStockDetails.Where(x => x.IsDeleted == "N" && x.OrderId == null).Take(stockModel.Quantity).ToList();
                 foreach (var objTblStockDtls in lstTblStockDtls)
                 {
                     objTblStockDtls.IsDeleted = "Y";
                     objTblStockDtls.DeleteReason = stockModel.DeleteReason;
-                    db.Entry(objTblStockDtls).State = EntityState.Modified;
+                    db.SetModified(objTblStockDtls);
                 }
                 
                 db.SaveChanges();
@@ -233,15 +248,15 @@ namespace WebShop.Controllers
             // Holt den Bestandseintrag aus der Datenbank und aktualisiert die Menge
             var tblStockModel = db.tblStocks.Where(x => x.Id == stockDetailModel.StockId).Single();
             tblStockModel.Quantity = tblStockModel.Quantity - 1;
-            tblStockModel.ModifiedBy = User.Identity.GetUserName();
+            tblStockModel.ModifiedBy = prinicpal.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
             tblStockModel.ModifiedDt = DateTime.Now;
 
-            db.Entry(tblStockModel).State = EntityState.Modified;
+            db.SetModified(tblStockModel);
 
             // Markiert die Bestandsdetails als gelöscht
             stockDetailModel.IsDeleted = "Y";
             stockDetailModel.DeleteReason = stockModel.DeleteReason;
-            db.Entry(stockDetailModel).State = EntityState.Modified;
+            db.SetModified(stockDetailModel);
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} entfernt.", stockDetailModel.SerialNumber) };
             return RedirectToAction("Index");
@@ -255,7 +270,7 @@ namespace WebShop.Controllers
         public ActionResult DetailsV2(int id, string itemName = "")
         {
             // Setzt die Benutzerrolle
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
             ViewBag.UserRole = _userRole;
             ViewBag.ItemName = itemName;
 

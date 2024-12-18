@@ -15,6 +15,8 @@ using WebShop.Models.Enum;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
+using System.Security.Claims;
+using System.Threading;
 
 namespace WebShop.Controllers
 {
@@ -23,11 +25,12 @@ namespace WebShop.Controllers
     /// Er bietet Funktionen zum Anzeigen, Filtern, Hinzufügen zum Warenkorb, Bearbeiten des Warenkorbs, Entfernen von Artikeln, Anzeigen von Details, Bestellen und Suchen von Produkten.
     /// </summary>
     [Authorize]
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
         int _userRole;
         private WebShopEntities db;
         List<ShoppingCartModel> lstShoppingCartModel;
+        ClaimsPrincipal prinicpal;
 
         /// <summary>
         /// Konstruktor, der die Datenbankverbindung initialisiert und den Warenkorb initialisiert.
@@ -36,6 +39,14 @@ namespace WebShop.Controllers
         {
             db = new WebShopEntities();
             lstShoppingCartModel = new List<ShoppingCartModel>();
+            prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+        }
+
+        public ProductController(WebShopEntities _db) : base(_db)
+        {
+            db = _db;
+            lstShoppingCartModel = new List<ShoppingCartModel>();
+            prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
         }
 
         /// <summary>
@@ -44,11 +55,14 @@ namespace WebShop.Controllers
         /// <returns>Die Index-Ansicht mit einer Liste von Produkten.</returns>
         public ActionResult Index(string searchString = "")
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
             List<ProductModel> lstProducts = new List<ProductModel>();
 
-            var query = db.tblItems.Include(x => x.tblStocks).Where(x => x.IsActive == "Y").Select(l => new ProductModel
+            var query = db.tblItems
+                .Include(x => x.tblStocks)
+                .Where(x => x.IsActive == "Y")
+                .Select(l => new ProductModel
             {
                 Id = l.Id,
                 Name = l.Name,
@@ -79,7 +93,7 @@ namespace WebShop.Controllers
         /// <returns>Die gefilterte Liste von Produkten.</returns>
         public ActionResult IndexFilter(string filter)
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             List<ProductModel> lstProducts = new List<ProductModel>();
@@ -198,7 +212,7 @@ namespace WebShop.Controllers
         /// <returns>Die Ansicht des Warenkorbs.</returns>
         public ActionResult ShoppingCart()
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             lstShoppingCartModel = Session["CartItem"] as List<ShoppingCartModel>;
@@ -212,7 +226,7 @@ namespace WebShop.Controllers
         /// <returns>Leitet zur Warenkorbansicht weiter.</returns>
         public ActionResult RemoveItem(int ItemId)
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             lstShoppingCartModel = Session["CartItem"] as List<ShoppingCartModel>;
@@ -234,7 +248,7 @@ namespace WebShop.Controllers
         /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult DetailsById(int id)
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             var selectedItem = db.tblItems.Where(x => x.Id == id).Single();
@@ -248,7 +262,7 @@ namespace WebShop.Controllers
         /// <returns>Die Detailansicht des Produkts.</returns>
         public ActionResult Details(string name)
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             var selectedItem = db.tblItems.Where(x => x.Name.Contains(name)).FirstOrDefault();
@@ -263,10 +277,11 @@ namespace WebShop.Controllers
         public ActionResult PlaceOrder()
         {
             var transaction = db.Database.BeginTransaction();
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
-            var currUser = User.Identity.GetUserName();
-            
+            var currUser = prinicpal.Claims.Where(x => x.Type == ClaimTypes.Name).First().Value;
+
+
             lstShoppingCartModel = Session["CartItem"] as List<ShoppingCartModel>;
             try
             {
@@ -311,7 +326,7 @@ namespace WebShop.Controllers
                     var availableStockDetail = availableStock.tblStockDetails.Where(x => x.StockId == availableStock.Id && x.OrderId == null && x.IsDeleted == "N").FirstOrDefault();
 
                     availableStock.Quantity = availableStock.Quantity - 1;
-                    db.Entry(availableStock).State = EntityState.Modified;
+                    db.SetModified(availableStock);
 
                     if (item.Type == (int)ItemTypeEnum.RentalSoftware) // Wenn der Artikel Mietsoftware ist
                     {
@@ -329,7 +344,7 @@ namespace WebShop.Controllers
                     if (availableStockDetail != null)
                     {
                         availableStockDetail.OrderId = generatedOrderId;
-                        db.Entry(availableStockDetail).State = EntityState.Modified;
+                        db.SetModified(availableStockDetail);
                     }
 
                     db.SaveChanges();
@@ -376,7 +391,7 @@ namespace WebShop.Controllers
 
         public ActionResult ClearCart()
         {
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
 
             Session["CartCounter"] = null;

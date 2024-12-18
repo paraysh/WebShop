@@ -27,12 +27,22 @@ namespace WebShop.Controllers
     /// Sie ermöglicht das Anzeigen, Hinzufügen, Bearbeiten, Aktivieren und Deaktivieren von Artikeln.
     /// </summary>
     [Authorize]
-    public class ItemController : Controller
+    public class ItemController : BaseController
     {
         // Speichert die Rolle des Benutzers
         int _userRole;
         // Datenbankkontext für den Zugriff auf die Datenbank
         private WebShopEntities db = new WebShopEntities();
+
+        public ItemController()
+        {
+               
+        }
+
+        public ItemController(WebShopEntities _db) : base(_db)
+        {
+            db = _db;
+        }
 
         /// <summary>
         /// Zeigt die Details aller Artikel an.
@@ -164,7 +174,8 @@ namespace WebShop.Controllers
             }
 
             // Markiert den Artikel als geändert und speichert die Änderungen in der Datenbank
-            db.Entry(selectedItem).State = EntityState.Modified;
+            // db.Entry(selectedItem).State = EntityState.Modified;
+            db.SetModified(selectedItem);
             db.SaveChanges();
             return RedirectToAction("ItemDetails");
         }
@@ -185,7 +196,7 @@ namespace WebShop.Controllers
             {
                 // Deaktiviert den Artikel, wenn er nicht auf Lager ist
                 selectedItem.IsActive = "N";
-                db.Entry(selectedItem).State = EntityState.Modified;
+                db.SetModified(selectedItem);
                 db.SaveChanges();
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} deaktiviert.", selectedItem.Name) };
             }
@@ -209,7 +220,7 @@ namespace WebShop.Controllers
             var selectedItem = db.tblItems.Include(x => x.tblStocks).Where(x => x.Id == id).Single();
             // Aktiviert den Artikel
             selectedItem.IsActive = "Y";
-            db.Entry(selectedItem).State = EntityState.Modified;
+            db.SetModified(selectedItem);
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel {0} aktiviert.", selectedItem.Name) };
 

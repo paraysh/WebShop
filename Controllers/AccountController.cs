@@ -22,9 +22,18 @@ namespace WebShop.Controllers
     /// <summary>
     /// Diese Klasse verwaltet die Benutzerkonten im WebShop. Sie bietet Funktionen zum Anmelden, Abmelden und zur Authentifizierung von Benutzern.
     /// </summary>
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        public WebShopEntities db = new WebShopEntities();
+        WebShopEntities db = new WebShopEntities();
+        public AccountController(WebShopEntities _db) : base(_db) 
+        {
+            db = _db;
+        }
+
+        public AccountController()
+        {
+                
+        }
 
         /// <summary>
         /// Holt den Authentifizierungsmanager für die aktuelle HTTP-Anfrage.
@@ -43,7 +52,7 @@ namespace WebShop.Controllers
         /// <param name="returnUrl">Die URL, zu der nach erfolgreicher Anmeldung weitergeleitet werden soll.</param>
         /// <returns>Die Ansicht der Anmeldeseite.</returns>
         [AllowAnonymous]
-        public async Task<ActionResult> Login(string returnUrl)
+        public ActionResult Login(string returnUrl)
         {
             return View();
         }
@@ -56,7 +65,7 @@ namespace WebShop.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginModel model)
+        public ActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -81,9 +90,10 @@ namespace WebShop.Controllers
                             return View(model);
                         }
 
+                        
+                        ViewBag.CurrentUser = user;
                         // Benutzer anmelden
                         SignIn(user);
-                        ViewBag.CurrentUser = user;
                         return RedirectToAction("Index", "Product");
 
                     }
@@ -105,14 +115,14 @@ namespace WebShop.Controllers
         /// Meldet den Benutzer an und erstellt die entsprechenden Ansprüche.
         /// </summary>
         /// <param name="user">Das Benutzerobjekt, das angemeldet werden soll.</param>
-        private void SignIn(tblUser user)
+        public void SignIn(tblUser user)
         {
             var claims = new Claim[] {
                             new Claim(ClaimTypes.NameIdentifier, user.UserRole.ToString()),
                             new Claim(ClaimTypes.Name, user.UserName),
                             new Claim(ClaimTypes.Role, user.tblUserRolesMaster.UserRole),
                             new Claim("UserId", user.Id.ToString())
-        };
+                            };
 
             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(identity);

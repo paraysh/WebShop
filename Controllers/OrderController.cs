@@ -27,7 +27,7 @@ namespace WebShop.Controllers
     /// Er bietet Funktionen zum Anzeigen, Genehmigen und Ablehnen von Bestellungen.
     /// </summary>
     [Authorize]
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         int _userRole;
         private WebShopEntities db;
@@ -41,6 +41,17 @@ namespace WebShop.Controllers
             db = new WebShopEntities();
         }
 
+        public OrderController(WebShopEntities _db) : base(_db)
+        {
+                db =_db;
+        }
+
+        public OrderController(WebShopEntities _db, ClaimsPrincipal _principle) : base(_db, _principle)
+        {
+            db = _db;
+            prinicpal = _principle;
+        }
+
         /// <summary>
         /// Zeigt die Hauptseite der Bestellverwaltung an.
         /// </summary>
@@ -48,37 +59,46 @@ namespace WebShop.Controllers
         public ActionResult Index()
         {
             // Bestimmt die Rolle des aktuellen Benutzers
-            _userRole = User.Identity.GetUserId<int>();
+            _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+            //_userRole = User.Identity.GetUserId<int>();
             ViewBag.UserRole = _userRole;
 
             // Bestimmt die ID des aktuellen Benutzers
-            int userID = Convert.ToInt32(prinicpal.Claims.Where(c => c.Type == "UserId").Select(c => c.Value).SingleOrDefault());
+            int userID = Convert.ToInt32(prinicpal.Claims
+                                .Where(c => c.Type == "UserId")
+                                .Select(c => c.Value)
+                                .SingleOrDefault()
+                                );
             ViewBag.UserId = userID;
 
             List<OrderModel> model = new List<OrderModel>();
 
             // Ruft die Liste der Bestellungen aus der Datenbank ab und erstellt eine Liste von OrderModel-Objekten
-            var lstOrders = db.tblOrders.Include(x => x.tblOrderDetails).Include(x => x.tblStockDetails).Include(x => x.tblUser).SelectMany(x => new List<OrderModel> {
-                new OrderModel
-                {
-                    Id = x.Id,
-                    OrderId = x.OrderId,
-                    OrderedBy = (int)x.OrderedBy,
-                    OrderedByName = x.tblUser.UserName,
-                    OrderDt = x.OrderDate.Value,
-                    OrderApproved = x.OrderApproved,
-                    OrderStatus = x.OrderApproved == "R" ? "Abgelehnt" : (x.OrderApproved == "Y" ? "Genehmigt" : "Ausstehend"),
-                    TotalItems = x.TotalItems.Value,
-                    TotalCost = x.TotalCost.Value,
-                    lstOrderDetails = x.tblOrderDetails.SelectMany(s => new List<OrderDetail> { new OrderDetail {
-                        StockDetailsId = s.tblStockDetail == null ? (int?)null : s.StockDetailsId.Value,
-                        SerialNo = s.tblStockDetail == null ?  "NA": s.tblStockDetail.SerialNumber,
-                        ItemName = s.tblStockDetail == null ? s.tblItem.Name : s.tblStockDetail.tblStock.tblItem.Name,
-                        LendingPeriodMonths = s.LendingPeriodMonths.Value,
-                        LendingStartDt = s.LendingStartDt.Value,
-                        LendingEndDt = s.LendingEndDt.Value
-                    } }).ToList()
-                }
+            var lstOrders = db.tblOrders
+                .Include(x => x.tblOrderDetails)
+                .Include(x => x.tblStockDetails)
+                .Include(x => x.tblUser)
+                .SelectMany(x => new List<OrderModel> {
+                    new OrderModel
+                    {
+                        Id = x.Id,
+                        OrderId = x.OrderId,
+                        OrderedBy = (int)x.OrderedBy,
+                        OrderedByName = x.tblUser.UserName,
+                        OrderDt = x.OrderDate.Value,
+                        OrderApproved = x.OrderApproved,
+                        OrderStatus = x.OrderApproved == "R" ? "Abgelehnt" : (x.OrderApproved == "Y" ? "Genehmigt" : "Ausstehend"),
+                        TotalItems = x.TotalItems.Value,
+                        TotalCost = x.TotalCost.Value,
+                        lstOrderDetails = x.tblOrderDetails.SelectMany(s => new List<OrderDetail> { new OrderDetail {
+                            StockDetailsId = s.tblStockDetail == null ? (int?)null : s.StockDetailsId.Value,
+                            SerialNo = s.tblStockDetail == null ?  "NA": s.tblStockDetail.SerialNumber,
+                            ItemName = s.tblStockDetail == null ? s.tblItem.Name : s.tblStockDetail.tblStock.tblItem.Name,
+                            LendingPeriodMonths = s.LendingPeriodMonths.Value,
+                            LendingStartDt = s.LendingStartDt.Value,
+                            LendingEndDt = s.LendingEndDt.Value
+                        } }).ToList()
+                    }
             });
 
             // Filtert die Bestellungen basierend auf der Rolle des Benutzers
@@ -110,7 +130,7 @@ namespace WebShop.Controllers
             var OrderTblRow = db.tblOrders.Where(x => x.Id == OrderId).Single();
 
             // Bestimmt den aktuellen Benutzernamen und das Budget des Mitarbeiters
-            var currUserName = User.Identity.GetUserName();
+            //var currUserName = User.Identity.GetUserName();
             var empBudget = db.tblTeamEmployees.Where(x => x.TeamEmployeeId == OrderTblRow.OrderedBy && x.Year == DateTime.Now.Year).Single().TeamEmployeeBudget;
             //var costForCurrYear = db.tblOrderDetails.Where(x => x.LendingStartDt)
 
@@ -126,7 +146,8 @@ namespace WebShop.Controllers
             OrderTblRow.OrderApproved = "Y";
 
             // Speichert die Änderungen in der Datenbank
-            db.Entry(OrderTblRow).State = EntityState.Modified;
+            db.SetModified(OrderTblRow);
+            //db.Entry(OrderTblRow).State = EntityState.Modified;
             db.SaveChanges();
 
             // Setzt eine Erfolgsmeldung und gibt eine JSON-Antwort zurück
@@ -150,7 +171,8 @@ namespace WebShop.Controllers
             OrderTblRow.tblStockDetails.ForEach(x => x.tblStock.Quantity = x.tblStock.Quantity + 1);
 
             // Speichert die Änderungen in der Datenbank
-            db.Entry(OrderTblRow).State = EntityState.Modified;
+            //db.Entry(OrderTblRow).State = EntityState.Modified;
+            db.SetModified(OrderTblRow);
             db.SaveChanges();
 
             // Setzt eine Erfolgsmeldung und gibt eine JSON-Antwort zurück

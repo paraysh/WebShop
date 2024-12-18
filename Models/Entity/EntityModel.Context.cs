@@ -12,7 +12,7 @@ namespace WebShop.Models.Entity
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+
     public partial class WebShopEntities : DbContext
     {
         public WebShopEntities()
@@ -24,7 +24,7 @@ namespace WebShop.Models.Entity
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
         public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblItemTypeMaster> tblItemTypeMasters { get; set; }
         public virtual DbSet<tblOrder> tblOrders { get; set; }

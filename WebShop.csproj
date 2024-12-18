@@ -298,6 +298,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -359,6 +360,7 @@
     <Compile Include="Models\Entity\tblUserRolesMaster.cs">
       <DependentUpon>EntityModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Entity\WebShopEntities.cs" />
     <Compile Include="Models\Enum\ItemTypeEnum.cs" />
     <Compile Include="Models\Enum\UserRoleEnum.cs" />
     <Compile Include="Models\ItemModel.cs" />
@@ -465,6 +467,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\ItemImages\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

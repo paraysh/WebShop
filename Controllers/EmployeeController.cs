@@ -26,11 +26,21 @@ namespace WebShop.Controllers
     /// Er bietet Funktionen zum Hinzufügen, Bearbeiten, Löschen und Deaktivieren von Mitarbeitern sowie zur Verwaltung der Mitarbeiterübersicht.
     /// </summary>
     [Authorize]
-    public class EmployeeController : Controller
+    public class EmployeeController : BaseController
     {
         int _userRole;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
         private WebShopEntities db = new WebShopEntities();
+
+        public EmployeeController()
+        {
+                
+        }
+
+        public EmployeeController(WebShopEntities _db) : base(_db)
+        {
+            db = _db;
+        }
 
         /// <summary>
         /// Zeigt die Startseite für Mitarbeiter an.
@@ -350,24 +360,14 @@ namespace WebShop.Controllers
                 }
             }
 
-            db.Entry(employee).State = EntityState.Modified;
+
+            db.SetModified(employee); // had to add extry layer for Unit Testing
+            //db.Entry(employee).State = EntityState.Modified;
             db.SaveChanges();
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Benutzer {0} aktualisiert.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
 
-        /// <summary>
-        /// Löscht einen Mitarbeiter.
-        /// </summary>
-        /// <param name="id">Die ID des zu löschenden Mitarbeiters.</param>
-        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
-        public ActionResult Delete(int id)
-        {
-            var user = db.tblUsers.Where(x => x.Id == id).SingleOrDefault();
-            db.tblUsers.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("EmployeeManagement");
-        }
 
         /// <summary>
         /// Deaktiviert einen Mitarbeiter.
@@ -378,7 +378,7 @@ namespace WebShop.Controllers
         {
             var user = db.tblUsers.Where(x => x.Id == id).SingleOrDefault();
             user.IsActive = "N";
-            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            db.SetModified(user);
             db.SaveChanges();
 
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} deaktiviert.", user.UserName) };
