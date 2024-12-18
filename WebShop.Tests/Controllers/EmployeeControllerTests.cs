@@ -23,16 +23,16 @@ namespace WebShop.Tests.Controllers
                 UserName = "Admin123",
                 Password = "Admin123",
                 ConfirmPassword = "Admin123",
-                FirstName = "Paresh",
-                LastName = "Bhalerao",
-                Email = "paraysh@something.com",
+                FirstName = "Tom",
+                LastName = "Müller",
+                Email = "tommueller@email.com",
                 UserRoleEnum = UserRoleEnum.Admins,
                 IsActive = "Y",
             };
 
             // create fake user table
             var userDbSet = new FakeDbSet<tblUser>();
-            
+
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
 
@@ -111,7 +111,7 @@ namespace WebShop.Tests.Controllers
                 UserRole = (int)UserRoleEnum.TeamLeaders,
                 IsActive = "Y"
             });
-            
+
 
             EmployeeController _controller = new EmployeeController(contextMock.Object);
 
@@ -134,9 +134,9 @@ namespace WebShop.Tests.Controllers
                 UserName = "Admin123",
                 Password = "Admin123",
                 ConfirmPassword = "Admin123",
-                FirstName = "Paresh",
-                LastName = "Bhalerao",
-                Email = "paraysh@something.com",
+                FirstName = "Kevin",
+                LastName = "Schmidt",
+                Email = "kevinschmidt@email.com",
                 UserRoleEnum = UserRoleEnum.Admins,
                 IsActive = "Y",
             };
