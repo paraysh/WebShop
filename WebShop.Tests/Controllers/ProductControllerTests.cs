@@ -1,4 +1,5 @@
 ﻿//Bearbeiter: Abbas Dayeh
+//            Yusuf Can Sönmez(PlaceOrder Test)
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using MvcFakes;
@@ -22,10 +23,13 @@ namespace WebShop.Tests.Controllers
     [TestClass]
     public class ProductControllerTests
     {
+        // Mock-Objekt für die WebShopEntities-Datenbank
         Mock<WebShopEntities> contextMock = new Mock<WebShopEntities>();
+
         public ProductControllerTests()
         {
             // Arrange
+            // Erstellen von Claims für den Testbenutzer
             var claims = new Claim[] {
                             new Claim(ClaimTypes.NameIdentifier, "50"),
                             new Claim(ClaimTypes.Name, "TestUser"),
@@ -34,7 +38,7 @@ namespace WebShop.Tests.Controllers
                             };
             Thread.CurrentPrincipal = new TestPrincipal(claims);
 
-            // create fake table
+            // Erstellen einer gefälschten Tabelle für tblItem
             var dbSet = new FakeDbSet<tblItem>();
             contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblItems).Returns(dbSet);
@@ -59,6 +63,7 @@ namespace WebShop.Tests.Controllers
                 tblItemTypeMaster = new tblItemTypeMaster() { Id = (int)ItemTypeEnum.LicensedSoftware }
             });
 
+            // Erstellen einer gefälschten Tabelle für tblStock
             var dbSet1 = new FakeDbSet<tblStock>();
             contextMock.Setup(dbContext => dbContext.tblStocks).Returns(dbSet1);
             dbSet1.Add(new tblStock()
@@ -78,6 +83,7 @@ namespace WebShop.Tests.Controllers
                 CreatedDate = DateTime.Now
             });
 
+            // Erstellen einer gefälschten Tabelle für tblStockDetail
             var dbSet2 = new FakeDbSet<tblStockDetail>();
             contextMock.Setup(dbContext => dbContext.tblStockDetails).Returns(dbSet2);
             dbSet2.Add(new tblStockDetail()
@@ -110,11 +116,11 @@ namespace WebShop.Tests.Controllers
         public void TestIndexWithSearch()
         {
             //Arrange
-            //Done in constructor
+            // Bereits im Konstruktor erledigt
 
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
-            var result =  _controller.Index("Hard");
+            var result = _controller.Index("Hard");
 
             //assert
             Assert.AreEqual(1, ((List<ProductModel>)((System.Web.Mvc.ViewResultBase)result).Model).Count);
@@ -149,11 +155,11 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            // Create fake Controller Context for Session
+            // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
             _controller.ControllerContext = new FakeControllerContext(_controller, sessionItems);
 
-            var result = _controller.AddToCart(10); // add item to cart
+            var result = _controller.AddToCart(10); // Artikel in den Warenkorb legen
 
             //assert
             Assert.AreEqual(1, _controller.Session["CartCounter"]);
@@ -165,16 +171,16 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            // Create fake Controller Context for Session
+            // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
             _controller.ControllerContext = new FakeControllerContext(_controller, sessionItems);
 
-            _controller.AddToCart(10); // add item to get data in session
+            _controller.AddToCart(10); // Artikel hinzufügen, um Daten in der Sitzung zu erhalten
             var lstShoppingCartModel = (List<ShoppingCartModel>)_controller.Session["CartItem"];
             var initialStartDt = lstShoppingCartModel.Where(x => x.Id == 10).Single().LendingStartDt;
             var initialEndDt = lstShoppingCartModel.Where(x => x.Id == 10).Single().LendingEndDt;
-            
-            var result = _controller.EditCart(10, 3); // change lending month to 3 months
+
+            var result = _controller.EditCart(10, 3); // Leihdauer auf 3 Monate ändern
             var lstShoppingCartModelAfterEdit = (List<ShoppingCartModel>)_controller.Session["CartItem"];
             var initialStartDtAfterEdit = lstShoppingCartModelAfterEdit.Where(x => x.Id == 10).Single().LendingStartDt;
             var initialEndDtAfterEdit = lstShoppingCartModelAfterEdit.Where(x => x.Id == 10).Single().LendingEndDt;
@@ -192,14 +198,14 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            // Create fake Controller Context for Session
+            // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
             _controller.ControllerContext = new FakeControllerContext(_controller, sessionItems);
 
-            _controller.AddToCart(10); // // add item to cart
+            _controller.AddToCart(10); // Artikel in den Warenkorb legen
 
-            var result = _controller.RemoveItem(10); // remove item id 10
-            
+            var result = _controller.RemoveItem(10); // Artikel mit der ID 10 entfernen
+
             //assert
             Assert.AreEqual(0, _controller.Session["CartCounter"]);
         }
@@ -210,7 +216,7 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            var result = _controller.DetailsById(10); // get details of item id 10
+            var result = _controller.DetailsById(10); // Details des Artikels mit der ID 10 abrufen
 
             //assert
             Assert.AreEqual(10, ((tblItem)((ViewResultBase)result).Model).Id);
@@ -222,16 +228,16 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            // Create fake Controller Context for Session
+            // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
             _controller.ControllerContext = new FakeControllerContext(_controller, sessionItems);
 
-            _controller.AddToCart(10); // add item to cart
+            _controller.AddToCart(10); // Artikel in den Warenkorb legen
 
-            var result = _controller.PlaceOrder(); // place order
+            var result = _controller.PlaceOrder(); // Bestellung aufgeben
 
             //assert
-            //Assert.AreEqual(0, _controller.Session["CartCounter"]);
+            Assert.AreEqual(0, _controller.Session["CartCounter"]);
         }
 
         [TestMethod]
@@ -240,13 +246,13 @@ namespace WebShop.Tests.Controllers
             //Act
             ProductController _controller = new ProductController(contextMock.Object);
 
-            // Create fake Controller Context for Session
+            // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
             _controller.ControllerContext = new FakeControllerContext(_controller, sessionItems);
 
-            _controller.AddToCart(10); // add item to cart
+            _controller.AddToCart(10); // Artikel in den Warenkorb legen
 
-            var result = _controller.ClearCart(); // clear cart
+            var result = _controller.ClearCart(); // Warenkorb leeren
 
             //assert
             Assert.IsNull(_controller.Session["CartCounter"]);

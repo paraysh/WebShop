@@ -43,7 +43,7 @@ namespace WebShop.Controllers
 
         public OrderController(WebShopEntities _db) : base(_db)
         {
-                db =_db;
+            db = _db;
         }
 
         public OrderController(WebShopEntities _db, ClaimsPrincipal _principle) : base(_db, _principle)

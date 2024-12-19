@@ -31,11 +31,11 @@ namespace WebShop.Controllers
 
         public StockController()
         {
-                
+
         }
         public StockController(WebShopEntities _db) : base(_db)
         {
-            db = _db; 
+            db = _db;
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace WebShop.Controllers
                     objTblStockDtls.DeleteReason = stockModel.DeleteReason;
                     db.SetModified(objTblStockDtls);
                 }
-                
+
                 db.SaveChanges();
 
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("Artikel entfernt.") };

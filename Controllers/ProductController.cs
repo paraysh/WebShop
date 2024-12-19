@@ -63,15 +63,15 @@ namespace WebShop.Controllers
                 .Include(x => x.tblStocks)
                 .Where(x => x.IsActive == "Y")
                 .Select(l => new ProductModel
-            {
-                Id = l.Id,
-                Name = l.Name,
-                Description = l.Description,
-                ProductType = l.tblItemTypeMaster.ItemType,
-                Cost = l.Cost,
-                ImageName = l.ImageName,
-                ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
-            });
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    Description = l.Description,
+                    ProductType = l.tblItemTypeMaster.ItemType,
+                    Cost = l.Cost,
+                    ImageName = l.ImageName,
+                    ItemsInStock = l.tblStocks.Sum(p => p.Quantity)
+                });
 
             if (string.IsNullOrEmpty(searchString))
             {

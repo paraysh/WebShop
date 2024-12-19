@@ -34,7 +34,7 @@ namespace WebShop.Controllers
 
         public EmployeeController()
         {
-                
+
         }
 
         public EmployeeController(WebShopEntities _db) : base(_db)
@@ -178,16 +178,16 @@ namespace WebShop.Controllers
                                                                     .Where(x => x.Year == DateTime.Now.Year)
                                                                     .SingleOrDefault().TeamBudget;
 
-            usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0 
+            usr.TeamLeader = employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).FirstOrDefault() == null ? 0
                            : employee.tblTeamEmployees.Where(x => x.TeamEmployeeId == id).First().TeamLeaderId;
 
             usr.EmployeeBudget = employee.tblTeamEmployees
                                 .Where(x => x.TeamEmployeeId == id && x.Year == DateTime.Now.Year)
-                                .SingleOrDefault() == null ? "0,00" 
+                                .SingleOrDefault() == null ? "0,00"
                                 : employee.tblTeamEmployees
                                 .Where(x => x.TeamEmployeeId == id && x.Year == DateTime.Now.Year)
                                 .Single().TeamEmployeeBudget;
-                         
+
             if (usr.UserRole == (int)UserRoleEnum.Employee)
             {
                 usr.AssignedTeamBudget = db.tblTeamBudgets

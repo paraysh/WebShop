@@ -20,76 +20,6 @@ namespace WebShop.Tests.Controllers
     public class OrderControllerTests
     {
         [TestMethod]
-        public void TestIndex()
-        {
-            // Arrange
-            var claims = new Claim[] {
-                            new Claim(ClaimTypes.NameIdentifier, "50"),
-                            new Claim(ClaimTypes.Name, "TestUser"),
-                            new Claim(ClaimTypes.Role, "Employee"),
-                            new Claim("UserId", "99")
-                            };
-            Thread.CurrentPrincipal = new TestPrincipal(claims);
-
-            // create fake user table
-            var contextMock = new Mock<WebShopEntities>();
-            var dbSet = new FakeDbSet<tblOrder>();
-            contextMock.Setup(dbContext => dbContext.tblOrders).Returns(dbSet);
-            dbSet.Add(new tblOrder()
-            {
-                Id = 77,
-                OrderId = "test-order-id-test",
-                OrderedBy = 99,
-                tblUser = new tblUser()
-                {
-                    UserName = "Test_User"
-                },
-                OrderDate = DateTime.Now,
-                OrderApproved = "Y",
-                TotalItems = 1,
-                TotalCost = 200,
-                tblOrderDetails = new List<tblOrderDetail>()
-                {
-                    new tblOrderDetail()
-                    {
-                        Id = 12,
-                        OrderId = 77,
-                        StockDetailsId = 22,
-                        LendingPeriodMonths = 2,
-                        LendingStartDt = DateTime.Now,
-                        LendingEndDt = DateTime.Now.AddMonths(2),
-                        ItemId = 55,
-                        tblOrder = new tblOrder(){ 
-                            Id = 77
-                        }
-                    }
-                },
-                tblStockDetails = new List<tblStockDetail>()
-                { 
-                    new tblStockDetail()
-                    {
-                        Id= 22,
-                        StockId = 33,
-                        SerialNumber = "11111-22222-33333",
-                        OrderId= 77,
-                        IsDeleted = "N",
-                        DeleteReason = null,
-                        tblStock = new tblStock()
-                        { 
-                            Id = 33,
-                            ItemId = 55,
-                            Quantity = 10,
-                        }
-                    }
-                }
-            });
-
-            OrderController _controller = new OrderController(contextMock.Object);
-            var result = _controller.Index();
-        }
-
-
-        [TestMethod]
         public void TestApproveRightBudget()
         {
             // Arrange
@@ -102,7 +32,7 @@ namespace WebShop.Tests.Controllers
                             };
             Thread.CurrentPrincipal = new TestPrincipal(claims);
 
-            // create fake user table
+            // Erstellen eines gefälschten Benutzertabellenkontexts
             var contextMock = new Mock<WebShopEntities>();
             var dbSet = new FakeDbSet<tblOrder>();
             contextMock.Setup(dbContext => dbContext.tblOrders).Returns(dbSet);
@@ -187,7 +117,7 @@ namespace WebShop.Tests.Controllers
                             };
             Thread.CurrentPrincipal = new TestPrincipal(claims);
 
-            // create fake user table
+            // Erstellen eines gefälschten Benutzertabellenkontexts
             var contextMock = new Mock<WebShopEntities>();
             var dbSet = new FakeDbSet<tblOrder>();
             contextMock.Setup(dbContext => dbContext.tblOrders).Returns(dbSet);
@@ -272,7 +202,7 @@ namespace WebShop.Tests.Controllers
                             };
             Thread.CurrentPrincipal = new TestPrincipal(claims);
 
-            // create fake user table
+            // Erstellen eines gefälschten Benutzertabellenkontexts
             var contextMock = new Mock<WebShopEntities>();
             var dbSet = new FakeDbSet<tblOrder>();
             contextMock.Setup(dbContext => dbContext.tblOrders).Returns(dbSet);

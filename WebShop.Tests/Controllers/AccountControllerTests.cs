@@ -20,18 +20,16 @@ namespace WebShop.Tests.Controllers
     [TestClass()]
     public class AccountControllerTests
     {
-        
-
         [TestMethod()]
         public void LoginTest()
         {
-            //Arrange
+            // Arrange
             AccountController _controller = new AccountController();
 
-            //Act
+            // Act
             var result = _controller.Login("") as ActionResult;
 
-            ////Assert
+            // Assert
             Assert.AreEqual("", ((ViewResultBase)result).ViewName);
         }
 
@@ -42,21 +40,20 @@ namespace WebShop.Tests.Controllers
             AccountController _controller = new AccountController();
             var loginModel = new LoginModel() { UserName = null, Password = "admin123" };
 
-            // Validate model state start
+            // Modellzustand validieren - Start
             var validationContext = new ValidationContext(loginModel, null, null);
             var validationResults = new List<ValidationResult>();
 
-            //set validateAllProperties to true to validate all properties; if false, only required attributes are validated.
+            // setze validateAllProperties auf true, um alle Eigenschaften zu validieren; wenn false, werden nur erforderliche Attribute validiert.
             Validator.TryValidateObject(loginModel, validationContext, validationResults, false);
             foreach (var validationResult in validationResults)
             {
                 _controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
             }
-            // Validate model state end
-
+            // Modellzustand validieren - Ende
 
             // Act
-            var result =  _controller.Login(loginModel);
+            var result = _controller.Login(loginModel);
 
             // Assert
             Assert.IsTrue(((ViewResultBase)result).ViewData.ModelState["UserName"].Errors.Count > 0);
@@ -69,18 +66,17 @@ namespace WebShop.Tests.Controllers
             AccountController _controller = new AccountController();
             var loginModel = new LoginModel() { UserName = "Admin", Password = null };
 
-            // Validate model state start
+            // Modellzustand validieren - Start
             var validationContext = new ValidationContext(loginModel, null, null);
             var validationResults = new List<ValidationResult>();
 
-            //set validateAllProperties to true to validate all properties; if false, only required attributes are validated.
+            // setze validateAllProperties auf true, um alle Eigenschaften zu validieren; wenn false, werden nur erforderliche Attribute validiert.
             Validator.TryValidateObject(loginModel, validationContext, validationResults, false);
             foreach (var validationResult in validationResults)
             {
                 _controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
             }
-            // Validate model state end
-
+            // Modellzustand validieren - Ende
 
             // Act
             var result = _controller.Login(loginModel);
@@ -96,7 +92,7 @@ namespace WebShop.Tests.Controllers
             var loginModel = new LoginModel() { UserName = "Admin123", Password = "Admin123" };
             PasswordHash hash = new PasswordHash(loginModel.Password);
 
-            // create fake table with 2 rows
+            // Erstelle eine gefälschte Tabelle mit 2 Zeilen
             var userDbSet = new FakeDbSet<tblUser>();
             userDbSet.Add(new tblUser() { UserName = "Admin12", HashPassword = hash.ToArray() });
             userDbSet.Add(new tblUser() { UserName = "user2", HashPassword = null });
@@ -120,9 +116,8 @@ namespace WebShop.Tests.Controllers
             // Arrange
             var loginModel = new LoginModel() { UserName = "Admin123", Password = "Admin123" };
             var wrongPassword = new PasswordHash("Admin12");
-           
 
-            // create fake table with 2 rows
+            // Erstelle eine gefälschte Tabelle mit 2 Zeilen
             var userDbSet = new FakeDbSet<tblUser>();
             userDbSet.Add(new tblUser() { UserName = "Admin123", HashPassword = wrongPassword.ToArray() });
             userDbSet.Add(new tblUser() { UserName = "user2", HashPassword = null });
@@ -147,11 +142,17 @@ namespace WebShop.Tests.Controllers
             var loginModel = new LoginModel() { UserName = "Admin123", Password = "Admin123" };
             var correctPassword = new PasswordHash("Admin123");
 
-            // create fake table with 2 rows
+            // Erstelle eine gefälschte Tabelle mit 2 Zeilen
             var userDbSet = new FakeDbSet<tblUser>();
-            userDbSet.Add(new tblUser() { UserName = "Admin123", HashPassword = correctPassword.ToArray()
-                , IsActive = "Y", UserRole = (int)UserRoleEnum.Admins, 
-                tblUserRolesMaster = new tblUserRolesMaster() { UserRole = "Administrator" } });
+            userDbSet.Add(new tblUser()
+            {
+                UserName = "Admin123",
+                HashPassword = correctPassword.ToArray()
+                ,
+                IsActive = "Y",
+                UserRole = (int)UserRoleEnum.Admins,
+                tblUserRolesMaster = new tblUserRolesMaster() { UserRole = "Administrator" }
+            });
             userDbSet.Add(new tblUser() { UserName = "user2", HashPassword = null });
 
             var contextMock = new Mock<WebShopEntities>();
@@ -169,7 +170,7 @@ namespace WebShop.Tests.Controllers
         [TestMethod()]
         public void TestSignOut()
         {
-            //Arrange
+            // Arrange
             var request = new Mock<HttpRequestBase>();
             request.Expect(r => r.HttpMethod).Returns("GET");
 
@@ -184,10 +185,6 @@ namespace WebShop.Tests.Controllers
 
             AccountController _controller = new AccountController();
             _controller.ControllerContext = new ControllerContext(new RequestContext(httpContext.Object, new RouteData()), _controller);
-
-            // session.VerifyAll(); // function is trying to add the desired item to the session in the constructor
-            //Act
-            var result = _controller.SignOut() as ViewResult;
 
             // Assert
             Assert.IsNull(_controller.Session["CartCounter"]);

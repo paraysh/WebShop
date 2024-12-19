@@ -25,14 +25,14 @@ namespace WebShop.Controllers
     public class AccountController : BaseController
     {
         WebShopEntities db = new WebShopEntities();
-        public AccountController(WebShopEntities _db) : base(_db) 
+        public AccountController(WebShopEntities _db) : base(_db)
         {
             db = _db;
         }
 
         public AccountController()
         {
-                
+
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace WebShop.Controllers
                             return View(model);
                         }
 
-                        
+
                         ViewBag.CurrentUser = user;
                         // Benutzer anmelden
                         SignIn(user);

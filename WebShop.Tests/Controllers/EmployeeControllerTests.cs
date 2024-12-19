@@ -31,7 +31,7 @@ namespace WebShop.Tests.Controllers
                 IsActive = "Y",
             };
 
-            // create fake user table
+            // Erstelle eine gefälschte Benutzertabelle
             var userDbSet = new FakeDbSet<tblUser>();
 
             var contextMock = new Mock<WebShopEntities>();
@@ -41,9 +41,9 @@ namespace WebShop.Tests.Controllers
 
             // Act
             var result = _controller.Add(userModel);
-            var rows = userDbSet.Count(); // check row count
+            var rows = userDbSet.Count(); // Überprüfe die Zeilenanzahl
 
-            //Assert
+            // Assert
             Assert.AreEqual(1, rows);
         }
 
@@ -64,7 +64,7 @@ namespace WebShop.Tests.Controllers
                 IsActive = "Y",
             };
 
-            // create fake user table
+            // Erstelle eine gefälschte Benutzertabelle
             var userDbSet = new FakeDbSet<tblUser>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
@@ -72,10 +72,10 @@ namespace WebShop.Tests.Controllers
             EmployeeController _controller = new EmployeeController(contextMock.Object);
 
             // Act
-            var result = _controller.Add(teamLeaderModel); // add team leader
-            var rows = userDbSet.Count<tblUser>(); // check row count
+            var result = _controller.Add(teamLeaderModel); // Füge Teamleiter hinzu
+            var rows = userDbSet.Count<tblUser>(); // Überprüfe die Zeilenanzahl
 
-            //Assert
+            // Assert
             Assert.AreEqual(1, rows);
             Assert.AreEqual("TestTeamleiter", userDbSet.First().UserName);
         }
@@ -98,11 +98,11 @@ namespace WebShop.Tests.Controllers
                 IsActive = "Y",
             };
 
-            // create fake user table
+            // Erstelle eine gefälschte Benutzertabelle
             var userDbSet = new FakeDbSet<tblUser>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
-            userDbSet.Add(new tblUser()  // create teamleader record
+            userDbSet.Add(new tblUser()  // Erstelle Teamleiter-Datensatz
             {
                 Id = 99,
                 UserName = "TestTeamleiter",
@@ -113,14 +113,13 @@ namespace WebShop.Tests.Controllers
                 IsActive = "Y"
             });
 
-
             EmployeeController _controller = new EmployeeController(contextMock.Object);
 
             // Act
-            var result = _controller.Add(employeeModel); // add team leader
-            var rows = userDbSet.Count<tblUser>(); // check row count
+            var result = _controller.Add(employeeModel); // Füge Mitarbeiter hinzu
+            var rows = userDbSet.Count<tblUser>(); // Überprüfe die Zeilenanzahl
 
-            //Assert
+            // Assert
             Assert.AreEqual(2, rows);
             Assert.AreEqual(1, userDbSet.Where(x => x.UserName == "TestTeamleiter").Count());
         }
@@ -142,12 +141,12 @@ namespace WebShop.Tests.Controllers
                 IsActive = "Y",
             };
 
-            // create fake user table
+            // Erstelle eine gefälschte Benutzertabelle
             var userDbSet = new FakeDbSet<tblUser>();
 
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
-            userDbSet.Add(new tblUser()  // add emplyee in table to edit
+            userDbSet.Add(new tblUser()  // Füge Mitarbeiter in die Tabelle ein, um ihn zu bearbeiten
             {
                 Id = 99,
                 UserName = "TestTeamleiter",
@@ -157,15 +156,14 @@ namespace WebShop.Tests.Controllers
                 UserRole = (int)UserRoleEnum.TeamLeaders,
                 IsActive = "Y"
             });
-            //contextMock.
 
             EmployeeController _controller = new EmployeeController(contextMock.Object);
 
             // Act
             var result = _controller.Edit(userModel);
-            var rows = userDbSet.Count<tblUser>(); // check row count
+            var rows = userDbSet.Count<tblUser>(); // Überprüfe die Zeilenanzahl
 
-            //Assert
+            // Assert
             Assert.AreEqual(1, rows);
             Assert.AreEqual(1, userDbSet.Where(x => x.UserName == "Admin123").Count());
         }
@@ -176,12 +174,12 @@ namespace WebShop.Tests.Controllers
             // Arrange
             var userId = 99;
 
-            // create fake user table
+            // Erstelle eine gefälschte Benutzertabelle
             var userDbSet = new FakeDbSet<tblUser>();
 
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
-            userDbSet.Add(new tblUser()  // add emplyee in table to edit
+            userDbSet.Add(new tblUser()  // Füge Mitarbeiter in die Tabelle ein, um ihn zu bearbeiten
             {
                 Id = 99,
                 UserName = "TestTeamleiter",
@@ -189,19 +187,18 @@ namespace WebShop.Tests.Controllers
                 LastName = "Mustermann",
                 Email = "maxime.mustermann@email.de",
                 UserRole = (int)UserRoleEnum.TeamLeaders,
-                IsActive = "Y" // user is active in table
+                IsActive = "Y" // Benutzer ist in der Tabelle aktiv
             });
-            //contextMock.
 
             EmployeeController _controller = new EmployeeController(contextMock.Object);
 
             // Act
             var result = _controller.Deactivate(userId);
-            var rows = userDbSet.Count<tblUser>(); // check row count
+            var rows = userDbSet.Count<tblUser>(); // Überprüfe die Zeilenanzahl
 
-            //Assert
-            Assert.AreEqual(1, rows); // row should exist in table
-            Assert.AreEqual("N", userDbSet.Where(x => x.Id == 99).Single().IsActive); // check if isActive = N
+            // Assert
+            Assert.AreEqual(1, rows); // Zeile sollte in der Tabelle existieren
+            Assert.AreEqual("N", userDbSet.Where(x => x.Id == 99).Single().IsActive); // Überprüfe, ob isActive = N ist
         }
     }
 }

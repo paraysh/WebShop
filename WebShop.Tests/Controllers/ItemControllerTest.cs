@@ -18,6 +18,7 @@ namespace WebShop.Tests.Controllers
         public void Test_AddItem()
         {
             // Arrange
+            // Erstellen von zwei ItemModel-Objekten mit Testdaten
             var item1Model = new ItemModel()
             {
                 Name = "TestHardware",
@@ -36,20 +37,24 @@ namespace WebShop.Tests.Controllers
                 IsActive = "N"
             };
 
-            // create fake table
+            // Erstellen einer gefälschten Tabelle
             var dbSet = new FakeDbSet<tblItem>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblItems).Returns(dbSet);
 
+            // Erstellen eines ItemController-Objekts mit dem gefälschten Kontext
             ItemController _controller = new ItemController(contextMock.Object);
 
             // Act
+            // Hinzufügen der Items zur gefälschten Tabelle
             var result1 = _controller.Add(item1Model);
             var result2 = _controller.Add(item2Model);
-            var rows = dbSet.Count(); // check row count
+            var rows = dbSet.Count(); // Überprüfen der Zeilenanzahl
 
-            //Assert
-            Assert.AreEqual(2, rows); // check if 2 rows added
+            // Assert
+            // Überprüfen, ob zwei Zeilen hinzugefügt wurden
+            Assert.AreEqual(2, rows);
+            // Überprüfen, ob die hinzugefügten Items in der Tabelle vorhanden sind
             Assert.IsNotNull(dbSet.Where(x => x.Name == "TestHardware" && x.IsActive == "Y"));
             Assert.IsNotNull(dbSet.Where(x => x.Name == "TestLizenzsoftware" && x.IsActive == "N"));
         }
@@ -58,6 +63,7 @@ namespace WebShop.Tests.Controllers
         public void Test_EditItem()
         {
             // Arrange
+            // Erstellen von zwei ItemModel-Objekten mit Testdaten
             var item1Model = new ItemModel()
             {
                 Id = 10,
@@ -78,11 +84,11 @@ namespace WebShop.Tests.Controllers
                 IsActive = "N"
             };
 
-            // create fake table
+            // Erstellen einer gefälschten Tabelle
             var dbSet = new FakeDbSet<tblItem>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblItems).Returns(dbSet);
-            dbSet.Add(new tblItem() 
+            dbSet.Add(new tblItem()
             {
                 Id = 10,
                 Name = "TestHardware",
@@ -91,7 +97,7 @@ namespace WebShop.Tests.Controllers
                 Cost = "20",
                 IsActive = "Y"
             });
-            dbSet.Add(new tblItem()  
+            dbSet.Add(new tblItem()
             {
                 Id = 20,
                 Name = "TestLizenzsoftware",
@@ -101,15 +107,19 @@ namespace WebShop.Tests.Controllers
                 IsActive = "N"
             });
 
+            // Erstellen eines ItemController-Objekts mit dem gefälschten Kontext
             ItemController _controller = new ItemController(contextMock.Object);
 
             // Act
+            // Bearbeiten der Items in der gefälschten Tabelle
             var result1 = _controller.Edit(item1Model);
             var result2 = _controller.Edit(item2Model);
-            var rows = dbSet.Count(); // check row count
+            var rows = dbSet.Count(); // Überprüfen der Zeilenanzahl
 
-            //Assert
-            Assert.AreEqual(2, rows); // check if 2 rows in table
+            // Assert
+            // Überprüfen, ob zwei Zeilen in der Tabelle vorhanden sind
+            Assert.AreEqual(2, rows);
+            // Überprüfen, ob die Kosten der bearbeiteten Items korrekt aktualisiert wurden
             Assert.AreEqual("10,00", dbSet.Where(x => x.Id == 10).Single().Cost);
             Assert.AreEqual("0,00", dbSet.Where(x => x.Id == 20).Single().Cost);
         }
@@ -118,9 +128,10 @@ namespace WebShop.Tests.Controllers
         public void Test_DeavtivateItem()
         {
             // Arrange
+            // Festlegen der Item-ID, die deaktiviert werden soll
             var itemId = 10;
 
-            // create fake user table
+            // Erstellen einer gefälschten Tabelle
             var dbSet = new FakeDbSet<tblItem>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblItems).Returns(dbSet);
@@ -133,24 +144,29 @@ namespace WebShop.Tests.Controllers
                 Cost = "20",
                 IsActive = "Y"
             });
+            // Erstellen eines ItemController-Objekts mit dem gefälschten Kontext
             ItemController _controller = new ItemController(contextMock.Object);
 
             // Act
+            // Deaktivieren des Items in der gefälschten Tabelle
             var result = _controller.Deactivate(itemId);
-            var rows = dbSet.Count(); // check row count
+            var rows = dbSet.Count(); // Überprüfen der Zeilenanzahl
 
-            //Assert
-            Assert.AreEqual(1, rows); // row should exist in table
-            Assert.AreEqual("N", dbSet.Where(x => x.Id == itemId).Single().IsActive); // check if isActive = N
+            // Assert
+            // Überprüfen, ob die Zeile in der Tabelle vorhanden ist
+            Assert.AreEqual(1, rows);
+            // Überprüfen, ob das Item korrekt deaktiviert wurde
+            Assert.AreEqual("N", dbSet.Where(x => x.Id == itemId).Single().IsActive);
         }
 
         [TestMethod]
         public void Test_ActivateItem()
         {
             // Arrange
+            // Festlegen der Item-ID, die aktiviert werden soll
             var itemId = 20;
 
-            // create fake user table
+            // Erstellen einer gefälschten Tabelle
             var dbSet = new FakeDbSet<tblItem>();
             var contextMock = new Mock<WebShopEntities>();
             contextMock.Setup(dbContext => dbContext.tblItems).Returns(dbSet);
@@ -164,15 +180,19 @@ namespace WebShop.Tests.Controllers
                 IsActive = "N"
             });
 
+            // Erstellen eines ItemController-Objekts mit dem gefälschten Kontext
             ItemController _controller = new ItemController(contextMock.Object);
 
             // Act
+            // Aktivieren des Items in der gefälschten Tabelle
             var result = _controller.Activate(itemId);
-            var rows = dbSet.Count(); // check row count
+            var rows = dbSet.Count(); // Überprüfen der Zeilenanzahl
 
-            //Assert
-            Assert.AreEqual(1, rows); // row should exist in table
-            Assert.AreEqual("Y", dbSet.Where(x => x.Id == itemId).Single().IsActive); // check if isActive = Y
+            // Assert
+            // Überprüfen, ob die Zeile in der Tabelle vorhanden ist
+            Assert.AreEqual(1, rows);
+            // Überprüfen, ob das Item korrekt aktiviert wurde
+            Assert.AreEqual("Y", dbSet.Where(x => x.Id == itemId).Single().IsActive);
         }
     }
 }

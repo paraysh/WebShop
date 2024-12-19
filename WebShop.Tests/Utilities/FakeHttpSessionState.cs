@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Bearbeiter: Yusuf Can Sönmez
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,20 +10,25 @@ using System.Web.SessionState;
 
 namespace MvcFakes
 {
+    // Diese Klasse stellt einen gefälschten HttpSessionState für Unit-Tests bereit.
     public class FakeHttpSessionState : HttpSessionStateBase
     {
+        // Privates Feld zur Speicherung der Session-Items.
         private readonly SessionStateItemCollection _sessionItems;
 
+        // Konstruktor, der die Session-Items initialisiert.
         public FakeHttpSessionState(SessionStateItemCollection sessionItems)
         {
             _sessionItems = sessionItems;
         }
 
+        // Methode zum Hinzufügen eines Elements zur Session.
         public override void Add(string name, object value)
         {
             _sessionItems[name] = value;
         }
 
+        // Eigenschaft, die die Anzahl der Elemente in der Session zurückgibt.
         public override int Count
         {
             get
@@ -31,11 +37,13 @@ namespace MvcFakes
             }
         }
 
+        // Methode zum Abrufen eines Enumerators für die Session-Items.
         public override IEnumerator GetEnumerator()
         {
             return _sessionItems.GetEnumerator();
         }
 
+        // Eigenschaft, die die Schlüssel der Session-Items zurückgibt.
         public override NameObjectCollectionBase.KeysCollection Keys
         {
             get
@@ -44,6 +52,7 @@ namespace MvcFakes
             }
         }
 
+        // Indexer zum Abrufen oder Festlegen eines Session-Items anhand des Namens.
         public override object this[string name]
         {
             get
@@ -56,6 +65,7 @@ namespace MvcFakes
             }
         }
 
+        // Indexer zum Abrufen oder Festlegen eines Session-Items anhand des Indexes.
         public override object this[int index]
         {
             get
@@ -68,13 +78,10 @@ namespace MvcFakes
             }
         }
 
+        // Methode zum Entfernen eines Elements aus der Session.
         public override void Remove(string name)
         {
             _sessionItems.Remove(name);
         }
     }
-
-   
-
-
 }

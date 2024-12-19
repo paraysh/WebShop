@@ -227,12 +227,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTests.cs" />
-    <Compile Include="Controllers\CommaHandlerTest.cs" />
     <Compile Include="Controllers\EmployeeControllerTests.cs" />
     <Compile Include="Controllers\ItemControllerTest.cs" />
     <Compile Include="Controllers\OrderControllerTests.cs" />
     <Compile Include="Controllers\ProductControllerTests.cs" />
     <Compile Include="Controllers\StockControllerTests.cs" />
+    <Compile Include="Helper\CommaHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\FakeControllerContext.cs" />
     <Compile Include="Utilities\FakeDbSet.cs" />

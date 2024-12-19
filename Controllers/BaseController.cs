@@ -1,4 +1,4 @@
-﻿//Bearbeiter: Yusuf Can Sönmez
+﻿//Bearbeiter: Yusuf Can Sönmez 
 using System.Security.Claims;
 using System.Web.Mvc;
 using WebShop.Models.Entity;

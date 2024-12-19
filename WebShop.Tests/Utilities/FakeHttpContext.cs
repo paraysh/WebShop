@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Bearbeiter: Yusuf Can Sönmez
+using System;
 using System.Collections.Specialized;
 using System.Security.Principal;
 using System.Web;
@@ -6,17 +7,18 @@ using System.Web.SessionState;
 
 namespace MvcFakes
 {
-
-
+    // Diese Klasse stellt einen gefälschten HttpContext für Unit-Tests bereit.
     public class FakeHttpContext : HttpContextBase
     {
+        // Private Felder zur Speicherung der gefälschten Daten.
         private readonly FakePrincipal _principal;
         private readonly NameValueCollection _formParams;
         private readonly NameValueCollection _queryStringParams;
         private readonly HttpCookieCollection _cookies;
         private readonly SessionStateItemCollection _sessionItems;
 
-        public FakeHttpContext(FakePrincipal principal, NameValueCollection formParams, NameValueCollection queryStringParams, HttpCookieCollection cookies, SessionStateItemCollection sessionItems )
+        // Konstruktor, der die gefälschten Daten initialisiert.
+        public FakeHttpContext(FakePrincipal principal, NameValueCollection formParams, NameValueCollection queryStringParams, HttpCookieCollection cookies, SessionStateItemCollection sessionItems)
         {
             _principal = principal;
             _formParams = formParams;
@@ -25,6 +27,7 @@ namespace MvcFakes
             _sessionItems = sessionItems;
         }
 
+        // Überschreibt die Request-Eigenschaft, um eine gefälschte HttpRequest zurückzugeben.
         public override HttpRequestBase Request
         {
             get
@@ -33,6 +36,7 @@ namespace MvcFakes
             }
         }
 
+        // Überschreibt die User-Eigenschaft, um den gefälschten Principal zurückzugeben.
         public override IPrincipal User
         {
             get
@@ -45,6 +49,7 @@ namespace MvcFakes
             }
         }
 
+        // Überschreibt die Session-Eigenschaft, um eine gefälschte HttpSessionState zurückzugeben.
         public override HttpSessionStateBase Session
         {
             get
@@ -52,8 +57,5 @@ namespace MvcFakes
                 return new FakeHttpSessionState(_sessionItems);
             }
         }
-
     }
-
-
 }

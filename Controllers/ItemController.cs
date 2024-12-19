@@ -36,7 +36,7 @@ namespace WebShop.Controllers
 
         public ItemController()
         {
-               
+
         }
 
         public ItemController(WebShopEntities _db) : base(_db)
@@ -142,7 +142,7 @@ namespace WebShop.Controllers
             item.Name = selectedItem.Name;
             item.Description = selectedItem.Description;
             item.Type = selectedItem.Type;
-            item.Cost =  selectedItem.Cost;
+            item.Cost = selectedItem.Cost;
             item.ImageName = selectedItem.ImageName;
 
             return View(item);
@@ -227,6 +227,6 @@ namespace WebShop.Controllers
             return RedirectToAction("ItemDetails");
         }
 
-        
+
     }
 }
