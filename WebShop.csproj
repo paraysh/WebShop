@@ -312,6 +312,7 @@
     <Compile Include="Helper\PasswordHash.cs" />
     <Compile Include="Helper\WebGridHelpers.cs" />
     <Compile Include="Models\AddStockModel.cs" />
+    <Compile Include="Models\Entity\EfContextProvider.cs" />
     <Compile Include="Models\Entity\EntityModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -327,6 +328,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EntityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Entity\IDbContextProvider.cs" />
     <Compile Include="Models\Entity\sysdiagram.cs">
       <DependentUpon>EntityModel.tt</DependentUpon>
     </Compile>

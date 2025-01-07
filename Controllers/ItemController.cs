@@ -33,8 +33,9 @@ namespace WebShop.Controllers
         int _userRole;
         // Datenbankkontext für den Zugriff auf die Datenbank
         private WebShopEntities db = new WebShopEntities();
+        private EfContextProvider efContext;
 
-        public ItemController()
+        public ItemController() : this(new EfContextProvider(new WebShopEntities()))
         {
 
         }
@@ -42,6 +43,12 @@ namespace WebShop.Controllers
         public ItemController(WebShopEntities _db) : base(_db)
         {
             db = _db;
+        }
+
+        public ItemController(EfContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
         }
 
         /// <summary>

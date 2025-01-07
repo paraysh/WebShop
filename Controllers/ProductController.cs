@@ -29,22 +29,29 @@ namespace WebShop.Controllers
     {
         int _userRole;
         private WebShopEntities db;
+        private IDbContextProvider efContext;
         List<ShoppingCartModel> lstShoppingCartModel;
         ClaimsPrincipal prinicpal;
 
         /// <summary>
         /// Konstruktor, der die Datenbankverbindung initialisiert und den Warenkorb initialisiert.
         /// </summary>
-        public ProductController()
+        public ProductController() : this(new EfContextProvider(new WebShopEntities()))
         {
-            db = new WebShopEntities();
-            lstShoppingCartModel = new List<ShoppingCartModel>();
-            prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
         }
 
         public ProductController(WebShopEntities _db) : base(_db)
         {
             db = _db;
+            lstShoppingCartModel = new List<ShoppingCartModel>();
+            prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+        }
+
+        public ProductController(IDbContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
             lstShoppingCartModel = new List<ShoppingCartModel>();
             prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
         }
@@ -276,7 +283,8 @@ namespace WebShop.Controllers
         [HttpPost]
         public ActionResult PlaceOrder()
         {
-            var transaction = db.Database.BeginTransaction();
+            //var transaction = db.Database.BeginTransaction();
+            efContext.BeginTransaction();
             _userRole = Convert.ToInt32(prinicpal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
             ViewBag.UserRole = _userRole;
             var currUser = prinicpal.Claims.Where(x => x.Type == ClaimTypes.Name).First().Value;
@@ -350,7 +358,8 @@ namespace WebShop.Controllers
                     db.SaveChanges();
                 }
 
-                transaction.Commit();
+                efContext.Commit();
+                //transaction.Commit();
 
                 // Warenkorb aktualisieren
                 Session["CartCounter"] = null;
@@ -361,7 +370,8 @@ namespace WebShop.Controllers
             }
             catch (Exception)
             {
-                transaction.Rollback();
+                //transaction.Rollback();
+                efContext.Rollback();
                 TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-danger", Title = "Fehler!", Message = "Bestellung fehlgeschlagen" };
                 return Json(data: new { Success = false, Message = "Bestellung fehlgeschlagen" }, JsonRequestBehavior.AllowGet);
             }

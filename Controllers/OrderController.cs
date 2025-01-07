@@ -31,19 +31,26 @@ namespace WebShop.Controllers
     {
         int _userRole;
         private WebShopEntities db;
+        private EfContextProvider efContext;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
         /// <summary>
         /// Konstruktor, der die Datenbankverbindung initialisiert.
         /// </summary>
-        public OrderController()
+        public OrderController() : this(new EfContextProvider(new WebShopEntities()))
         {
-            db = new WebShopEntities();
+
         }
 
         public OrderController(WebShopEntities _db) : base(_db)
         {
             db = _db;
+        }
+
+        public OrderController(EfContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
         }
 
         public OrderController(WebShopEntities _db, ClaimsPrincipal _principle) : base(_db, _principle)

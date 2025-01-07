@@ -31,10 +31,17 @@ namespace WebShop.Controllers
         int _userRole;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
         private WebShopEntities db = new WebShopEntities();
+        private EfContextProvider efContext;
 
-        public EmployeeController()
+        public EmployeeController() : this(new EfContextProvider(new WebShopEntities()))
         {
 
+        }
+
+        public EmployeeController(EfContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
         }
 
         public EmployeeController(WebShopEntities _db) : base(_db)
@@ -398,6 +405,22 @@ namespace WebShop.Controllers
             db.SaveChanges();
 
             TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} deaktiviert.", user.UserName) };
+            return RedirectToAction("EmployeeManagement");
+        }
+
+        /// <summary>
+        /// Aktiviert einen Mitarbeiter.
+        /// </summary>
+        /// <param name="id">Die ID des zu aktivierenden Mitarbeiters.</param>
+        /// <returns>Leitet zur Mitarbeiterverwaltungsseite weiter.</returns>
+        public ActionResult Activate(int id)
+        {
+            var user = db.tblUsers.Where(x => x.Id == id).SingleOrDefault();
+            user.IsActive = "Y";
+            db.SetModified(user);
+            db.SaveChanges();
+
+            TempData["UserMessage"] = new MessageVM() { CssClassName = "alert-success", Title = "Erledigt!", Message = string.Format("{0} aktiviert.", user.UserName) };
             return RedirectToAction("EmployeeManagement");
         }
     }

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Policy;
+using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -25,14 +27,21 @@ namespace WebShop.Controllers
     public class AccountController : BaseController
     {
         WebShopEntities db = new WebShopEntities();
-        public AccountController(WebShopEntities _db) : base(_db)
+        private EfContextProvider efContext;
+        public AccountController(WebShopEntities _db) : base(_db) 
         {
             db = _db;
         }
 
-        public AccountController()
+        public AccountController() : this(new EfContextProvider(new WebShopEntities()))
         {
 
+        }
+
+        public AccountController(EfContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
         }
 
         /// <summary>

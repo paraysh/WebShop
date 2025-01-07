@@ -25,7 +25,8 @@ namespace WebShop.Tests.Controllers
     {
         // Mock-Objekt für die WebShopEntities-Datenbank
         Mock<WebShopEntities> contextMock = new Mock<WebShopEntities>();
-
+        Mock<IDbContextProvider> providerMock = new Mock<IDbContextProvider>();
+        
         public ProductControllerTests()
         {
             // Arrange
@@ -50,7 +51,16 @@ namespace WebShop.Tests.Controllers
                 Type = 10,
                 Cost = "20",
                 IsActive = "Y",
-                tblItemTypeMaster = new tblItemTypeMaster() { Id = (int)ItemTypeEnum.Hardware }
+                tblItemTypeMaster = new tblItemTypeMaster() { Id = (int)ItemTypeEnum.Hardware },
+                tblStocks = new List<tblStock>() 
+                            { 
+                                new tblStock { Id = 101, ItemId = 10, Quantity = 2,
+                                                      tblStockDetails =  new List<tblStockDetail>() { new tblStockDetail { StockId = 101, IsDeleted = "N", OrderId = null } }
+                                },
+                                new tblStock { Id = 102, ItemId = 10, Quantity = 1,
+                                                       tblStockDetails =  new List<tblStockDetail>() { new tblStockDetail { StockId = 102, IsDeleted = "N", OrderId = null } }
+                                }                    
+                            }
             });
             dbSet.Add(new tblItem()
             {
@@ -110,6 +120,32 @@ namespace WebShop.Tests.Controllers
                 IsDeleted = "N",
                 DeleteReason = null
             });
+
+            var dbSet3 = new FakeDbSet<tblUser>();
+            contextMock.Setup(dbContext => dbContext.tblUsers).Returns(dbSet3);
+            dbSet3.Add(new tblUser()
+            {
+                UserName = "TestUser",
+                Id = 666
+            });
+
+            var dbSet4 = new FakeDbSet<tblTeamEmployee>();
+            contextMock.Setup(dbContext => dbContext.tblTeamEmployees).Returns(dbSet4);
+            dbSet4.Add(new tblTeamEmployee()
+            {
+                Id = 999,
+                TeamEmployeeId = 666,
+                Year = DateTime.Now.Year
+            });
+
+            var dbSet5 = new FakeDbSet<tblOrder>();
+            contextMock.Setup(dbContext => dbContext.tblOrders).Returns(dbSet5);
+
+            var dbSet6 = new FakeDbSet<tblOrderDetail>();
+            contextMock.Setup(dbContext => dbContext.tblOrderDetails).Returns(dbSet6);
+
+
+            providerMock.Setup(provider => provider.Context).Returns(contextMock.Object);
         }
 
         [TestMethod]
@@ -226,7 +262,7 @@ namespace WebShop.Tests.Controllers
         public void TestPlaceOrder()
         {
             //Act
-            ProductController _controller = new ProductController(contextMock.Object);
+            ProductController _controller = new ProductController(providerMock.Object);
 
             // Erstellen eines gefälschten Controller-Kontexts für die Sitzung
             var sessionItems = new SessionStateItemCollection();
@@ -237,7 +273,11 @@ namespace WebShop.Tests.Controllers
             var result = _controller.PlaceOrder(); // Bestellung aufgeben
 
             //assert
-            Assert.AreEqual(0, _controller.Session["CartCounter"]);
+            Assert.IsNull(_controller.Session["CartCounter"]);
+            Assert.IsNull(_controller.Session["CartItem"]);
+            Assert.AreEqual(1, providerMock.Object.Context.tblOrders.Count()); // 1 row inserted in tblOrders
+            Assert.AreEqual(1, providerMock.Object.Context.tblOrderDetails.Count()); // 1 row inserted in tblOrderDetails
+            Assert.AreEqual(2, providerMock.Object.Context.tblItems.Where(item => item.Id == 10).Single().tblStocks.Sum(x => x.Quantity)); // quantity reduced to 2, initially it was 3 for itemId = 10
         }
 
         [TestMethod]

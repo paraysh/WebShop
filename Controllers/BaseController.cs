@@ -15,6 +15,7 @@ namespace WebShop.Controllers
         /// Die Datenbankinstanz, die für Datenbankoperationen verwendet wird.
         /// </summary>
         public readonly WebShopEntities _db;
+        public readonly IDbContextProvider _dbContextProvider;
 
         /// <summary>
         /// Die ClaimsPrincipal-Instanz, die die Ansprüche des aktuellen Benutzers enthält.
@@ -44,9 +45,16 @@ namespace WebShop.Controllers
         /// <summary>
         /// Initialisiert eine neue Instanz der BaseController-Klasse mit einer neuen Datenbankinstanz.
         /// </summary>
-        public BaseController()
+        public BaseController(EfContextProvider dbContextProvider)
         {
             _db = new WebShopEntities();
+            _dbContextProvider = dbContextProvider;
+        }
+
+        public BaseController(IDbContextProvider dbContextProvider)
+        {
+            _db = new WebShopEntities();
+            _dbContextProvider = dbContextProvider;
         }
     }
 }

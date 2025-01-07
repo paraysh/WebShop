@@ -27,15 +27,22 @@ namespace WebShop.Controllers
     {
         int _userRole;
         private WebShopEntities db = new WebShopEntities();
+        private EfContextProvider efContext;
         ClaimsPrincipal prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-        public StockController()
+        public StockController() : this(new EfContextProvider(new WebShopEntities()))
         {
 
         }
         public StockController(WebShopEntities _db) : base(_db)
         {
             db = _db;
+        }
+
+        public StockController(EfContextProvider _efContext) : base(_efContext)
+        {
+            efContext = _efContext;
+            db = _efContext.Context as WebShopEntities;
         }
 
         /// <summary>

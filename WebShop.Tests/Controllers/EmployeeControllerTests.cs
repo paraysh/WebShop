@@ -200,5 +200,39 @@ namespace WebShop.Tests.Controllers
             Assert.AreEqual(1, rows); // Zeile sollte in der Tabelle existieren
             Assert.AreEqual("N", userDbSet.Where(x => x.Id == 99).Single().IsActive); // Überprüfe, ob isActive = N ist
         }
+
+        [TestMethod]
+        public void Test_AcvtivateUser()
+        {
+            // Arrange
+            var userId = 99;
+
+            // create fake user table
+            var userDbSet = new FakeDbSet<tblUser>();
+
+            var contextMock = new Mock<WebShopEntities>();
+            contextMock.Setup(dbContext => dbContext.tblUsers).Returns(userDbSet);
+            userDbSet.Add(new tblUser()  // add emplyee in table to edit
+            {
+                Id = 99,
+                UserName = "TestTeamleiter",
+                FirstName = "Maxime",
+                LastName = "Mustermann",
+                Email = "maxime.mustermann@email.de",
+                UserRole = (int)UserRoleEnum.TeamLeaders,
+                IsActive = "N" // user is deactived in table
+            });
+            //contextMock.
+
+            EmployeeController _controller = new EmployeeController(contextMock.Object);
+
+            // Act
+            var result = _controller.Activate(userId);
+            var rows = userDbSet.Count<tblUser>(); // check row count
+
+            //Assert
+            Assert.AreEqual(1, rows); // row should exist in table
+            Assert.AreEqual("Y", userDbSet.Where(x => x.Id == 99).Single().IsActive); // check if isActive = Y
+        }
     }
 }

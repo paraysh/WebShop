@@ -62,7 +62,15 @@
                     {
                         <!-- Zeigt "Bearbeiten" und "Deaktivieren" Links nur für Admins an. -->
                         <td>@Html.ActionLink("Bearbeiten", "Edit", "Employee", new { id = @user.Id }, null) </td>
-                        <td>@Html.ActionLink("Deaktivieren", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
+                        if (@user.IsActive == "Y")
+                        {
+                            <td>@Html.ActionLink("Deaktivieren", "Deactivate", "Employee", new { id = @user.Id }, null) </td>
+                        }
+                        else
+                        {
+                            <td>@Html.ActionLink("Aktivieren", "Activate", "Employee", new { id = @user.Id }, null) </td>
+                        }
+
                     }
                     else if (ViewBag.UserRole == (int)WebShop.Models.Enum.UserRoleEnum.TeamLeaders)
                     {
